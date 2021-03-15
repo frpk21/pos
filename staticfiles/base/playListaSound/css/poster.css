@@ -1,0 +1,270 @@
+*{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:none;
+}
+a{ 
+	text-decoration: none; 
+}
+body {
+	 overflow: hidden;
+}
+html, body { 
+	height: 100%;
+	background-color: #2b2b2b;
+}
+
+#hap-wrapper{
+	position:relative;
+	min-width:400px;
+	max-width:800px;
+	max-height: 400px;
+	margin:0 auto;
+	top:50%;
+	-webkit-transform: translateY(-50%);
+  	-ms-transform: translateY(-50%);
+  	transform: translateY(-50%);
+	font-family: Arial, Helvetica, sans-serif;
+	-moz-box-shadow: 1px 1px 75px #111;
+	-webkit-box-shadow: 1px 1px 75px #111;
+    box-shadow: 1px 1px 75px #111;
+}
+.hap-player-thumb{
+    overflow: hidden;
+    opacity: 0.7;
+}
+.hap-player-thumb img{
+	display: block;
+    width: 100%;
+    height: auto;
+	max-width: none!important;
+}
+.hap-player-holder{
+	position: absolute;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	touch-action: none;
+}
+.hap-contr-btn > i{
+	color:#ddd;
+}
+.hap-contr-btn:hover > i,
+.hap-contr-btn-hover{
+	color:#fff!important;
+} 
+
+.hap-contr-btn > i{
+	position: absolute;
+    top: 0;
+    left: 0;
+	width:25px;
+	height:25px;
+	text-align: center;
+	display: inline-block;
+	font-size: 16px!important;
+	line-height: 25px!important;
+}
+
+.hap-info{
+	margin-top:20px;
+	margin-left:30px;
+	margin-right:200px;
+}
+.hap-player-title{
+	font-size:22px;
+	color:#fff;
+	margin:0!important;
+}
+.hap-player-artist{
+	font-size:18px;
+	color:#ccc;
+	margin:0!important;
+}
+
+
+
+.hap-share-toggle{
+	position:absolute;
+	top:30px;
+	width:25px;
+	height:25px;
+	right:27px;
+}
+.hap-share-holder{
+	position:absolute;
+	top:0px;
+	right:25px;
+	width:165px;
+	height:25px;
+	display: none;
+	background: rgba(0,0,0,0.01);
+}
+.hap-share-toggle:hover .hap-share-holder{
+	display: block;
+}
+.hap-share-item{
+	position: relative;
+	width:25px;
+	height:25px;
+	top:0;
+	float: right;
+	margin-right:10px;
+}
+.hap-share-item i{
+	font-size: 18px!important;
+}
+
+
+.hap-player-controls{
+	position: absolute;
+	height: 30px;
+	bottom: 60px;
+	left:30px;
+}
+.hap-prev-toggle{
+	position:relative;
+	left:0px;
+	top:2px;
+	width:25px;
+	height:25px;
+	float:left;
+	margin-right:20px;
+}
+.hap-playback-toggle{
+	position:relative;
+	top:0px;
+	width:30px;
+	height:30px;
+	float:left;
+	margin-right:20px;
+}
+.hap-playback-toggle i{
+	width:30px;
+	height:30px;
+	line-height:30px!important;
+	font-size: 30px!important;
+}
+.hap-next-toggle{
+	position:relative;
+	top:2px;
+	width:25px;
+	height:25px;
+	float:left;
+	margin-right:20px;
+}
+.hap-prev-toggle i,
+.hap-next-toggle i{
+	font-size:18px!important;
+}
+
+
+.hap-volume-wrapper{
+	position:relative;
+	top:2px;
+	width:25px;
+	height:25px;
+	float:left;
+}
+.hap-volume-seekbar{
+	position:relative;
+	left:25px;
+	top:3px;
+	width:70px;
+	height:18px;
+	float:left;
+	cursor: pointer;
+	touch-action: none;
+	background: rgba(0,0,0,0.01);
+}
+.hap-volume-bg{
+	position:absolute;
+	top:8px;
+	left:10px;
+	width:50px;
+	height:3px;
+	background:#ccc;
+}
+.hap-volume-level{
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	background:#D1C1FA;
+}
+
+
+.hap-seekbar{
+	position:absolute;
+	bottom:30px;
+	left:36px;
+	right:36px;
+	height:20px;
+	cursor: pointer;
+	touch-action: none;
+}
+.hap-progress-bg{
+	position:relative;
+	background:#ccc;
+	width:100%;
+	top:11px;
+	height:2px;
+}
+.hap-load-level{
+	position:absolute;
+	background:#ccc;
+	top:0;
+	height:100%;
+}
+.hap-progress-level{
+	position:absolute;
+	background:#D1C1FA;
+	top:0;
+	height:100%;
+}
+
+
+
+
+
+
+
+#hap-playlist-list{
+	display:none;
+}
+
+
+
+.hap-tooltip{
+	position:absolute;
+	background:#D1C1FA;
+	text-align:center;
+	z-index:10000;
+	pointer-events:none;
+	color:#fff!important;
+	-moz-box-shadow: 1px 1px 8px #111;
+	-webkit-box-shadow: 1px 1px 8px #111;
+	box-shadow: 1px 1px 8px #111;
+	border-radius: 1px;
+	display:none;
+	font-size:13px!important;
+	padding:2px 5px !important;
+	line-height:20px !important;
+	white-space:nowrap;
+}
+
+
+
+.hap-hidden {
+	opacity: 0; 
+	filter: alpha(opacity=0); 
+}
+.hap-visible {
+	opacity: 1;
+	-webkit-transition: opacity 500ms ease-out;
+	-moz-transition: opacity 500ms ease-out;
+	transition: opacity 500ms ease-out;
+}
+

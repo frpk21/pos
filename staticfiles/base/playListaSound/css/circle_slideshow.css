@@ -1,0 +1,161 @@
+*{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:none;
+}
+a{ 
+	text-decoration: none; 
+}
+body {
+	background:#eeeeee;
+	-webkit-font-smoothing: subpixel-antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+
+
+#hap-wrapper{
+	font-family: Arial, Helvetica, sans-serif;
+	position:relative;
+	max-width:800px;
+	top:50px;
+	background-color: #ACBEBF;
+	margin:0 auto;
+	-moz-box-shadow: 0 0 30px #999999;
+	-webkit-box-shadow: 0 0 30px #999999;
+	box-shadow: 0 0 30px #999999;
+}
+.hap-slide-holder{
+	position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    overflow: hidden;
+	background-color: #333;
+	border: 20px solid #FFFFFF;
+	-webkit-box-sizing: border-box; 
+   	-moz-box-sizing: border-box;    
+    box-sizing: content-box;  
+    touch-action: none;
+}
+.hap-slide-holder img{
+    position: absolute;
+    width: 100%;
+    width: calc(100% + 2px);
+    min-height: 100%;
+    display: block;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+	max-width: none!important;
+}
+.hap-slide-timer { 
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:0px; 
+	height:4px;
+	background:#fff;
+	opacity: 0.5;
+}
+#hap-circle{
+	position:absolute;
+	top:50%;	
+	left:50%;
+	margin-left:-80px;
+	margin-top:-80px;
+	width:160px;
+	height:160px;
+	opacity: 0.3;
+	transition: opacity 500ms ease-out;
+}
+.hap-load-canvas,
+.hap-progress-canvas{
+	position:absolute;
+	display: block;
+	cursor: pointer;
+	touch-action: none;
+}
+.hap-progress-blocker{
+	position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    background: red;
+    top:40px;
+	left:40px;
+    opacity:0;
+}
+.hap-playback-toggle{
+	position:absolute;
+	top:0px;
+	width:50px;
+	height:50px;
+	left:50%;
+	top:50%;
+	margin-top: -25px;
+	margin-left: -25px;
+}
+.hap-playback-toggle i{
+	font-size:36px!important;
+}
+.hap-contr-btn-i{
+	position: absolute;
+    top: 0;
+    left: 0;
+	width:50px;
+	height:50px;
+	text-align: center;
+	display: inline-block;
+	line-height: 50px!important;
+	color:#fff !important;
+}
+
+
+
+
+.hap-tooltip{
+	position:absolute;
+	text-align:center;
+	z-index: 2147483646!important;
+	pointer-events:none;
+	display:none;
+	font-size:13px!important;
+	padding:2px 8px !important;
+	line-height:20px !important;
+	white-space:nowrap;
+	user-select: none;
+	direction: ltr !important;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+	border:1px solid #ddd;
+	background: #fff;
+    color: #333!important;
+}
+
+
+.hap-playlist-holder{
+	display: none;
+}
+
+
+.hap-hidden {
+	opacity: 0; 
+}
+.hap-visible {
+	opacity: 1;
+	transition: opacity 500ms ease-out;
+}
+
+#hap-playlist-list{
+	display:none;
+}
+
+		 
+		 
+		 
+		 
+		 
+		  
+
+
+

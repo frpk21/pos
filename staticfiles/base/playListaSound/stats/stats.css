@@ -1,0 +1,104 @@
+body{
+	background: #f1f1f1;
+}
+
+
+/* statistics */
+.hap-stats-total{
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.hap-stats-total-inner{
+	display: flex;
+	justify-content: space-between;
+}
+.hap-stats-total-inner div{
+	text-align: center;
+	flex: 1;
+}
+.hap-stats-total p{
+	padding: 0;
+	margin: 0;
+}
+.hap-stats-total-value{
+	font-size: 40px;
+}
+.hap-stat-no-data{
+	text-align: center;
+}
+.top-box-wrap{
+	display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.top-box{
+	background: #fff;
+	padding: 10px;
+	flex: 1;
+    min-width: 350px;
+}
+.top-box-title{
+	position: relative;
+}
+.top-box-inner h2{
+	display: inline-block;
+}
+.top-box:not(:last-child){
+	margin-right: 10px;
+}
+.hap-stat-info{
+	margin-left: 5px;
+	font-size: 10px;
+	font-style: italic;
+}
+.stat-table{
+	margin-top: 20px;
+}
+
+
+/* table pagination */
+.hap-pgn{
+	display: inline-block;
+	float: right;
+}
+.hap-pgn li{
+    display: inline;
+}
+.hap-pgn-btn{
+    color: #333;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    margin-right: 1px;
+    margin-bottom: 1px;
+}
+.hap-pgn-current,
+.hap-pgn-btn:hover{
+    color: #fff!important;
+    background: #0073aa!important;
+}
+
+
+
+
+
+
+table.minimalistBlack {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    background: #fff;
+}
+table.minimalistBlack td, table.minimalistBlack th {
+  padding: 5px 4px;
+}
+table.minimalistBlack thead {
+  background: #0073aa;
+}
+table.minimalistBlack thead th a {
+  color: #fff;
+  text-align: left;
+}
+
+

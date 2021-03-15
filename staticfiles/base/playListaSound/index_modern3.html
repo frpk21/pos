@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>HTML5 Audio Player with Playlist</title>
+       
+        <link rel="stylesheet" type="text/css" href="css/hap-fontawesome.css"/>
+		<link rel="stylesheet" type="text/css" href="css/jquery.mCustomScrollbar.css" media="all" /><!-- playlist scroll -->
+		<link rel="stylesheet" type="text/css" href="css/modern3.css" />
+        
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/new.js"></script>			
+        <script>
+
+            jQuery(document).ready(function($){
+                
+                var settings = {
+                    instanceName:"modern3",
+                    sourcePath:"",
+                    activePlaylist:"#playlist-audio2",
+                    activeItem:0,
+                    volume:0.5,
+                    autoPlay:true,
+                    preload:"auto",
+                    randomPlay:false,
+                    loopingOn:true,
+                    mediaEndAction:"next",
+                    soundCloudAppId:"",
+                    gDriveAppId:"",
+                    usePlaylistScroll:true,
+                    playlistScrollOrientation:"vertical",
+                    playlistScrollTheme:"minimal",
+                    useKeyboardNavigationForPlayback:true,
+                    facebookAppId:"",
+                    useNumbersInPlaylist: false,
+                    playlistItemContent:"title,thumb"
+                };
+
+                $("#hap-wrapper").hap(settings);
+
+            });
+
+        </script>
+        
+	</head>
+	<body>
+
+        <!-- player code -->   
+        <div id="hap-wrapper">
+
+       		<div class="hap-player-holder">
+
+                <div class="hap-player-thumb-wrapper">
+                    <div class="hap-player-thumb"></div>
+                    <div class="hap-player-thumb-cover"></div>
+                </div>
+
+                <div class="hap-volume-wrapper">
+                    <div class="hap-volume-toggle hap-contr-btn"><i class="hap-icon hap-icon-volume-up"></i></div>
+                    <div class="hap-volume-seekbar">
+                        <div class="hap-volume-bg">
+                            <div class="hap-volume-level"><div class="hap-volume-drag"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hap-random-toggle hap-contr-btn" data-tooltip="Shuffle"><i class="hap-icon hap-icon-random"></i></div>
+
+                <div class="hap-player-content">
+
+                    <div class="hap-info">
+                        <div class="hap-player-artist"></div>
+                        <div class="hap-player-title"></div>
+                    </div>
+
+                    <div class="hap-seekbar">
+                        <div class="hap-progress-bg">
+                            <div class="hap-load-level"></div>
+                            <div class="hap-progress-level"></div>
+                        </div>
+                    </div>
+
+                    <div class="hap-player-controls">
+                        <div class="hap-prev-toggle hap-contr-btn"><i class="hap-icon hap-icon-step-backward"></i></div>
+                        <div class="hap-playback-toggle hap-contr-btn"><i class="hap-icon hap-icon-play"></i></div>
+                        <div class="hap-next-toggle hap-contr-btn"><i class="hap-icon hap-icon-step-forward"></i></div>
+                    </div>
+
+                </div>
+                  
+            </div>
+
+            <div class="hap-playlist-holder">
+
+                <div class="hap-playlist-inner">
+                    <div class="hap-playlist-content">
+          
+                    </div>
+                </div>
+
+                <div class="hap-playlist-filter-msg"><span>NOTHING FOUND!</span></div>
+
+                <div class="hap-bottom-bar">
+                    
+                    <input class="hap-search-filter" type="text" placeholder="filter...">
+                    <div class="hap-sort-alpha hap-contr-btn" data-tooltip="Alphabetic sort"><i class="hap-icon hap-icon-sort-alpha-down"></i></div>
+              
+                    <div class="hap-share-toggle hap-contr-btn">
+                        <div class="hap-share-holder">
+                            <div class="hap-share-item hap-contr-btn" data-type="tumblr" data-tooltip="Share on Tumblr"><i class="hab-icon hap-icon-tumblr-square"></i></div>
+                            <div class="hap-share-item hap-contr-btn" data-type="twitter" data-tooltip="Share on Twitter"><i class="hab-icon hap-icon-twitter-square"></i></div>
+                            <div class="hap-share-item hap-contr-btn" data-type="facebook" data-tooltip="Share on Facebook"><i class="hab-icon hap-icon-facebook-square"></i></div>
+                        </div>
+                        <i class="hap-icon hap-icon-share-square"></i>
+                    </div>
+
+                </div>
+                
+                <div class="hap-preloader"></div>
+
+            </div>
+			
+			<div class="hap-tooltip"></div>  
+
+        </div>  
+
+        <!-- PLAYLIST LIST -->
+        <div id="hap-playlist-list">
+
+             <div id="playlist-audio2">
+                 <div class="hap-playlist-item" data-type="audio" data-mp3="media/audio/2/main/08.mp3" data-artist="Soundroll" data-title="A Way To The Top" data-thumb="media/thumb/4/01.jpg" data-share="http://audiojungle.net/item/a-way-to-the-top/162200?ref=Tean" data-description="This is optional song description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec magna. Donec consequat hendrerit magna."></div>
+
+                 <div class="hap-playlist-item" data-type="audio" data-mp3="media/audio/2/main/09.mp3" data-artist="Soundroll" data-title="Feel Good Journey" data-thumb="media/thumb/4/02.jpg" data-share="http://audiojungle.net/item/feel-good-journey/119565?ref=Tean" data-description="Maecenas vehicula, leo eu commodo aliquam, sem dolor iaculis eros, vel mollis sem urna ac sapien. Integer mattis dui ut erat."></div>
+
+                 <div class="hap-playlist-item" data-type="audio" data-mp3="media/audio/2/main/03.mp3" data-artist="Soundroll" data-title="Fight No More" data-thumb="media/thumb/4/03.jpg" data-share="http://audiojungle.net/item/fight-no-more/143561?ref=Tean" data-description="Duis egestas, quam faucibus interdum tincidunt, enim sem tincidunt tellus, sed condimentum tellus tortor ut mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."></div>
+
+                 <div class="hap-playlist-item" data-type="audio" data-mp3="media/audio/2/main/04.mp3" data-artist="Soundroll" data-title="Funky Boom" data-thumb="media/thumb/4/04.jpg" data-share="http://audiojungle.net/item/funky-boom/127833?ref=Tean" data-description="Vestibulum accumsan enim nec ipsum. Nunc cursus sapien. Etiam fermentum luctus arcu. Curabitur vitae velit eget nisl ornare sollicitudin. Etiam vitae erat."></div>
+
+                 <div class="hap-playlist-item" data-type="audio" data-mp3="media/audio/2/main/05.mp3" data-artist="Soundroll" data-title="Pump The Club" data-thumb="media/thumb/4/05.jpg" data-share="http://audiojungle.net/item/pump-the-club/166358?ref=Tean" data-description="Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris consequat. Quisque leo erat, egestas quis, pellentesque eu, suscipit sit amet, sem."></div>
+
+                 <div class="hap-playlist-item" data-type="audio" data-mp3="media/audio/2/main/06.mp3" data-artist="Soundroll" data-title="Rush" data-thumb="media/thumb/4/06.jpg" data-share="http://audiojungle.net/item/rush/118500?ref=Tean" data-description="Maecenas eu erat condimentum neque molestie tincidunt. Fusce egestas, est ut fringilla facilisis, quam purus blandit dui, eget egestas mauris nibh ut diam."></div>
+
+                 <div class="hap-playlist-item" data-type="audio" data-mp3="media/audio/2/main/07.mp3" data-artist="Soundroll" data-title="Sun Is So Bright" data-thumb="media/thumb/4/07.jpg" data-share="http://audiojungle.net/item/sun-is-so-bright/134956?ref=Tean" data-description="Suspendisse porta, quam ac ultricies sagittis, libero nisi gravida sem, in convallis sem ante nec purus. Suspendisse in tellus vitae purus porttitor pharetra."></div>
+             </div>
+
+        </div>
+      
+
+
+	</body>
+</html>

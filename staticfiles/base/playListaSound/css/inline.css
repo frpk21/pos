@@ -1,0 +1,40 @@
+*{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:none;
+}
+a{ 
+	text-decoration: none; 
+}
+body {
+	background: #eee;
+}
+
+h1{
+	margin-left:30px;
+	margin-top:30px;
+	color:white;
+}
+
+p{
+	max-width:700px;
+	margin-left:30px;
+	margin-right:30px;
+	padding-bottom:30px;
+}
+ 
+.hap-inline{
+	position:relative;
+	top:2px;
+	width:16px;
+	height:16px;
+	margin-right:3px;
+}
+
+.hap_text_link{
+	text-decoration: underline;
+	color:green;
+}
+
+

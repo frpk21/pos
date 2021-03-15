@@ -1,0 +1,104 @@
+*{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:none;
+}
+a{ 
+	text-decoration: none; 
+}
+body {
+	background:#eeeeee;
+}
+
+
+
+#hap-circle{
+	position: relative;
+	width:160px;
+	height:160px;
+	margin:50px;
+	float:left;
+}
+#hap-circle2{
+	position: relative;
+	width:260px;
+	height:260px;
+	margin:50px;
+	float:left;
+}
+
+/* DO NOT set the width and heigth of the canvas in css! This is done in the html */	
+.hap-load-canvas,
+.hap-progress-canvas{	
+	position:absolute;
+	display: block;
+	cursor: pointer;
+	touch-action: none;
+}
+.hap-playback-toggle{
+	position:absolute;
+	top:0px;
+	width:50px;
+	height:50px;
+	left:50%;
+	top:50%;
+	margin-top: -25px;
+	margin-left: -25px;
+}
+.hap-playback-toggle i{
+	font-size:36px!important;
+}
+#hap-circle2 .hap-playback-toggle i{
+	font-size:50px!important;
+}
+.hap-contr-btn-i{
+	width:50px;
+	height:50px;
+	text-align: center;
+	display: inline-block;
+	line-height: 50px!important;
+	color:#fff !important;
+}
+
+
+.hap-tooltip{
+	position:absolute;
+	background:#fff;
+	text-align:center;
+	z-index:999999;
+	border:1px solid #ddd;
+	pointer-events:none;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+	color:#333!important;
+	font-size:13px!important;
+	padding:2px 5px !important;
+	white-space:nowrap;
+	display: none;
+}
+
+
+.hap-hidden {
+	opacity: 0; 
+	filter: alpha(opacity=0); 
+}
+.hap-visible {
+	opacity: 1;
+	-webkit-transition: opacity 500ms ease-out;
+	-moz-transition: opacity 500ms ease-out;
+	transition: opacity 500ms ease-out;
+}
+
+
+
+		#hap-playlist-list{
+	display:none;
+} 
+		 
+		 
+		 
+		 
+		  
+
+
+

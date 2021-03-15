@@ -1,0 +1,251 @@
+*{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:none;
+}
+a{ 
+	text-decoration: none; 
+}
+body {
+	background: #304352; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #304352 , #d7d2cc); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #304352 , #d7d2cc); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+#hap-wrapper{
+	font-family: Helvetica,Arial,sans-serif; 
+	position: relative;
+	max-width: 1600px;
+	min-width: 320px;
+	width:100%;
+	height: 200px;
+	top:150px;
+	margin: 0 auto;
+	-moz-box-shadow: 1px 1px 15px #666;
+	-webkit-box-shadow: 1px 1px 15px #666;
+	box-shadow: 1px 1px 15px #111;
+	touch-action: none;
+}
+.hap-circle-player{
+	position: absolute;
+	top: 50%;
+	left:-10000px;/*cannot be display:none!*/
+	height: 100px;
+	width: 100px;
+	margin-top:-50px;
+	border-radius: 100%;
+	opacity: 0;/*cannot be display:none!*/
+}
+.hap-circle-player-set{
+	opacity:1;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+  	-ms-transform: translateX(-50%);
+  	transform: translateX(-50%);
+}
+.hap-load-canvas,
+.hap-progress-canvas{
+	position:absolute;
+	display: block;
+	cursor: pointer;
+	touch-action: none;
+}
+.hap-progress-blocker{
+	position: absolute;
+    width: 70px;
+    height: 70px;
+    border-radius: 100%;
+    background: red;
+    top:15px;
+	left:15px;
+    opacity:0;
+}
+.hap-playback-toggle{
+	position:absolute;
+	top:50%;
+	width:30px;
+	height:30px;
+	left:50%;
+	-webkit-transform: translate(-50%,-50%);
+  	-ms-transform: translate(-50%,-50%);
+  	transform: translate(-50%, -50%);
+}
+.hap-playback-toggle i{
+	width:32px;
+	height:32px;
+	font-size: 32px!important;
+	line-height:32px!important;
+	color:#fff !important;
+	text-align: center;
+	display: inline-block;
+}
+
+#hap-playlist-list{
+	display:none;
+}
+
+
+.hap-playlist-inner{
+	position: absolute;
+	left:30px;
+	right:30px;
+	height: 100%;
+	overflow: hidden;
+}
+.hap-playlist-inner-clear{
+	left:0;
+	right:0;
+}
+.hap-playlist-content{
+	position: absolute;
+	height: 100%;
+	top:0;
+	left:0;
+}
+.hap-playlist-item{
+	position: relative;
+	top:0px;
+	left:0px;
+	width: 300px;
+	height: 100%;
+	background:#fff;
+	float: left;
+}
+.hap-playlist-item-content {
+	cursor: pointer;
+	overflow: hidden;
+	width: 100%;
+	height:100%;
+}/*
+.hap-playlist-item-selected .hap-wall-preview{
+	opacity: 0;
+}
+.hap-playlist-item:not(.hap-active):hover .hap-wall-preview{
+	opacity: 1;
+}
+*/
+
+
+.hap-playlist-item-selected .hap-playlist-title{
+	opacity:1;
+	top: 5px;
+}
+.hap-playlist-item-selected .hap-wall-preview{
+	opacity: 1;
+}
+.hap-active .hap-wall-preview{
+	opacity: 0;
+}
+
+	
+
+
+
+
+
+.hap-playlist-thumb{
+	display: block;
+	position:relative;
+	width:100%;
+	height:100%;
+	top:0px;
+	left:0px;
+	overflow:hidden;
+	float: left;
+}
+.hap-playlist-thumb img{
+	position: absolute;
+	display:block;
+	top:0;
+	height:100%;
+	width:auto!important;
+	min-width: 100%!important;	
+	-webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+	max-width: none!important;
+}
+.hap-playlist-title{
+	font-size:15px;
+	position:absolute;
+	top:0;
+	left:0;
+	right: 0;
+	padding:10px;
+	opacity:0;
+	pointer-events:none;
+	-webkit-transition: all .5s ease-out;
+    transition: all .5s ease-out; 
+    color:#fff;
+    text-align: center;
+    line-height: normal;
+}
+.hap-wall-preview{
+	position: absolute;
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+  	opacity: 0;
+  	-webkit-transition: all .5s ease-out;
+    transition: all .5s ease-out; 
+  	pointer-events:none;
+  	background-image: url('../data/misc/bigplay2.png');
+  	background-repeat: no-repeat;
+  	background-position: center;
+}
+ 
+		  
+.hap-hidden {
+	opacity: 0; 
+	filter: alpha(opacity=0); 
+}
+.hap-visible {
+	opacity: 1;
+	-webkit-transition: opacity 500ms ease-out;
+	-moz-transition: opacity 500ms ease-out;
+	transition: opacity 500ms ease-out;
+}					  
+
+
+
+
+.hap-playlist-backward{
+	position: absolute;
+	left:0;
+	top:0;
+	width:30px;
+	height:100%;
+	cursor: pointer;
+	background: #fff;
+}
+.hap-playlist-forward{
+	position: absolute;
+	right:0;
+	top:0;
+	width:30px;
+	height:100%;
+	cursor: pointer;
+	background: #fff;
+}
+.hap-playlist-backward i,
+.hap-playlist-forward i{
+	position: absolute;
+    top: 0;
+    left: 0;
+	width:30px;
+	height:100%;
+	text-align: center;
+	display: inline-block;
+	font-size: 20px!important;
+	line-height: 200px!important;
+	color:#A8A9A9!important;
+}
+
+/*
+.hap-playlist-item-sizer{
+	position: relative;
+	height: 20px;
+	z-index: 10;
+}*/
+

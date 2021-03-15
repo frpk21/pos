@@ -1,0 +1,322 @@
+*{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:none;
+}
+a{ 
+	text-decoration: none; 
+}
+body {
+	background: #fff;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#hap-wrapper{
+	position: relative;
+	width:60px;
+	margin:100px 0 0 50px;
+	-moz-box-shadow: 1px 1px 1px #ddd;
+	-webkit-box-shadow: 1px 1px 1px #ddd;
+	box-shadow: 1px 1px 1px #ddd;
+}
+#hap-wrapper2{
+	position: relative;
+	width:120px;
+	margin:100px 0 0 50px;
+	-moz-box-shadow: 1px 1px 1px #ddd;
+	-webkit-box-shadow: 1px 1px 1px #ddd;
+	box-shadow: 1px 1px 1px #ddd;
+}
+#hap-wrapper3{
+	position: relative;
+	width:200px;
+	margin:100px 0 0 50px;
+	-moz-box-shadow: 1px 1px 1px #ddd;
+	-webkit-box-shadow: 1px 1px 1px #ddd;
+	box-shadow: 1px 1px 1px #ddd;
+}
+
+
+.hap-player-holder{
+	position:relative;
+	height:26px;
+	background-image: -moz-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(50%,#f1f1f1), color-stop(51%,#e1e1e1), color-stop(100%,#f6f6f6));
+    background-image: -webkit-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+    background-image: -o-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+    background-image: -ms-linear-gradient(top, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+    background-image: linear-gradient(to bottom, #ffffff 0%,#f1f1f1 50%,#e1e1e1 51%,#f6f6f6 100%);
+    border: 1px solid #cbcbcb;
+}
+.hap-contr-btn > i{
+	color:#666;
+}
+.hap-contr-btn:hover > i,
+.hap-contr-btn-hover{
+	color:#fff!important;
+}
+.hap-contr-btn{
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;       
+}
+.hap-contr-btn > i{
+	position:relative;
+	top:0px;
+	left:0px;
+	width:30px;	
+	height:26px;
+	text-align: center;
+	display: inline-block;
+	font-size: 14px!important;
+	line-height: 26px!important;
+}
+
+
+/* player 1 */
+#hap-wrapper .hap-playback-toggle{
+	position:absolute;
+	width:30px;	
+	height:26px;
+	left:0px;
+	border-right: 1px solid #ccc;
+}
+#hap-wrapper .hap-volume-wrapper{
+	position:absolute;
+	width:30px;	
+	height:26px;
+	right:0px;
+	top:0px;
+}
+#hap-wrapper .hap-volume-wrapper:hover .hap-volume-seekbar{
+	display: block;
+}
+#hap-wrapper .hap-player-volume{
+	width:30px;	
+	height:26px;
+}
+#hap-wrapper .hap-volume-seekbar{
+	position:absolute;
+	top:-82px;
+	left:-1px;
+	width:30px;
+	height:80px;
+	display:none;
+	cursor: pointer;
+	touch-action: none;
+	background: rgb(255,255,255); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    border: 1px solid #cbcbcb;
+}
+#hap-wrapper .hap-volume-bg{
+	position:absolute;
+	width:3px;
+	height:60px;
+	background:#888;
+	left:13px;
+	bottom:10px;
+}
+#hap-wrapper .hap-volume-level{
+	position:absolute;
+	width:100%;
+	height:0;
+	background:#fff;
+	left:0;
+	bottom:0;
+}
+
+/* player 2 */
+#hap-wrapper2 .hap-playback-toggle{
+	position:absolute;
+	width:30px;	
+	height:26px;
+	left:0px;
+	border-right: 1px solid #ccc;
+}
+#hap-wrapper2 .hap-prev-toggle{
+	position:absolute;
+	width:30px;	
+	height:26px;
+	left:30px;
+	border-right: 1px solid #ccc;
+}
+#hap-wrapper2 .hap-next-toggle{
+	position:absolute;
+	width:30px;	
+	height:26px;
+	left:60px;
+	border-right: 1px solid #ccc;
+}
+#hap-wrapper2 .hap-volume-wrapper{
+	position:absolute;
+	width:30px;	
+	height:26px;
+	right:0px;
+	top:0px;
+}
+#hap-wrapper2 .hap-volume-wrapper:hover .hap-volume-seekbar{
+	display: block;
+}
+#hap-wrapper2 .hap-player-volume{
+	width:30px;	
+	height:26px;
+}
+#hap-wrapper2 .hap-volume-seekbar{
+	position:absolute;
+	top:-82px;
+	left:-1px;
+	width:30px;
+	height:80px;
+	display:none;
+	cursor: pointer;
+	touch-action: none;
+	background: rgb(255,255,255); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    border: 1px solid #cbcbcb;
+}
+#hap-wrapper2 .hap-volume-bg{
+	position:absolute;
+	width:3px;
+	height:60px;
+	background:#888;
+	left:13px;
+	bottom:10px;
+}
+#hap-wrapper2 .hap-volume-level{
+	position:absolute;
+	width:100%;
+	height:0;
+	background:#fff;
+	left:0;
+	bottom:0;
+}
+
+/* player 3 */
+#hap-wrapper3 .hap-playback-toggle{
+	position:absolute;
+	width:30px;	
+	height:26px;
+	left:0px;
+	border-right: 1px solid #ccc;
+}
+#hap-wrapper3 .hap-prev-toggle{
+	position:absolute;
+	width:30px;	
+	height:26px;
+	left:30px;
+}
+#hap-wrapper3 .hap-next-toggle{
+	position:absolute;
+	width:30px;	
+	height:26px;
+	left:60px;
+}
+#hap-wrapper3 .hap-seekbar{
+	position:absolute;
+	height:26px;
+	top:0px;
+	left:30px;
+	right:30px;
+	touch-action: none;
+	cursor: pointer;
+	border-right: 1px solid #ccc;
+}
+#hap-wrapper3 .hap-progress-bg{
+	position:absolute;
+	height:3px;
+	background:#666;
+	top:12px;
+	left:10px;
+	right:10px;
+}
+#hap-wrapper3 .hap-load-level{
+	position:absolute;
+	height:100%;
+	background:#888;
+	top:0;
+	left:0;
+	right:0;
+}
+#hap-wrapper3 .hap-progress-level{
+	position:absolute;
+	height:100%;
+	background:#fff;
+	top:0;
+	left:0;
+	right:0;
+}
+#hap-wrapper3 .hap-volume-wrapper{
+	position:absolute;
+	width:30px;	
+	height:26px;
+	right:0px;
+	top:0px;
+}
+#hap-wrapper3 .hap-volume-wrapper:hover .hap-volume-seekbar{
+	display: block;
+}
+#hap-wrapper3 .hap-player-volume{
+	width:30px;	
+	height:26px;
+}
+#hap-wrapper3 .hap-volume-seekbar{
+	position:absolute;
+	top:-82px;
+	left:-1px;
+	width:30px;
+	height:80px;
+	display:none;
+	cursor: pointer;
+	touch-action: none;
+	background: rgb(255,255,255); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    border: 1px solid #cbcbcb;
+}
+#hap-wrapper3 .hap-volume-bg{
+	position:absolute;
+	width:3px;
+	height:60px;
+	background:#888;
+	left:13px;
+	bottom:10px;
+}
+#hap-wrapper3 .hap-volume-level{
+	position:absolute;
+	width:100%;
+	background:#fff;
+	left:0;
+	bottom:0;
+}
+
+
+
+
+
+.hap-tooltip{
+	position:absolute;
+	background: rgb(255,255,255); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+	text-align:center;
+	z-index:10000;
+	border:1px solid #ccc;
+	pointer-events:none;
+	-moz-box-shadow: 1px 1px 1px #ddd;
+	-webkit-box-shadow: 1px 1px 1px #ddd;
+	box-shadow: 1px 1px 1px #ddd;
+	color:#666!important;
+	display:none;
+	font-size:12px!important;
+	padding:2px 5px !important;
+	line-height:20px !important;
+	white-space:nowrap;
+}

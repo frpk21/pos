@@ -1,0 +1,461 @@
+*{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:none;
+}
+a{ 
+	text-decoration: none; 
+}
+body {
+	
+}
+
+#bg{
+	position:absolute;
+	width:100%;
+	height: 100%;
+	top:0px;
+	left:0px;
+	background: url("../data/pattern/b1.jpg") no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+
+#hap-wrapper{
+	position:fixed;
+	max-width:920px;
+	width:100%;
+	bottom:0px;
+	left:50%;
+	-webkit-transform: translate(-50%, 0);
+  	-ms-transform: translate(-50%, 0);
+  	transform: translate(-50%, 0);
+  	background:rgba(64,46,34,0.9);
+	font-family: 'Times New Roman', Times, serif;
+	min-width: 320px;
+	z-index:99999;
+}
+
+.hap-player-holder{
+	position: relative;
+	left:0;
+	width: 100%;
+	height: 70px;
+}
+.hap-contr-btn > i{
+	color:#ddd;
+}
+.hap-contr-btn:hover > i,
+.hap-contr-btn-hover{
+	color:#D1C1FA!important;
+} 
+.hap-contr-btn i{
+	position: absolute;
+    top: 0;
+    left: 0;
+	width:25px;
+	height:25px;
+	text-align: center;
+	display: inline-block;
+	font-size: 15px!important;
+	line-height: 25px!important;
+}
+
+.hap-media-title-mask{
+	position:relative;
+	display: inline-block;
+	top:16px;
+	left:50%;
+	-webkit-transform: translate(-50%, 0);
+  	-ms-transform: translate(-50%, 0);
+  	transform: translate(-50%, 0);
+	overflow:hidden;
+}
+.hap-media-title{
+	white-space: nowrap;
+	font-size:14px;
+	color:#eee;
+	margin:0;
+}
+
+.hap-player-left{
+	position: absolute; 
+	width:180px;
+	height:100%;
+}
+.hap-controls-left{
+	display: inline-block;
+	height: 30px;
+	margin-top:22px;
+    margin-left: 30px;
+}
+.hap-prev-toggle{
+	position:relative;
+	left:0px;
+	top:2px;
+	width:25px;
+	height:25px;
+	float:left;
+	margin-right:20px;
+}
+.hap-playback-toggle{
+	position:relative;
+	top:0px;
+	width:30px;
+	height:30px;
+	float:left;
+	margin-right:20px;
+}
+.hap-playback-toggle i{
+	width:30px;
+	height:30px;
+	line-height:30px!important;
+	font-size: 26px!important;
+}
+.hap-next-toggle{
+	position:relative;
+	top:2px;
+	width:25px;
+	height:25px;
+	float:left;
+}
+
+
+.hap-player-middle{
+	position: absolute;
+	left:180px; 
+	right:180px; 
+	height:100%;
+	z-index: 1;
+}
+.hap-seekbar-inner-wrap{
+	position:absolute;
+	bottom:15px;
+	left:100px;
+	right:100px;
+	height:20px;
+}
+.hap-seekbar{
+	position:absolute;
+	top:0;
+	left:0px;
+	right:0px;
+	height:20px;
+	cursor: pointer;
+	touch-action: none;
+}
+.hap-progress-bg{
+	position:relative;
+	background:#ccc;
+	width:100%;
+	top:11px;
+	height:2px;
+}
+.hap-load-level{
+	position:absolute;
+	background:#ccc;
+	top:0;
+	height:100%;
+}
+.hap-progress-level{
+	position:absolute;
+	background:#D1C1FA;
+	top:0;
+	height:100%;
+}
+.hap-media-time-current{
+	position:absolute;
+	top:2px;
+	left:-40px;
+	height:20px;
+	line-height:20px !important;
+	margin:0!important;
+	padding: 0px 0px 0px 2px!important;
+	color:#ccc !important;
+	font-size:13px!important;
+}
+.hap-media-time-total{
+	position:absolute;
+	top:2px;
+	right:-40px;
+	height:20px;
+	line-height:20px !important;
+	margin:0!important;
+	padding: 0px 0px 0px 2px!important;
+	color:#ccc !important;
+	font-size:13px!important;
+}
+
+
+
+.hap-player-right{
+	position: absolute;
+	right: 0;
+	width:180px;
+	height:100%;
+}
+.hap-controls-right{
+	display: inline-block;
+	height: 30px;
+	margin-top:24px;
+    margin-left: 30px;
+}
+.hap-random-toggle{
+	position:relative;
+	width:25px;
+	height:25px;
+	float:right;
+	margin-left:5px;
+	display: none;
+}
+.hap-playlist-toggle{
+	position:relative;
+	width:25px;
+	height:25px;
+	float:right;
+	margin-left:5px;
+	cursor: pointer;
+}
+.hap-volume-toggle{
+	position:relative;
+	width:25px;
+	height:25px;
+	float:right;
+}
+.hap-volume-seekbar{
+	position:relative;
+	left:0px;
+	top:5px;
+	width:70px;
+	height:16px;
+	float:right;
+	cursor: pointer;
+	touch-action: none;
+}
+.hap-volume-bg{
+	position:absolute;
+	top:6px;
+	left:10px;
+	width:50px;
+	height:3px;
+	background:#ccc;
+}
+.hap-volume-level{
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	background:#D1C1FA;
+}
+
+
+
+
+#hap-playlist-list{
+	display:none;
+}
+.hap-playlist-holder{
+	position:relative;
+	top:0px;
+	width:100%;
+	overflow:hidden;
+}
+.hap-playlist-inner{
+	margin:20px;
+	min-height:100px;
+	max-height:215px;
+}
+.hap-playlist-item{
+	position: relative;
+	top:0px;
+	left:0px;
+	line-height: 50px;
+	overflow: hidden;
+	margin-bottom:5px!important;
+	display: flex;
+    width: 100%;
+}
+.hap-playlist-item:last-child {  
+	margin-bottom:0px!important;
+}
+
+.hap-playlist-item-content {
+	cursor: pointer;
+	flex:1;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	color:#aaa;
+}
+.hap-playlist-item-selected{
+	background: #ccc!important;
+}
+.hap-playlist-item-selected .hap-playlist-title-num,
+.hap-playlist-item-selected .hap-playlist-title{
+	color:#fff;
+}
+.hap-playlist-item-selected .hap-playlist-thumb img{
+	-webkit-filter: grayscale(0%);
+	filter: grayscale(0%);
+}
+.hap-playlist-title-num{
+	
+}
+.hap-playlist-title-num,
+.hap-playlist-title {
+	font-size:13px;
+	color:inherit;
+	color:#666;
+}
+.hap-playlist-title {
+	position: relative;
+    margin-left: 15px;
+    font-size:15px;
+	color:inherit;
+}
+.hap-download, .hap-link{
+	float:right;
+	color:#fff!important;
+	font-size: 13px!important;
+	margin-left: 15px;
+	margin-right: 4px;
+	display: flex;
+	justify-content: center;
+	border: 0!important;
+	box-shadow: none!important;
+}
+.hap-download i, .hap-link i{
+	color:inherit;
+	line-height: 50px;
+}
+.hap-playlist-thumb{
+	margin:4px;
+	width:60px;
+	height:40px;
+	float: left;
+	border:1px solid #aaa;
+	overflow: hidden;
+}
+.hap-playlist-thumb img{
+	display: block;
+	height: 100%;
+	width: 100%;
+	-webkit-filter: grayscale(100%);
+	filter: grayscale(100%);
+	max-width: none!important;
+}
+
+.hap-playlist-filter-msg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+	color:#ffa48f!important;
+}
+.hap-playlist-filter::placeholder { 
+    color: inherit!important;
+}
+.hap-playlist-filter-msg span{
+    position: relative;
+    float: left;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+	color: #ffa48f;
+}
+
+.hap-tooltip{
+	position:absolute;
+	background:rgba(64,46,34,0.9);
+	text-align:center;
+	z-index:10000;
+	color:#fff!important;
+	border:1px solid #444;
+	pointer-events:none;
+	display:none;
+	font-size:12px!important;
+	padding:2px 5px !important;
+	line-height:20px !important;
+	white-space:nowrap;
+}
+
+.hap-preloader {
+	position: fixed;
+	top:50%;
+	left:50%;
+    width: 40px;
+    height: 40px;
+    margin-left:-20px;
+	margin-top:-20px;
+    background-color: #fff;
+    -webkit-animation: hap_preloader 1.2s infinite ease-in-out;
+    animation: hap_preloader 1.2s infinite ease-in-out;
+}
+@-webkit-keyframes hap_preloader {
+    0% { -webkit-transform: perspective(120px) }
+    50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+    100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+}
+@keyframes hap_preloader {
+    0% { 
+	    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+	    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg) 
+    } 50% { 
+	    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+	    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg) 
+    } 100% { 
+	    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+	    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    }
+}
+.hap-hidden {
+	opacity: 0; 
+	filter: alpha(opacity=0); 
+}
+.hap-visible {
+	opacity: 1;
+	-webkit-transition: opacity 500ms ease-out;
+	-moz-transition: opacity 500ms ease-out;
+	transition: opacity 500ms ease-out;
+}
+
+
+/* scroll */
+.hap-playlist-inner .mCSB_inside > .mCSB_container {
+    margin-right: 30px;
+}
+.hap-mCSB_full{/* hide scroll area when no scroll */
+	margin-right: 0!important;
+}
+
+
+
+@media screen and (max-width: 768px) {
+    .hap-seekbar-inner-wrap{
+		left:50px;
+		right:50px;
+	}
+}
+@media screen and (max-width: 641px) {
+	.hap-player-holder {
+        height:120px;
+    }
+	.hap-player-middle {
+        top:50px;
+        left:0;
+        right:0;
+        width: 100%;
+    }
+    .hap-seekbar-inner-wrap{
+		bottom:65px;
+		left:70px;
+		right:70px;
+	}
+}

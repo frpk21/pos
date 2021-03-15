@@ -1,0 +1,655 @@
+/** Copyright (C) 2016 Danial Sabagh | DanialSabagh.com - All Rights Reserved **/
+@import 'https://fonts.googleapis.com/css?family=Pathway+Gothic+One';
+body {
+/**    background: url(../img/preview-bg.jpg) no-repeat;**/
+    background-size: cover;
+}
+*{
+    margin:0;padding: 0;
+}
+.sMusicPlayer {
+    background: rgba(255, 255, 255, 0.5);
+    color: #000;
+    width: 400px;
+    height: 100px;
+    font-family: 'Pathway Gothic One', sans-serif;
+    margin: 10px;
+}
+.sMusicPlayer.black {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+
+}
+.sMusicPlayer > .upperSec {
+    width: 100%;
+    height: 50px;
+}
+
+.sMusicPlayer > .lowerSec {
+    height: 50px
+}
+.sMusicPlayer > .playlist{
+    height:150px;
+    white-space: nowrap;
+}
+
+/** END **/
+
+
+/** UPPER SECTION **/
+
+.sMusicPlayer > .upperSec > div {
+    height: 100%;
+    float: left;
+}
+
+.sMusicPlayer > .upperSec > .leftSide {
+    width: 55%;
+    overflow: hidden;
+}
+
+.sMusicPlayer > .upperSec > .rightSide {
+    width: 45%;
+    position: relative;
+}
+
+
+/** END **/
+
+
+/** UPPER SECTION >> LEFT SIDE **/
+
+.sMusicPlayer > .upperSec > .leftSide > div {
+    padding: 4px 0 0 9px;
+    white-space: nowrap;
+}
+
+.sMusicPlayer > .upperSec > .leftSide > .title {
+    font-size: 14px;
+}
+
+.sMusicPlayer > .upperSec > .leftSide > .artist {
+    font-size: 12px;
+    padding-top: 2px;
+}
+
+
+/** END **/
+
+
+/** UPPER SECTION >> RIGHT SIDE **/
+
+.sMusicPlayer > .upperSec > .rightSide > div div {
+    width: 22px;
+    height: 22px;
+    float: right;
+    margin: 13px 9px 0 0;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.sMusicPlayer > .upperSec > .rightSide > div div > a{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.sMusicPlayer > .upperSec > .rightSide > div {
+    position: absolute;
+    right: 0;
+}
+
+.sMusicPlayer > .upperSec > .rightSide > div div {
+    display: none;
+}
+.sMusicPlayer > .upperSec > .rightSide > div input[type="radio"]:checked ~ div {
+    display: block;
+}
+.sMusicPlayer > .upperSec > .rightSide > div input[type="radio"]:checked ~ .showing {
+    opacity: 0;
+    transform: translate(-100%, 0);
+    animation: slideToRight .3s ease forwards;
+}
+@keyframes slideToRight {
+    to {
+        opacity: 1;
+        transform: translate(0%, 0);
+    }
+}
+/** END **/
+
+
+/** LOWER SECTION **/
+
+.sMusicPlayer > .lowerSec > div {
+    float: left;
+}
+
+.sMusicPlayer > .lowerSec > .playButton {
+    width: 12%;
+    height: 100%;
+    background-image: url(../img/play64.png);
+    background-size: 48px 48px;
+    background-repeat: no-repeat;
+}
+.sMusicPlayer > .lowerSec > .playButton.pause {
+    background-image: url(../img/pause64.png);
+}
+.sMusicPlayer.black > .lowerSec > .playButton {
+    background-image: url(../img/play64-w.png);
+}
+.sMusicPlayer.black > .lowerSec > .playButton.pause {
+    background-image: url(../img/pause64-w.png);
+}
+.sMusicPlayer > .lowerSec > .seekbar {
+    width: 63%;
+    height: 100%;
+    position: relative;
+}
+
+.sMusicPlayer > .lowerSec > .panel {
+    width: 25%;
+    height: 100%;
+}
+
+.sMusicPlayer > .lowerSec > .panel > label {
+    width: 32px;
+    height: 32px;
+    float: right !important;
+    margin: 9px 1px 0 0;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+/*
+.sMusicPlayer > .lowerSec > .panel > .share {
+    background-image: url(../img/share32.png);
+}
+.sMusicPlayer > .lowerSec > .panel > .resource {
+    background-image: url(../img/cloud32.png);
+    background-size: 28px;
+}
+.sMusicPlayer > .lowerSec > .panel > .settings {
+    background-image: url(../img/settings32.png);
+    background-size: 20px;
+}*/
+
+.sMusicPlayer.black > .lowerSec > .panel > .share {
+     background-image: url(../img/share32-w.png);
+ }
+.sMusicPlayer.black > .lowerSec > .panel > .resource {
+     background-image: url(../img/cloud32-w.png);
+ }
+.sMusicPlayer.black > .lowerSec > .panel > .settings {
+    background-image: url(../img/settings32-w.png);
+}
+.sMusicPlayer > .lowerSec > .panel > .share:hover,
+.sMusicPlayer > .lowerSec > .panel > .resource:hover,
+.sMusicPlayer > .lowerSec > .panel > .settings:hover{
+    background-color: rgba(255,255,255,.9);
+}
+.sMusicPlayer.black > .lowerSec > .panel > .share:hover,
+.sMusicPlayer.black > .lowerSec > .panel > .resource:hover,
+.sMusicPlayer.black > .lowerSec > .panel > .settings:hover{
+    background-color: rgba(0,0,0,.9);
+}
+    /** END **/
+
+
+/** LOWER SECTION >> SEEKBAR **/
+
+.sMusicPlayer > .lowerSec > .seekbar {}
+
+.sMusicPlayer > .lowerSec > .seekbar > .curT,
+.sMusicPlayer > .lowerSec > .seekbar > .dueT {
+    margin-top: 6px;
+}
+
+.sMusicPlayer > .lowerSec > .seekbar > .curT {
+    float: left;
+    margin-left: 2%;
+}
+
+.sMusicPlayer > .lowerSec > .seekbar > .dueT {
+    float: right;
+    margin-right: 2%;
+}
+
+.sMusicPlayer > .lowerSec > .seekbar > .bar {
+    float: left;
+    position: absolute;
+    width: 96%;
+    height: 10px;
+    bottom: 10px;
+    border: 1px solid #000;
+    margin-left: 2%;
+}
+.sMusicPlayer.black > .lowerSec > .seekbar > .bar {
+    border: 1px solid #fff;
+}
+.sMusicPlayer > .lowerSec > .seekbar > .bar > .buffer {
+    background: rgba(185, 176, 176, 0.8);
+    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.5);
+    width: 0;
+    height: 100%;
+}
+
+.sMusicPlayer > .lowerSec > .seekbar > .bar > .played {
+    background: rgba(0, 0, 0, 0.6);
+    width: 0;
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+.sMusicPlayer.black > .lowerSec > .seekbar > .bar > .played {
+    background: rgba(255, 255, 255, 0.6);
+}
+.sMusicPlayer > .lowerSec > .seekbar > .bar > .played > .handle {
+    float: right;
+    width: 2px;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.6);
+    margin-top: -3px;
+}
+.sMusicPlayer.black > .lowerSec > .seekbar > .bar > .played > .handle {
+    background: rgba(255, 255, 255, 0.6);
+}
+/** LIVE **/
+.sMusicPlayer > .lowerSec > .seekbar > .live{
+    margin-left:5px;
+}
+.sMusicPlayer > .lowerSec > .seekbar >  .live::before{
+    content: "";
+    width: 8px;
+    height:8px;
+    background: red;
+    border-radius: 50%;
+    animation: blinker 1.5s linear infinite;
+    position: absolute;
+    margin:5px 0 0 -10px;
+}
+@keyframes blinker {
+    from { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@-webkit-keyframes blinker {
+    from { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    to { opacity: 0; }
+}
+@-moz-keyframes blinker {
+    from { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    to { opacity: 0; }
+}
+@-ms-keyframes blinker {
+    from { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    to { opacity: 0; }
+}
+.sMusicPlayer > .lowerSec > .seekbar > .bar > .meter{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    opacity:1;
+    animation: loading 3s ease-in-out infinite;
+    -webkit-animation: loading 3s ease-in-out infinite;
+    -moz-animation: loading 3s ease-in-out infinite;
+    -ms-animation: loading 3s ease-in-out infinite;
+    -o-animation: loading 3s ease-in-out infinite;
+}
+@keyframes loading {
+    from { opacity: 0.1; }
+    50% { opacity: 0.6; }
+    to { opacity: 0.1; }
+}
+@-webkit-keyframes loading {
+    from { opacity: 0.1; }
+    50% { opacity: 0.6; }
+    to { opacity: 0.1; }
+}
+@-moz-keyframes loading {
+    from { opacity: 0.1; }
+    50% { opacity: 0.6; }
+    to { opacity: 0.1; }
+}
+@-ms-keyframes loading {
+    from { opacity: 0.1; }
+    50% { opacity: 0.6; }
+    to { opacity: 0.1; }
+}
+@-o-keyframes loading {
+    from { opacity: 0.1; }
+    50% { opacity: 0.6; }
+    to { opacity: 0.1; }
+}
+
+@font-face {
+    font-family: 'ds';
+    src:  url('../font/fonts/ds.eot?lg4cxh');
+    src:  url('../font/fonts/ds.eot?lg4cxh#iefix') format('embedded-opentype'),
+    url('../font/fonts/ds.ttf?lg4cxh') format('truetype'),
+    url('../font/fonts/ds.woff?lg4cxh') format('woff'),
+    url('../font/fonts/ds.svg?lg4cxh#ds') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'ds' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    font-size: 18px;
+    padding: 2px 0 0 4px;
+}
+
+.icon-download:before {
+    content: "\e90c";
+}
+.icon-spotify:before {
+    content: "\e900";
+}
+.icon-soundcloud:before {
+    content: "\e901";
+}
+.icon-apple:before {
+    content: "\e902";
+}
+.icon-amazon:before {
+    content: "\e903";
+}
+.icon-cart:before {
+    content: "\e904";
+}
+.icon-twitter:before {
+    content: "\e905";
+}
+.icon-email:before {
+    content: "\e906";
+}
+.icon-facebook:before {
+    content: "\e907";
+}
+.icon-mute:before {
+    content: "\e908" !important;
+}
+.icon-volume:before {
+    content: "\e909";
+}
+.icon-shuffle:before {
+    content: "\e90a";
+}
+.icon-shuffle2:before {
+    content: "\e90d" !important;
+}
+.icon-repeat:before {
+    content: "\e90b";
+}
+.icon-repeat2:before {
+    content: "\e90e" !important;
+}
+.icon-audio:before {
+    content: "\e90f";
+}
+
+.icon-facebook:hover {
+    background-color: rgba(59, 89, 152, 1);
+    color: rgba(255, 255, 255, 1);
+}
+.icon-twitter:hover {
+    background-color: rgba(37, 152, 237,1);
+    color: rgba(255, 255, 255, 1);
+}
+.icon-email:hover {
+    background-color: rgb(28, 130, 239);
+    color: rgba(255, 255, 255, 1);
+}
+.icon-apple:hover{
+    color: #000;
+}
+.icon-amazon:hover{
+    color: #ff8701;
+}
+.icon-download:hover{
+    color: #1c82ef;
+}
+.icon-cart:hover{
+    color: #ff4e37;
+}
+.icon-apple:hover,
+.icon-amazon:hover,
+.icon-cart:hover,
+.icon-download:hover,
+.icon-shuffle2:hover,
+.icon-shuffle:hover,
+.icon-repeat2:hover,
+.icon-repeat:hover,
+.icon-mute:hover,
+.icon-volume:hover{
+    background-color: #fff;
+}
+.black .icon-apple:hover,
+.black .icon-amazon:hover,
+.black .icon-cart:hover,
+.black .icon-download:hover,
+.black .icon-shuffle2:hover,
+.black .icon-shuffle:hover,
+.black .icon-repeat2:hover,
+.black .icon-repeat:hover,
+.black .icon-mute:hover,
+.black .icon-volume:hover{
+    background-color: #000;
+}
+.black .icon-apple:hover{
+    color:#fff;
+}
+.icon-email:hover{
+    cursor: pointer;
+}
+.overlapper{
+    position: absolute;
+    top: 0;
+}
+.branding{
+    float: right;
+    margin: 5px 0 0 0;
+    position: absolute;
+    right: 40px;
+}
+a.branding{
+    text-decoration: none;
+    color:#000;
+    font-size: 15px;
+}
+.black a.branding{
+    color:#fff;
+}
+.icon-soundcloud.branding:hover{
+   color:#ff3a00;
+}
+.icon-spotify.branding:hover{
+    color:#1DB954;
+}
+.icon-apple.branding:hover{
+    background: none;
+}
+/** PLAYLIST **/
+.sMusicPlayer > .playlist > .row{
+    padding: 0 0 0 5px;
+    height:24px;
+    line-height: 24px;
+    cursor: default !important;
+}
+.sMusicPlayer > .playlist > .row:hover,
+.sMusicPlayer > .playlist > .row.whiteBG{
+    background-color: rgba(255,255,255,.85) !important;
+}
+.sMusicPlayer.black > .playlist > .row:hover,
+.sMusicPlayer.black > .playlist > .row.whiteBG{
+    background-color: rgba(0,0,0,.5) !important;
+}
+
+.sMusicPlayer > .playlist > .row > .left{
+    width:90%;
+    font-weight: bold;
+}
+.sMusicPlayer.black > .playlist > .row > .left{
+    color: #fff;
+    font-weight: normal;
+}
+.sMusicPlayer > .playlist > .row > .left > span{
+    font-weight: normal;
+    font-size: 15px;
+}
+.sMusicPlayer.black > .playlist > .row > .left > span{
+    color: rgba(255,255,255,0.6);
+}
+.sMusicPlayer > .playlist > .row > .left,
+.sMusicPlayer > .playlist > .row > .right{
+    float:left;
+}
+.sMusicPlayer > .playlist > .row > .right{
+    width:10%;
+    position: relative;
+}
+.sMusicPlayer > .playlist > .row > .right > span> a{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.borderStyle{
+    border-bottom: 1px dashed rgba(0,0,0,0.5);
+}
+.sMusicPlayer > .playlist > .row > .right > span::before {
+    position: absolute;
+    margin: 2px 0 0 10px;
+    opacity: .9;
+}
+.sMusicPlayer > .playlist > .row > .right > span:hover{
+    opacity: 1;
+}
+.sMusicPlayer > .playlist > .row > .right > span.icon-soundcloud:hover{
+    color:#ff3a00;
+}
+.sMusicPlayer > .playlist > .row > .right > span.icon-apple:hover{
+    background: none;
+}
+.sMusicPlayer > .playlist > .row > .right > span.icon-spotify:hover{
+    color:#1DB954;
+}
+.sMusicPlayer > .playlist > .row > .right > span.icon-audio:hover{
+    color:#da0656;
+}
+.sMusicPlayer > .playlist.scroll{
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.sMusicPlayer.black > .playlist > .row > .right > span.icon-apple:hover{
+    background: none;
+}
+/** END OF PLAYLIST **/
+
+
+/** SCROLL **/
+.sMusicPlayer ::-webkit-scrollbar {
+    width:11px;
+}
+.sMusicPlayer ::-webkit-scrollbar-track {
+    -webkit-border-radius:5px;
+    border-radius:5px;
+    background:rgba(0,0,0,0.15);
+}
+.sMusicPlayer ::-webkit-scrollbar-thumb {
+    -webkit-border-radius:5px;
+    border-radius:5px;
+    background: rgba(0, 0, 0, 0.7);
+}
+.sMusicPlayer ::-webkit-scrollbar-thumb:hover {
+    background:rgba(0, 0, 0, 0.6);
+}
+.sMusicPlayer ::-webkit-scrollbar-thumb:window-inactive {
+    background:rgba(0,0,0,0.2);
+}
+/** END OF SCROLL **/
+.white_theme{
+    background: #000 !important;
+}
+.sMusicPlayer{
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+/* #### Mobile Phones Landscape #### */
+@media screen and (max-device-width: 400px){
+    .sMusicPlayer, .sMusicPlayer.black{
+        width: 100%;
+    }
+    .sMusicPlayer > .lowerSec > .panel > .share{
+        background-size: 25px;
+    }
+    .sMusicPlayer > .lowerSec > .panel > .settings{
+        background-size: 16px;
+    }
+    .sMusicPlayer > .lowerSec > .panel > .resource{
+        background-size: 23px;
+    }
+    .sMusicPlayer > .lowerSec > .panel > label{
+        width: 24px;
+        height: 24px;
+        margin: 20px 1px 0 0;
+    }
+    .sMusicPlayer > .upperSec > .rightSide > div div {
+        width: 18px;
+        height: 18px;
+        margin: 13px 9px 0 0;
+    }
+    .sMusicPlayer > .lowerSec > .playButton {
+        background-size: 40px 40px;
+        background-position: center;
+    }
+    .icon-volume{
+        display: none !important;
+    }
+}
+
+/**       ----------       EXTRA       ----------       **/
+.sMusicPlayer {
+    line-height: normal;
+    font-size: 16px;
+}
+.sMusicPlayer  div{
+    background-color: transparent;
+    -webkit-box-sizing: initial;
+    -moz-box-sizing: initial;
+    box-sizing: initial;
+}
+.sMusicPlayer > .lowerSec > .panel{
+    border: none;
+    margin-bottom: 0;
+}
+.sMusicPlayer > .playlist > .row{
+    margin: 0;
+}

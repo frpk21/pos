@@ -1,0 +1,323 @@
+*{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:none;
+}
+a{ 
+	text-decoration: none; 
+}
+body {
+	background: #E6DADA; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #E6DADA , #274046); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #E6DADA , #274046); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+#hap-wrapper{
+	font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
+	max-width: 815px;
+	position: relative;
+	top:150px;
+	margin: 0 auto;
+	-moz-box-shadow: 1px 1px 25px #666;
+	-webkit-box-shadow: 1px 1px 25px #666;
+	box-shadow: 1px 1px 25px #666;
+}
+
+
+.hap-circle-player{
+	position: absolute;
+	top: 50%;
+    -webkit-transform: translate(0,-50%);
+  	-ms-transform: translate(0,-50%);
+  	transform: translate(0,-50%);
+	left:-10000px;/*cannot be display:none!*/
+	height: 80px;
+	width: 80px;
+	border-radius: 100%;
+	opacity: 0;/*cannot be display:none!*/
+}
+.hap-circle-player-set{
+	opacity:1;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+  	-ms-transform: translate(-50%,-50%);
+  	transform: translate(-50%,-50%);
+}
+/* DO NOT set the width and heigth of the canvas in css! This is done in the html */	
+.hap-load-canvas,
+.hap-progress-canvas{
+	position:absolute;
+	display: block;
+	cursor: pointer;
+	touch-action: none;
+}
+.hap-progress-blocker{
+	position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background: red;
+    top:15px;
+	left:15px;
+    opacity:0;
+}
+.hap-playback-toggle{
+	position:absolute;
+	top:50%;
+	width:30px;
+	height:30px;
+	left:50%;
+	-webkit-transform: translate(-50%, -50%);
+  	-ms-transform: translate(-50%, -50%);
+  	transform: translate(-50%, -50%);
+}
+.hap-playback-toggle i{
+	width:30px;
+	height:30px;
+	font-size: 30px!important;
+	line-height:30px!important;
+	color:#fff !important;
+	text-align: center;
+	display: inline-block;
+}
+
+
+
+.hap-volume-wrapper{
+	position:absolute;
+	width:25px;
+	height:25px;
+	bottom:8px;
+	left:10px;
+	display: none;
+}
+.hap-volume-wrapper:hover .hap-volume-seekbar{
+	display: block;
+}
+.hap-player-volume{
+	position:absolute;
+	width:25px;
+	height:25px;
+	left:0;
+	top:0;
+}
+.hap-player-volume i{
+	width:25px;
+	height:25px;
+	font-size: 18px!important;
+	line-height:25px!important;
+	color:#fff !important;
+	text-align: center;
+	display: inline-block;
+}
+.hap-volume-seekbar{
+	position: absolute;
+	bottom:0px;
+	left:25px;
+	width:90px;
+	height:25px;
+	cursor: pointer;
+	touch-action: none;
+	background: rgba(200, 54, 54, 0.01); 
+	display: none;
+}
+.hap-volume-bg{
+	position:absolute;
+	top:10px;
+	left:10px;
+	width:70px;
+	height:5px;
+	background:#bbb;
+}
+.hap-volume-level{
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	background:#fff;
+}
+
+
+
+#hap-playlist-list{
+	display:none;
+}
+.hap-playlist-holder{
+	position: relative;
+	height:215px;
+	width: 100%;
+	background:#111;
+}
+.hap-playlist-inner{
+	height:100%;
+}
+.hap-playlist-content{
+	
+}
+.hap-playlist-item{
+	position: relative;
+	top:0px;
+	left:0px;
+	background:#222;
+	height:200px;
+	width: 200px;
+	margin-right:5px;
+	float: left;
+	overflow: hidden;
+}
+.hap-playlist-item:last-child {  
+	margin-right:0px;
+}
+
+.hap-playlist-item-content {
+	cursor: pointer;
+	overflow: hidden;
+	color:#fff;
+	width: 100%;
+	height:100%;
+	text-align: center;
+}
+
+.hap-playlist-item-selected .hap-playlist-title{
+	opacity:1;
+	top: 5px;
+}
+.hap-playlist-item-selected .hap-wall-overlay{
+	opacity: 0.7;
+}
+.hap-playlist-item-selected .hap-wall-preview{
+	opacity: 1;
+}
+.hap-active .hap-wall-preview{
+	opacity: 0;
+}
+
+
+
+.hap-playlist-selected {
+	display: block;
+	width: 100%;
+	height:100%;
+	color:#fff;
+	text-align: center;
+	text-decoration: none; 
+}
+.hap-playlist-non-selected {
+	display: block;
+	width: 100%;
+	height:100%;
+	color:#fff;
+	text-align: center;
+	text-decoration: none; 
+}
+
+
+.hap-playlist-thumb{
+	position:relative;
+	top:0px;
+	left:0px;
+	overflow:hidden;
+}
+.hap-playlist-thumb img{
+	display:block;
+	height:100%;
+	width:auto!important;
+	min-width: 200px!important;
+	max-width: none!important;
+}
+.hap-playlist-title{
+	font-size:15px;
+	position:absolute;
+	top:0;
+	left:0;
+	right: 0;
+	padding:10px;
+	opacity:0;
+	pointer-events:none;
+	-webkit-transition: all .5s ease-out;
+    transition: all .5s ease-out; 
+    line-height: normal;
+	color:inherit;
+}
+.hap-wall-overlay{
+	position: absolute;
+	left:0;
+	top:0;
+	width: 100%;
+	height: 100%;
+	background: #111;
+	opacity: 0;
+	-webkit-transition: all .5s ease-out;
+    transition: all .5s ease-out; 
+}
+.hap-wall-preview{
+    position: absolute;
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+  	opacity: 0;
+  	-webkit-transition: all .5s ease-out;
+    transition: all .5s ease-out; 
+  	pointer-events:none;
+  	background-image: url('../data/misc/bigplay2.png');
+  	background-repeat: no-repeat;
+  	background-position: center;
+}
+
+
+
+
+
+.hap-tooltip{
+	position:absolute;
+	background:#111;
+	text-align:center;
+	z-index:10000;
+	border:1px solid #222;
+	color:#fff!important;
+	pointer-events:none;
+	display:none;
+	font-size:12px!important;
+	padding:2px 5px !important;
+	line-height:20px !important;
+	white-space:nowrap;
+}
+
+
+.hap-hidden {
+	opacity: 0; 
+	filter: alpha(opacity=0); 
+}
+.hap-visible {
+	opacity: 1;
+	-webkit-transition: opacity 500ms ease-out;
+	-moz-transition: opacity 500ms ease-out;
+	transition: opacity 500ms ease-out;
+}					  
+
+
+
+/* scroll */
+.hap-playlist-inner .mCSB_scrollTools.mCSB_scrollTools_horizontal {
+    height: 10px;
+}
+.hap-playlist-inner .mCSB_scrollTools.mCSB_scrollTools_horizontal .mCSB_draggerRail {
+    height: 10px;
+    margin: 0; 
+    -webkit-border-radius: 0px; 
+    -moz-border-radius: 0px;
+     border-radius: 0px; 
+}
+.hap-playlist-inner .mCSB_scrollTools .mCSB_draggerRail {
+    background-color: #444444;
+}
+.hap-playlist-inner .mCSB_scrollTools.mCSB_scrollTools_horizontal .mCSB_dragger .mCSB_dragger_bar {
+    height: 10px;
+    margin: 0; 
+    -webkit-border-radius: 0px; 
+    -moz-border-radius: 0px;
+     border-radius: 0px; 
+}
+

@@ -1,0 +1,95 @@
+[11-Jul-2018 15:52:20 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/raduhulu/Google Drive/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/raduhulu/Google Drive/hosts/devsite/zoomsounds/source/publisher.php on line 676
+[09-Sep-2018 14:00:38 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 676
+[16-Oct-2018 21:38:56 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 676
+[16-Oct-2018 21:47:21 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 676
+[16-Oct-2018 21:51:23 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 676
+[16-Oct-2018 21:51:51 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 676
+[16-Oct-2018 21:52:31 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 676
+[16-Oct-2018 21:59:04 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 676
+[06-Feb-2019 02:06:03 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:30
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(73): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 30
+[06-Feb-2019 02:06:23 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:30
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(73): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 30
+[06-Feb-2019 02:06:47 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:30
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(75): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 30
+[06-Feb-2019 02:06:49 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:30
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(75): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 30
+[06-Feb-2019 02:07:06 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:30
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(76): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 30
+[06-Feb-2019 02:09:47 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:31
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(76): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 31
+[06-Feb-2019 02:10:27 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:31
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(76): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 31
+[06-Feb-2019 02:11:02 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:30
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(76): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 30
+[06-Feb-2019 02:11:29 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:30
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(76): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 30
+[06-Feb-2019 02:11:43 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:30
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(76): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 30
+[06-Feb-2019 02:11:55 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php:30
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/index-footer-wave-slick.php(76): get_pcm('', 'http://devsite/...')
+#1 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 30
+[12-Feb-2019 22:57:21 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:04:54 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:28:14 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:29:09 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:31:24 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:31:58 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:33:56 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:34:28 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:34:47 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:35:47 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:39:50 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:40:16 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:40:26 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:51:40 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:53:01 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[12-Feb-2019 23:53:58 Europe/Bucharest] PHP Warning:  file_get_contents(/Users/user/Dropbox/hosts/devsite/zoomsounds/source/db/db-likesap2.html): failed to open stream: No such file or directory in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php on line 681
+[02-Jun-2019 04:19:27 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/shoutcast_now_playing.php:116
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php(454): shoutcast_get_now_playing('http://masterv2...')
+#1 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php(247): DZSAP_Publisher->check_post_input()
+#2 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php(814): DZSAP_Publisher->__construct()
+#3 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/shoutcast_now_playing.php on line 116
+[02-Jun-2019 14:34:11 Europe/Bucharest] PHP Fatal error:  Uncaught Error: Using $this when not in object context in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/shoutcast_now_playing.php:116
+Stack trace:
+#0 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php(454): shoutcast_get_now_playing('http://masterv2...')
+#1 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php(247): DZSAP_Publisher->check_post_input()
+#2 /Users/user/Dropbox/hosts/devsite/zoomsounds/source/publisher.php(814): DZSAP_Publisher->__construct()
+#3 {main}
+  thrown in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/shoutcast_now_playing.php on line 116
+[02-Jun-2019 21:02:19 Europe/Bucharest] PHP Warning:  unpack(): Type c: not enough input, need 1, have 0 in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/shoutcast_now_playing.php on line 150
+[02-Jun-2019 21:02:19 Europe/Bucharest] PHP Warning:  join(): Argument must be an array in /Users/user/Dropbox/hosts/devsite/zoomsounds/source/shoutcast_now_playing.php on line 150

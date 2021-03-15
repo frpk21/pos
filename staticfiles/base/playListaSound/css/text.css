@@ -1,0 +1,92 @@
+*{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:none;
+}
+
+
+#hap-wrapper{
+	position: absolute;
+	top:200px;
+	width: 100%;
+	max-width: 550px;
+	left: 50%;
+	-webkit-transform: translate(-50%,0);
+	-ms-transform: translate(-50%,0);
+	transform: translate(-50%,0);
+	border: 1px solid #39D0F0;
+	padding: 20px;
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box; 
+}
+.player a{
+	color:#FA7575;
+}
+.player li {
+	list-style: none;
+}
+.commands:after,
+.tracks:after {
+  content:"";
+  display:block;
+  clear:both;
+}
+.timeend,
+.commands,
+.tracks{
+	padding-bottom:20px; 
+}
+.commands{
+	padding-top:20px; 
+}
+.tracks li{
+	float:left;
+}
+.tracks:first-child { 
+    color: #39D0F0;
+}
+.title{
+	color: #39D0F0;
+}
+.commands li{
+	float:left;
+}
+.volume{
+	color: #39D0F0;
+}
+a.volup,
+a.voldown{
+	color:#333;
+	text-decoration: none;
+}
+a.voldown{
+	position: relative;
+	top:-1px;
+}
+
+
+
+
+
+
+
+
+
+#hap-playlist-list{
+	display:none;
+}
+
+
+.hap-hidden {
+	opacity: 0; 
+	filter: alpha(opacity=0); 
+}
+.hap-visible {
+	opacity: 1;
+	-webkit-transition: opacity 500ms ease-out;
+	-moz-transition: opacity 500ms ease-out;
+	transition: opacity 500ms ease-out;
+}
+
