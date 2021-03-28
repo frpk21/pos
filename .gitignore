@@ -62,7 +62,7 @@ dsdp_datapipeline/media/
 
 
 local_settings.py
-dsdp_datapipeline/settings_local.py
+pos/settings_local.py
 
 #vscode
 .vscode/
@@ -72,3 +72,4 @@ scripts_test/
 src/
 celerybeat-schedule.*
 Pipfile
+.python-version

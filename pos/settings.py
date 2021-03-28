@@ -26,9 +26,6 @@ SECRET_KEY = '-hz5q68!fk(pr_tp_5**j+^b+2aetv!9k=x)udq)ugsijjxca!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -158,7 +155,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 ALLOWED_HOSTS = ['*']
 
 # archivo que contiene la seguridad de acceso a la base de datos
-#try:
-#   exec(open(os.path.join(BASE_DIR, 'monitoreo/settings_local.py')).read())
-#except IOError:
-#   raise Exception('error reading local settings')
+try:
+    exec(open(os.path.join(BASE_DIR, 'pos/settings_local.py')).read())
+except IOError:
+    raise Exception('error reading local settings')
