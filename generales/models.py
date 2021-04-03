@@ -1,5 +1,6 @@
 from django.db import models
 from ckeditor.fields import RichTextField
+from django.contrib.auth.models import User
 
 class ClaseModelo(models.Model):
     activo = models.BooleanField(default=True, null=True)
@@ -8,6 +9,19 @@ class ClaseModelo(models.Model):
 
     class Meta:
         abstract=True
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    foto = models.FileField("Archivo con Foto del Usuario", upload_to="fotos/", blank=False, null=False, default="")
+    nit  = models.CharField('NIT / CC #', blank=False, null=False, max_length=30, default="")
+    empresa = models.CharField('Empresa', blank=False, null=False, max_length=100, default="")
+    #sede = models.ForeignKey(Sedes, on_delete=models.CASCADE, default=0, null=False, blank=False)
+ 
+    def save(self):
+        self.empresa = self.empresa.upper()
+        super(Profile, self).save()
+
 
 class Pais(ClaseModelo):
     nombre_pais = models.CharField('Nombre del Pais', blank=False, null=False, max_length=100, default="")

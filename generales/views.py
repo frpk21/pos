@@ -14,6 +14,8 @@ from django.http import JsonResponse
 
 from django.conf import settings
 
+from django.contrib.auth.models import User
+
 
 class SinPrivilegios(PermissionRequiredMixin):
     login_url='generales:sin_privilegios'

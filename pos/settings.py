@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'generales',
     'facturas',
     'catalogos',
@@ -158,7 +159,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 ALLOWED_HOSTS = ['*']
 
 # archivo que contiene la seguridad de acceso a la base de datos
-#try:
-#   exec(open(os.path.join(BASE_DIR, 'monitoreo/settings_local.py')).read())
-#except IOError:
-#   raise Exception('error reading local settings')
+try:
+   exec(open(os.path.join(BASE_DIR, 'monitoreo/settings_local.py')).read())
+except IOError:
+   raise Exception('error reading local settings')
