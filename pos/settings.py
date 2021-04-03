@@ -155,14 +155,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 
 ALLOWED_HOSTS = ['*']
 
-# archivo que contiene la seguridad de acceso a la base de datos
 try:
-<<<<<<< HEAD
    exec(open(os.path.join(BASE_DIR, 'monitoreo/settings_local.py')).read())
 except IOError:
    raise Exception('error reading local settings')
-=======
-    exec(open(os.path.join(BASE_DIR, 'pos/settings_local.py')).read())
-except IOError:
-    raise Exception('error reading local settings')
->>>>>>> b4aa9f536d5e9e53491b61c746c641af5aa6ccb7
