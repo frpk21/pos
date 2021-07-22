@@ -6,189 +6,131 @@
 
 {% load humanize %}
 
-<div class="modal" id="ventana_modal" style="margin-top:0px;background: #41414188;">
-	<div class="modal-dialog">
-		<div class="modal-content" >
-			<!-- Modal Header -->
-			<div class="modal-header">
-				<p><h3 style="text-align: center; color: rgba(31, 31, 30, 0.801);">Procesando...</h3></p>
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-			</div>
-			<!-- Modal body -->
-			
-		</div>
-	</div>
-</div>
-
-<section>
-	<div class="container">
-		<div class="swiper-container swiper-slider swiper-slider-custom" data-simulate-touch="false" data-loop="true" data-autoplay="4000">
-		<div class="swiper-wrapper">
-			{% for foto in carrusel %}
-				<div class="swiper-slide" data-slide-bg="{{foto.foto_carrusel.url}}">
-					<div class="swiper-slide-caption"></div>
-				</div>
-			{% endfor %}
-		</div>
-
-			<div class="swiper-pagination"></div>
-		</div>
-	</div>
-</section>
-
-
-
 <div class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header card-header-rose card-header-icon">
-              <div class="card-icon">
-                  <i class="material-icons">assignment</i>
-              </div>
-              <h3 class="card-title">Campañas SMS</h3>
-          </div>
-          <div class="card-body">
-            <div class="text-left"> <a href="" class="btn btn-info"><span class="fa fa-plus-circle"></span>   Nueva Campaña</a></div>
-            <div class="material-datatables">
-              <table id="radicaciones_table" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
-                <thead>
-					<tr>
-						<th data-orderable="false"><strong>Id</strong></th>
-						<th><strong>Nombre campaña</strong></th>
-						<th class="text-left"><strong>Ciudad</strong></th>
-						<th class="text-left"><strong>Fecha</strong></th>
-						<th class="text-left" data-orderable="false"><strong>SMS</strong></th>
-						<th class="text-center" data-orderable="false"><strong>ENVIADO</strong></th>
-						<th class="text-center" data-orderable="false"><strong>CANTIDAD</strong></th>
-						<th class="text-center" data-orderable="false"><strong>API</strong></th>
-						<th data-orderable="false" class="text-center"><strong>Accciones</strong></th>
-					</tr>
-                </thead>
-                <tfoot>
-					<tr>
-						<th><strong>Id</strong></th>
-						<th><strong>Nombre campaña</strong></th>
-						<th><strong>Ciudad</strong></th>
-						<th class="text-left"><strong>Fecha</strong></th>
-						<th class="text-left"><strong>SMS</strong></th>
-						<th class="text-center"><strong>ENVIADO</strong></th>
-						<th class="text-center"><strong>CANTIDAD</strong></th>
-						<th class="text-center"><strong>API</strong></th>
-						<th class="text-center"><strong>Acciones</strong></th>
-					</tr>
-                </tfoot>
-                <tbody>
-					{% csrf_token %}
-					{% for item in campanas %}
-						<div style="display: none">
-							{{ forloop.counter0 }}
-						</div>
-						<tr>
-							<td>{{item.id}}</td>
-							<td><strong>{{item.name}}</strong></td>
-							<td>{{item.ciudad}}</td>
-							<td class="text-left">{{item.modificado}}</td>
-							<td class="text-left" style="color: blue;" id="{{forloop.counter}}">{{item.sms}}</td>
-							<td>
-								<button type="button" class="btn" id="estado" value="{{ item.estado }}"
-								  {% if item.estado == 1 %}
-									  style="background-color: #0c7cd5"
-								  {% else %}
-									  style="background-color: rgb(243, 135, 12)"
-								  {% endif %}
-								  data-toggle="tooltip" data-placement="top" data-html="true" title='Estado del mensaje'>
-								  {% if item.estado == 2 %}Si{% else %}No{% endif %}
-								</button>
-							</td>
-							<td class="text-center">{{item.total_sms}}</td>
-							{% if item.resultado == 0 %}
-								<td class="text-center" style="color:blue;" data-toggle="tooltip" data-placement="top" data-html="true" title=' SMS ENVIADO'>{{item.resultado}}</td>
-							{% else %}
-								{% if item.resultado == 35 %}
-									<td class="text-center" style="color: red;" data-toggle="tooltip" data-placement="top" data-html="true" title='SIN CREDITOS PARA ENVIAR SMS (DEBE COMPRAR CREDITOS)'>{{item.resultado}}</td>
-								{% else %}
-									<td class="text-center" style="color: red;" data-toggle="tooltip" data-placement="top" data-html="true" title='SIN ENVIAR'>{{item.resultado}}</td>
-								{% endif %}
-							{% endif %}
-							<td class="td-actions text-center">
-								{% if item.resultado > 0 %}
-									<a href="#">
-										<button type="button" rel="tooltip" class="btn btn-success btn-round">
-											<i class="material-icons">edit</i>
-										</button>
-									</a>
-								{% endif %}
-								{% if item.resultado > 0 %}
-									<a href="">
-										<button type="button" rel="tooltip" class="btn btn-danger btn-round">
-											<i class="material-icons">delete</i>
-										</button>
-									</a>
-								{% endif %}
-								{% if item.resultado > 0 %}
-								<a href='#ventana_modal' data-toggle="modal">
-									<button type="button" rel="tooltip" class="btn btn-info btn-round" onclick="send_testsms('{{item.sms}}','{{item.id}}','{{item.ciudad.id}}');">
-										<i class="material-icons">send</i>
-									</button>
-								</a>
-								{% endif %}
-							</td>
-						</tr>
-					{% endfor %}
-                </tbody>
-              </table>
-              <div id="hap-wrapper"></div>
+    <div class="container-fluid">
+        <br><br>   
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-product">
+                    <div class="card-header card-header-image" data-header-animation="true">
+                        <a href="#pablo">
+                            <img class="img" src="/static/base/images/pos.png">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-actions text-center">
+                            <button type="button" class="btn btn-danger btn-link fix-broken-card">
+                                <i class="material-icons">build</i> Fix Header!
+                            </button>
+                            <button type="button" class="btn btn-default btn-link" rel="tooltip" data-placement="bottom" title="View">
+                                <i class="material-icons">art_track</i>
+                            </button>
+                            <button type="button" class="btn btn-success btn-link" rel="tooltip" data-placement="bottom" title="Edit">
+                                <i class="material-icons">edit</i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-link" rel="tooltip" data-placement="bottom" title="Remove">
+                                <i class="material-icons">close</i>
+                            </button>
+                        </div>
+                        <h4 class="card-title">
+                            <a href="#pablo"><strong>P O S</strong></a>
+                        </h4>
+                        <div class="card-description">
+                            Inventarios & Punto de Venta
+                        </div>
+                        En la nube  | Multiplataforma | Desde $55.000/MES
+                    </div>
+                    <div class="card-footer">
+                        <div class="price">
+                            <h4>Cotizar</h4>
+                        </div>
+                        <div class="stats">
+                            <p class="card-category"><i class="material-icons">place</i> Col</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="col-md-4">
+                <div class="card card-product">
+                    <div class="card-header card-header-image" data-header-animation="true">
+                        <a href="#pablo">
+                            <img class="img" src="/static/base/images/fact.jpg">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-actions text-center">
+                            <button type="button" class="btn btn-danger btn-link fix-broken-card">
+                                <i class="material-icons">build</i> Fix Header!
+                            </button>
+                            <button type="button" class="btn btn-default btn-link" rel="tooltip" data-placement="bottom" title="View">
+                                <i class="material-icons">art_track</i>
+                            </button>
+                            <button type="button" class="btn btn-success btn-link" rel="tooltip" data-placement="bottom" title="Edit">
+                                <i class="material-icons">edit</i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-link" rel="tooltip" data-placement="bottom" title="Remove">
+                                <i class="material-icons">close</i>
+                            </button>
+                        </div>
+                        <h4 class="card-title">
+                            <a href="#pablo"><strong>F A C T U R A C I O N  -   E L E C T R O N I C A</strong></a>
+                        </h4>
+                        <div class="card-description">
+                            Seleccione la modalidad que m&aacute;s se ajuste a sus necesidades.
+                        </div>
+                        En la nube  | Multiplataforma | Desde $25.000/MES
+                    </div>
+                    <div class="card-footer">
+                        <div class="price">
+                            <h4>Cotizar</h4>
+                        </div>
+                        <div class="stats">
+                            <p class="card-category"><i class="material-icons">place</i> Col</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-product">
+                    <div class="card-header card-header-image" data-header-animation="true">
+                        <a href="#pablo">
+                            <img class="img" src="/static/base/images/dev.jpg">
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-actions text-center">
+                            <button type="button" class="btn btn-danger btn-link fix-broken-card">
+                                <i class="material-icons">build</i> Fix Header!
+                            </button>
+                            <button type="button" class="btn btn-default btn-link" rel="tooltip" data-placement="bottom" title="View">
+                                <i class="material-icons">art_track</i>
+                            </button>
+                            <button type="button" class="btn btn-success btn-link" rel="tooltip" data-placement="bottom" title="Edit">
+                                <i class="material-icons">edit</i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-link" rel="tooltip" data-placement="bottom" title="Remove">
+                                <i class="material-icons">close</i>
+                            </button>
+                        </div>
+                        <h4 class="card-title">
+                            <a href="#pablo"><strong>S O L U C I O N E S  -A-  M E D I D A</strong></a>
+                        </h4>
+                        <div class="card-description">
+                            Desarrollamos la soluci&oacute;n para usted. <br>CREATIVIDAD SIN LIMITES
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="price">
+                            <h4>Cotizar</h4>
+                        </div>
+                        <div class="stats">
+                            <p class="card-category"><i class="material-icons">place</i> Col</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-  </div>
 </div>
 
-<script>
-	function abrir_modal(url)
-	{
-		$('#ventana_modal').load(url, function()
-		{
-		$(this).modal({
-			backdrop: 'static',
-			keyboard: false
-		})
-		$(this).modal('show');
-		});
-		return false;
-	}
-
-	function cerrar_modal()
-	{
-		$('#ventana_modal').modal('hide');
-		return false;
-	}
-</script>
-
-<script>
-	function send_testsms(sms, id, ciudad){
-		var go_url = $("#radicaciones_table").data("data-url");
-        $.ajax({
-			url: '{% url 'generales:login' %}',
-			type: 'POST',
-			data: {'sms': sms, csrfmiddlewaretoken: '{{ csrf_token }}', 'id': id, 'ciudad': ciudad},
-			dataType: "json",
-			
-			cache: true,
-			success: function(response){
-				var message = response.content.message
-				cerrar_modal();
-				alert(message);
-				location.reload();
-			},
-		});
-		return false;
-	}
-</script>
-
 {% endblock contenido %}
-
-

@@ -55,7 +55,7 @@ class Ubicaciones(ClaseModelo):
     direccion = models.CharField(max_length=100, help_text='Dirección')
     
     def __str__(self):
-        return '{}:{}'.format(self.categoria.descripcion,self.descripcion)
+        return '{}:{}'.format(self.descripcion,self.ciudad)
 
     def save(self):
         self.descripcion = self.descripcion.upper()
@@ -81,6 +81,7 @@ class Iva(ClaseModelo):
         unique_together = ('tarifa_iva',)
 
 
+
 class Producto(ClaseModelo):
     usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
     subcategoria = models.ForeignKey(SubCategoria, on_delete=models.CASCADE)
@@ -90,21 +91,21 @@ class Producto(ClaseModelo):
     CHOICES = ( (1,'UNIDAD'),(2,'KILOGRAMO'),(3,'GRAMO'),(4,'MILIGRAMO'),(5,'METRO'),(6,'CENTIMETRO'),(7,'MILIMETRO'),\
         (8,'LITRO'), (9,'MILILITRO'), (10,'CENTILITRO'), (11,'METRO CUADRADO'), (12,'CENTIMETRO CUADRADO'), (13,'LITRO') )
     unidad_de_medida = models.IntegerField(choices=CHOICES, default=1, blank=False, null=False)
-    proveedor = models.ForeignKey(Terceros, models.DO_NOTHING)
+    proveedor = models.ForeignKey(Terceros, models.DO_NOTHING, blank=True, null=True, default=0)
     existencia = models.DecimalField('EXISTENCIA', max_digits=12, decimal_places=2, default=0, blank=True, null=True)
     stock_minimo = models.DecimalField('STOCK MINIMO', max_digits=10, decimal_places=0, default=0, blank=True, null=True)
     stock_maximo = models.DecimalField('STOCK MAXIMO', max_digits=10, decimal_places=0, default=0, blank=True, null=True)
-    toal_copas = models.DecimalField('TOTAL COPAS', max_digits=10, decimal_places=0, default=0, blank=True, null=True)
+    total_copas = models.DecimalField('TOTAL COPAS', max_digits=10, decimal_places=0, default=0, blank=True, null=True)
     descuento_promo = models.DecimalField('DESCUENTO PROMOCIONAL', max_digits=2, decimal_places=0, default=0, blank=True, null=True)
     costo_unidad = models.DecimalField('VALOR COMPRA', max_digits=12, decimal_places=2, default=0, blank=True, null=True)
     tarifa_iva = models.ForeignKey(Iva, models.DO_NOTHING)
     precio_de_venta = models.DecimalField('PRECIO DE VENTA', max_digits=12, decimal_places=0, default=0, blank=True, null=True)
     fecha_de_vencimiento = models.DateTimeField('Fecha de Vencimiento', blank=True, null=True)
-    codigo_de_barra = models.CharField(max_length=70, help_text='Código de Barra')
-    lote = models.CharField(max_length=100, help_text='Lote del producto', unique=True)
+    codigo_de_barra = models.CharField(max_length=100, help_text='Código de Barra', blank=True, null=True, default='')
     ubicacion = models.ForeignKey(Ubicaciones, on_delete=models.DO_NOTHING, default=1, null=False, blank=False)
     cuenta_contable_ventas_locales = models.CharField('Cuenta de contabilidad para ventas locales', blank=True, null=True, max_length=20, default="")
     cuenta_contable_ventas_exterior = models.CharField('Cuenta de contabilidad para ventas al exterior', blank=True, null=True, max_length=20, default="")
+    usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return '{}'.format(self.nombre)

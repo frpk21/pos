@@ -99,15 +99,20 @@ class Terceros(ClaseModelo):
     cta_banco = models.CharField('Cuenta Bancaria', default='', blank=True, null=True, max_length=20)
     banco = models.CharField('Nombre Banco Cuenta', default='', blank=True, null=True, max_length=50)
     dias_credito = models.IntegerField(choices=CHOICES, default=0, blank=True, null=True)
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return '{}: {}'.format(self.rzn_social, self.nit)
 
     def save(self):
-        self.nombre1 = self.nombre1.upper()
-        self.nombre2 = self.nombre2.upper()
-        self.apellido1 = self.apellido1.upper()
-        self.apellido2 = self.apellido2.upper()
+        if self.nombre1:
+            self.nombre1 = self.nombre1.upper()
+        if self.nombre2:
+            self.nombre2 = self.nombre2.upper()
+        if self.apellido1:
+            self.apellido1 = self.apellido1.upper()
+        if self.apellido2:
+            self.apellido2 = self.apellido2.upper()
         self.rzn_social = self.rzn_social.upper()
         super(Terceros, self).save()
 

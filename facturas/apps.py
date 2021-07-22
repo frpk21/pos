@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class FacturasConfig(AppConfig):
-    name = 'facturas'
+class SalidasConfig(AppConfig):
+    name = 'salidas'

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'generales',
     'facturas',
+    'fact_digital',
     'catalogos',
     'ckeditor',
     'multiselectfield',
@@ -155,7 +156,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 
 ALLOWED_HOSTS = ['*']
 
-try:
-   exec(open(os.path.join(BASE_DIR, 'pos/settings_local.py')).read())
-except IOError:
-   raise Exception('error reading local settings')
+#try:
+#   exec(open(os.path.join(BASE_DIR, 'pos/settings_local.py')).read())
+#except IOError:
+#   raise Exception('error reading local settings')

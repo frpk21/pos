@@ -1,0 +1,130 @@
+
+{% extends 'base/base.html' %}
+
+
+
+{% block contenido %}
+
+
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-warning card-header-icon">
+              <div class="card-icon">
+                  <i class="material-icons">assignment</i>
+              </div>
+              <h3 class="card-title">Lista de Ordenes de Publicidad</h3>
+          </div>
+          <div class="card-body">
+            <div class="material-datatables">
+              <table id="radicaciones_table" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                <thead>
+                  <tr>
+                    <th data-orderable="false"><strong>#</strong></th>
+                    <th><strong>Orden Publicidad/Rad-No.</strong></th>
+                    <th><strong>Fecha</strong></th>
+                    <th><strong>Cliente</strong></th>
+                    <th><strong>Anunciante</strong></th>                    
+                    <th><strong>Asesor</strong></th>
+                    <th data-orderable="false" class="text-center"><strong>Ver evidencias</strong></th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <th><strong>#</strong></th>
+                    <th><strong>Orden Publicidad/Rad-No.</strong></th>
+                    <th><strong>Fecha</strong></th>
+                    <th><strong>Cliente</strong></th>
+                    <th><strong>Anunciante</strong></th>
+                    <th><strong>Asesor</strong></th>
+                    <th data-orderable="false" class="text-center"><strong>Ver evidencias</strong></th>
+                  </tr>
+                </tfoot>
+                <tbody>
+                  {% for item in radicaciones %}
+                    <div style="display: none">
+                      {{ forloop.counter1 }}
+                    </div>
+                    <tr>
+                        <td style="font-size:12px;">{{ forloop.counter }}</td>
+                        <td><a href="{% url 'ordenacion:evidencias_list' item.id %}">{{item.no_publicidad}} / {{ item.id }}</a></td>
+                        <td>{{item.fecha}}</td>
+                        <td><strong>{{item.nit_cliente}}</strong></td>
+                        <td><strong>{{item.nit_anunciante}}</strong></td>
+                        <td>{{item.asesor_comercial}}</td>
+                        <td class="td-actions text-center">
+                          <a href="{% url 'ordenacion:evidencias_list' item.id %}">
+                            <button type="button" rel="tooltip" class="btn btn-warning btn-round">
+                              <i class="material-icons">add</i>
+                            </button>
+                          </a>
+                        </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#radicaciones_table').DataTable({
+      "pagingType": "full_numbers",
+      "lengthMenu": [
+        [10, 25, 50, -1],
+        [10, 25, 50, "Todo"]
+      ],
+      responsive: true,
+      "language": {
+        "sProcessing":    "Procesando...",
+        "sLengthMenu":    "Mostrar _MENU_ registros",
+        "sZeroRecords":   "No se encontraron resultados",
+        "sEmptyTable":    "Ningún dato disponible en esta tabla",
+        "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":   "",
+        "sSearch":        "Buscar:",
+        "sUrl":           "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":    "Último",
+            "sNext":    "Siguiente",
+            "sPrevious": "Anterior"
+        }}
+    });
+
+    var table = $('#radicaciones_table').DataTable();
+
+    // Edit record
+    table.on('click', '.edit', function() {
+      $tr = $(this).closest('tr');
+      var data = table.row($tr).data();
+      alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+    });
+
+    // Delete a record
+    table.on('click', '.remove', function(e) {
+      $tr = $(this).closest('tr');
+      table.row($tr).remove().draw();
+      e.preventDefault();
+    });
+
+    //Like record
+    table.on('click', '.like', function() {
+      alert('You clicked on Like button');
+    });
+  });
+</script>
+
+{% endblock contenido %}

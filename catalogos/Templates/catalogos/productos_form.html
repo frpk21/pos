@@ -1,25 +1,213 @@
 {% extends 'base/base.html' %}
+
+{% load static %}
+
 {% block contenido %}
-<form method="POST">
-    <div class="paanel panel-default">
-        Editar/Crear Producto
-    </div>
-    <div class = "panel-body">
-        {% csrf_token %}
-        <div class="form-group has-success">
-            <label class="control-label" for="inputSuccess">Categoria</label>
-            {{ form.subcategoria }}
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="card-header card-header-icon card-header-warning">
+                                <div class="card-icon">
+                                    <i class="material-icons">assignment</i>
+                                </div>
+                                <h4 class="card-title "><strong> Crear Productos</strong></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class = "panel-body">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-sm-8 form-group has-success">
+                                        <label class="control-label bmd-label-floating" for="inputSuccess">Categoria</label><br>
+                                        <select class="js-data-example-ajax" style="width: 60%;" name='subcategoria' id='subcategoria'>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group has-success">
+                                            <label class="bmd-label-floating">Nombre Producto</label>
+                                            {{ form.nombre }}
+                                            <small class="text-danger">{{form.errors.nombre}}</small>
+                                            {% if form.nombre.errors %}
+                                                {% for error in form.nombre.errors %}
+                                                    <small class="text-danger">{{ error|escape }} </small>
+                                                {% endfor %}
+                                            {% endif %} 
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group has-success">
+                                            <label class="bmd-label-floating">Descripci&oacute;n</label>
+                                            {{ form.descripcion }}
+                                            <small class="text-danger">{{form.errors.descripcion}}</small>
+                                            {% if form.descripcion.errors %}
+                                                {% for error in form.descripcion.errors %}
+                                                    <small class="text-danger">{{ error|escape }} </small>
+                                                {% endfor %}
+                                            {% endif %} 
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class=" has-success">
+                                            <label class="bmd-label-floating">Archivo Foto</label>
+                                            {{ form.archivo_foto }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="has-success">
+                                            <label class="control-label bmd-label-floating">Unidad de Medida</label>
+                                            {{ form.unidad_de_medida }}
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <div class="form-group has-success">
+                                            <label class="bmd-label-floating">Proveedor</label>
+                                            <select class="js-data-example-ajax" style="width: 60%;" name='proveedor' id='proveedor'>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group has-success">
+                                            <label class="bmd-label-floating">Stock M&iacute;n</label>
+                                            {{ form.stock_minimo }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group has-success">
+                                            <label class="bmd-label-floating">Stock M&aacute;x</label>
+                                            {{ form.stock_maximo }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label style="color: green;"><small>Tarifa IVA</small></label>
+                                        <div>
+                                            {{ form.tarifa_iva }}
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group has-success">
+                                            <label class="bmd-label-floating">Costo Compra</label>
+                                            {{ form.costo_unidad }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group has-success">
+                                            <label class="bmd-label-floating">Precio Venta</label>
+                                            {{ form.precio_de_venta }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group has-success">
+                                            <label class="bmd-label-floating">C&oacute;digo de Barra</label>
+                                            {{ form.codigo_de_barra }}
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group has-success">
+                                            <label class="bmd-label-floating">Cuenta Contable Ventas Locales</label>
+                                            {{ form.cuenta_contable_ventas_locales }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group has-success">
+                                            <label class="bmd-label-floating">Cuenta Contable Ventas al Exterior</label>
+                                            {{ form.cuenta_contable_ventas_exterior }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="has-success">
+                                            <label class="control-label bmd-label-floating">Ubicaci&oacute;n</label>
+                                            {{ form.ubicacion }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div><br><br>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
+                                <a href="{% url 'catalogos:productos_list' %}" class="btn tbn-success"><span class="fa fa-undo"></span>Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group has-warning">
-            <label class="control-label" for="inputWarning">Descripcion</label>
-            {{ form.descripcion }}
-        </div>
     </div>
-    <div class="form-group has-error">
-        <label class="control-label" for="inputError">Estado</label>
-        {{ form.activo }}
-    </div>
-    <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span>Guardar</button>
-    <a href="{% url 'catalogos:productos_list' %}" class="btn tbn-success"><span class="fa fa-undo"></span>Cancelar</a>
-</form>
+
+    <script>
+        $(document).ready(function(){ 
+            $("#subcategoria").select2({ 
+                tags: true, 
+                multiple: false,
+                tokenSeparators: [',', ' '], 
+                minimumInputLength: 3,
+                delay: 200,
+                minimumResultsForSearch: 20, 
+                ajax: { 
+                    url: '{% url 'catalogos:subcategoria_select2' %}', 
+                    dataType: "json", 
+                    type: "GET", 
+                    data: function (params) { var queryParameters = { q: params.term } 
+                    return queryParameters; 
+                }, 
+                processResults: function (data) {
+                    return { 
+                        results: $.map(data, function (item) { 
+                            return { 
+                                text: item.nombre, 
+                                id: item.id
+                            } 
+                        }) 
+                    }; 
+                } 
+            } 
+        }); }); 
+    </script>
+
+    <script>
+        $(document).ready(function(){ 
+            $("#proveedor").select2({ 
+                tags: true, 
+                multiple: false,
+                tokenSeparators: [',', ' '], 
+                minimumInputLength: 3,
+                delay: 200,
+                minimumResultsForSearch: 20, 
+                ajax: { 
+                    url: '{% url 'catalogos:terceros_select2' %}', 
+                    dataType: "json", 
+                    type: "GET", 
+                    data: function (params) { var queryParameters = { q: params.term } 
+                    return queryParameters; 
+                }, 
+                processResults: function (data) {
+                    return { 
+                        results: $.map(data, function (item) { 
+                            return { 
+                                text: item.rzn_social, 
+                                id: item.id
+                            } 
+                        }) 
+                    }; 
+                } 
+            } 
+        }); }); 
+    </script>
 {% endblock contenido %}

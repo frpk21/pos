@@ -1,19 +1,42 @@
 {% extends 'base/base.html' %}
+
 {% block contenido %}
-<form method='POST'>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            Eliminar
-        </div>
-        <!-- /.panel-heading -->
-        <div class='panel-body'>
-            {% csrf_token %}
-            <div class="alert alert-success">
-                Elimina ? {{ obj.descripcion }}
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="card-header card-header-icon card-header-warning">
+                                <div class="card-icon">
+                                    <i class="material-icons">assignment</i>
+                                </div>
+                                <h4 class="card-title "><strong> Eliminar Categoría</strong></h4>
+                                <span style="color: gray;">FAMILIAS DE PRODUCTOS</span><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method='POST'>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    Eliminar
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class='panel-body'>
+                                    {% csrf_token %}
+                                    <div class="alert alert-success">
+                                       <h3> Elimina ? {{ obj.nombre }}</h3>
+                                    </div>
+                                    <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span> Eliminar</button>
+                                    <a href="{% url 'catalogos:subcategoria_list'%}" class="btn btn-success"><span class="fa fa-undo"></span>Cancelar</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span> Eliminar</button>
-            <a href="{% url 'catalogos:subcategoria_list'%}" class="btn btn-success"><span class="fa fa-undo"></span>Cancelar</a>
         </div>
     </div>
-</form>
 {% endblock contenido %}
