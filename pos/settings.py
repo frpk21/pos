@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from decimal import Decimal
+
+from django.contrib import messages
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'media'),)
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'multiselectfield',
     'tempus_dominus',
+    'social.apps.SocialConfig',
 ]
 
 CKEDITOR_CONFIGS = {
@@ -74,27 +78,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social.processors.ctx_dict'
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'pos.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pos',
-        'USER': 'postgres',
-        'PASSWORD': '0268',
-        'HOST': 'localhost',
-        'PORT': '5432',
-       },
-}
 
 
 # Password validation
@@ -114,6 +104,23 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pos',
+        'USER': 'postgres',
+        'PASSWORD': '0268',
+        'HOST': 'localhost',
+        'PORT': '5432',
+       },
+    
+}
+
+
 
 
 # Internationalization
@@ -155,8 +162,8 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 ALLOWED_HOSTS = ['*']
-
-#try:
-#   exec(open(os.path.join(BASE_DIR, 'pos/settings_local.py')).read())
-#except IOError:
-#   raise Exception('error reading local settings')
+DEFAULT_BAG_PER_UNIT_AMOUNT = Decimal(51)
+try:
+   exec(open(os.path.join(BASE_DIR, 'pos/settings_local.py')).read())
+except IOError:
+   raise Exception('error reading local settings')

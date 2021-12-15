@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Ubicaciones
+from .models import Ubicaciones, Tipos_movimientos
 from django.contrib.admin.widgets import AutocompleteSelect
 
 
@@ -22,4 +22,5 @@ class UbicacionesAdmin(admin.ModelAdmin):
         return qs.filter(usuario=request.user)
 
 admin.site.register(Ubicaciones, UbicacionesAdmin)
+admin.site.register(Tipos_movimientos)
 

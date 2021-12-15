@@ -9,127 +9,133 @@
 <div class="content">
     <div class="container-fluid">
         <br><br>   
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card card-product">
-                    <div class="card-header card-header-image" data-header-animation="true">
-                        <a href="#pablo">
-                            <img class="img" src="/static/base/images/pos.png">
-                        </a>
+        {% if not request.user.is_staff %}
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-product">
+                        <div class="card-header card-header-image" data-header-animation="true">
+                            <a href="#pablo">
+                                <img class="img" src="/static/base/images/pos.png">
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-actions text-center">
+                                <button type="button" class="btn btn-danger btn-link fix-broken-card">
+                                    <i class="material-icons">build</i> Fix Header!
+                                </button>
+                                <button type="button" class="btn btn-default btn-link" rel="tooltip" data-placement="bottom" title="View">
+                                    <i class="material-icons">art_track</i>
+                                </button>
+                                <button type="button" class="btn btn-success btn-link" rel="tooltip" data-placement="bottom" title="Edit">
+                                    <i class="material-icons">edit</i>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-link" rel="tooltip" data-placement="bottom" title="Remove">
+                                    <i class="material-icons">close</i>
+                                </button>
+                            </div>
+                            <h4 class="card-title">
+                                <a href="#pablo"><strong>P O S</strong></a>
+                            </h4>
+                            <div class="card-description">
+                                Inventarios & Punto de Venta
+                            </div>
+                            En la nube  | Multiplataforma | Desde $55.000/MES
+                        </div>
+                        <div class="card-footer">
+                            <div class="price">
+                                <h4>Cotizar</h4>
+                            </div>
+                            <div class="stats">
+                                <p class="card-category"><i class="material-icons">place</i> Col</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="card-actions text-center">
-                            <button type="button" class="btn btn-danger btn-link fix-broken-card">
-                                <i class="material-icons">build</i> Fix Header!
-                            </button>
-                            <button type="button" class="btn btn-default btn-link" rel="tooltip" data-placement="bottom" title="View">
-                                <i class="material-icons">art_track</i>
-                            </button>
-                            <button type="button" class="btn btn-success btn-link" rel="tooltip" data-placement="bottom" title="Edit">
-                                <i class="material-icons">edit</i>
-                            </button>
-                            <button type="button" class="btn btn-danger btn-link" rel="tooltip" data-placement="bottom" title="Remove">
-                                <i class="material-icons">close</i>
-                            </button>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-product">
+                        <div class="card-header card-header-image" data-header-animation="true">
+                            <a href="#pablo">
+                                <img class="img" src="/static/base/images/fact.jpg">
+                            </a>
                         </div>
-                        <h4 class="card-title">
-                            <a href="#pablo"><strong>P O S</strong></a>
-                        </h4>
-                        <div class="card-description">
-                            Inventarios & Punto de Venta
+                        <div class="card-body">
+                            <div class="card-actions text-center">
+                                <button type="button" class="btn btn-danger btn-link fix-broken-card">
+                                    <i class="material-icons">build</i> Fix Header!
+                                </button>
+                                <button type="button" class="btn btn-default btn-link" rel="tooltip" data-placement="bottom" title="View">
+                                    <i class="material-icons">art_track</i>
+                                </button>
+                                <button type="button" class="btn btn-success btn-link" rel="tooltip" data-placement="bottom" title="Edit">
+                                    <i class="material-icons">edit</i>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-link" rel="tooltip" data-placement="bottom" title="Remove">
+                                    <i class="material-icons">close</i>
+                                </button>
+                            </div>
+                            <h4 class="card-title">
+                                <a href="#pablo"><strong>F A C T U R A C I O N  -   E L E C T R O N I C A</strong></a>
+                            </h4>
+                            <div class="card-description">
+                                Seleccione la modalidad que m&aacute;s se ajuste a sus necesidades.
+                            </div>
+                            En la nube  | Multiplataforma | Desde $25.000/MES
                         </div>
-                        En la nube  | Multiplataforma | Desde $55.000/MES
+                        <div class="card-footer">
+                            <div class="price">
+                                <h4>Cotizar</h4>
+                            </div>
+                            <div class="stats">
+                                <p class="card-category"><i class="material-icons">place</i> Col</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-footer">
-                        <div class="price">
-                            <h4>Cotizar</h4>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-product">
+                        <div class="card-header card-header-image" data-header-animation="true">
+                            <a href="#pablo">
+                                <img class="img" src="/static/base/images/dev.jpg">
+                            </a>
                         </div>
-                        <div class="stats">
-                            <p class="card-category"><i class="material-icons">place</i> Col</p>
+                        <div class="card-body">
+                            <div class="card-actions text-center">
+                                <button type="button" class="btn btn-danger btn-link fix-broken-card">
+                                    <i class="material-icons">build</i> Fix Header!
+                                </button>
+                                <button type="button" class="btn btn-default btn-link" rel="tooltip" data-placement="bottom" title="View">
+                                    <i class="material-icons">art_track</i>
+                                </button>
+                                <button type="button" class="btn btn-success btn-link" rel="tooltip" data-placement="bottom" title="Edit">
+                                    <i class="material-icons">edit</i>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-link" rel="tooltip" data-placement="bottom" title="Remove">
+                                    <i class="material-icons">close</i>
+                                </button>
+                            </div>
+                            <h4 class="card-title">
+                                <a href="#pablo"><strong>S O L U C I O N E S  -A-  M E D I D A</strong></a>
+                            </h4>
+                            <div class="card-description">
+                                Desarrollamos la soluci&oacute;n para usted. <br>CREATIVIDAD SIN LIMITES
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="price">
+                                <h4>Cotizar</h4>
+                            </div>
+                            <div class="stats">
+                                <p class="card-category"><i class="material-icons">place</i> Col</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card card-product">
-                    <div class="card-header card-header-image" data-header-animation="true">
-                        <a href="#pablo">
-                            <img class="img" src="/static/base/images/fact.jpg">
-                        </a>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-actions text-center">
-                            <button type="button" class="btn btn-danger btn-link fix-broken-card">
-                                <i class="material-icons">build</i> Fix Header!
-                            </button>
-                            <button type="button" class="btn btn-default btn-link" rel="tooltip" data-placement="bottom" title="View">
-                                <i class="material-icons">art_track</i>
-                            </button>
-                            <button type="button" class="btn btn-success btn-link" rel="tooltip" data-placement="bottom" title="Edit">
-                                <i class="material-icons">edit</i>
-                            </button>
-                            <button type="button" class="btn btn-danger btn-link" rel="tooltip" data-placement="bottom" title="Remove">
-                                <i class="material-icons">close</i>
-                            </button>
-                        </div>
-                        <h4 class="card-title">
-                            <a href="#pablo"><strong>F A C T U R A C I O N  -   E L E C T R O N I C A</strong></a>
-                        </h4>
-                        <div class="card-description">
-                            Seleccione la modalidad que m&aacute;s se ajuste a sus necesidades.
-                        </div>
-                        En la nube  | Multiplataforma | Desde $25.000/MES
-                    </div>
-                    <div class="card-footer">
-                        <div class="price">
-                            <h4>Cotizar</h4>
-                        </div>
-                        <div class="stats">
-                            <p class="card-category"><i class="material-icons">place</i> Col</p>
-                        </div>
-                    </div>
-                </div>
+        {% else %}
+            <div class="row">
+                <img src="{{ user.profile.logo.url }}"/>
             </div>
-            <div class="col-md-4">
-                <div class="card card-product">
-                    <div class="card-header card-header-image" data-header-animation="true">
-                        <a href="#pablo">
-                            <img class="img" src="/static/base/images/dev.jpg">
-                        </a>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-actions text-center">
-                            <button type="button" class="btn btn-danger btn-link fix-broken-card">
-                                <i class="material-icons">build</i> Fix Header!
-                            </button>
-                            <button type="button" class="btn btn-default btn-link" rel="tooltip" data-placement="bottom" title="View">
-                                <i class="material-icons">art_track</i>
-                            </button>
-                            <button type="button" class="btn btn-success btn-link" rel="tooltip" data-placement="bottom" title="Edit">
-                                <i class="material-icons">edit</i>
-                            </button>
-                            <button type="button" class="btn btn-danger btn-link" rel="tooltip" data-placement="bottom" title="Remove">
-                                <i class="material-icons">close</i>
-                            </button>
-                        </div>
-                        <h4 class="card-title">
-                            <a href="#pablo"><strong>S O L U C I O N E S  -A-  M E D I D A</strong></a>
-                        </h4>
-                        <div class="card-description">
-                            Desarrollamos la soluci&oacute;n para usted. <br>CREATIVIDAD SIN LIMITES
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="price">
-                            <h4>Cotizar</h4>
-                        </div>
-                        <div class="stats">
-                            <p class="card-category"><i class="material-icons">place</i> Col</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endif %}
     </div>
 </div>
 

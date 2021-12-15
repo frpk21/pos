@@ -46,14 +46,16 @@
             <div class="sidebar-wrapper">
                 <div class="user">
                     <div class="photo">
-                        <img src="/media/{{ user.profile.foto.url }}" />
+                        {% if request.user.is_staff %}
+                            <img src="{{ user.profile.foto.url }}"/>
+                        {% endif %}
                     </div>
                     <div class="user-info">
                         <a data-toggle="collapse" href="#collapseExample" class="username">
-                                    <span>
-                                        {{ user.first_name }} {{ user.last_name }}
-                                        <b class="caret"></b>
-                                    </span>
+                            <span>
+                                {{ user.first_name }} {{ user.last_name }}
+                                <b class="caret"></b>
+                            </span>
                         </a>
                         <div class="collapse" id="collapseExample">
                             <!--<ul class="nav">
@@ -86,191 +88,190 @@
                             <p> Dashboard </p>
                         </a>
                     </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" data-toggle="collapse" href="#cat">
-                            <i class="material-icons">language</i>
-                            <p> Productos
-                                <b class="caret"></b>
-                            </p>
-                        </a>
-                        <div class="collapse" id="cat">
-                            <ul class="nav">
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="{% url 'catalogos:categoria_list' %}">
-                                        <span class="sidebar-mini"> C </span>
-                                        <span class="sidebar-normal"> Categor&iacute;as </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="{% url 'catalogos:subcategoria_list' %}">
-                                        <span class="sidebar-mini"> E </span>
-                                        <span class="sidebar-normal"> Subcategor&iacute;as</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="{% url 'catalogos:productos_list' %}">
-                                        <span class="sidebar-mini"> P </span>
-                                        <span class="sidebar-normal"> Productos</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="{% url 'catalogos:tarifas_iva' %}">
-                                        <span class="sidebar-mini"> T </span>
-                                        <span class="sidebar-normal"> Tarifas de IVA</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" data-toggle="collapse" href="#ads">
-                            <i class="material-icons">language</i>
-                            <p> Inventario
-                                <b class="caret"></b>
-                            </p>
-                        </a>
-                        <div class="collapse" id="ads">
-                            <ul class="nav">
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="">
-                                        <span class="sidebar-mini"> C </span>
-                                        <span class="sidebar-normal"> Cat&aacute;logo </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="">
-                                        <span class="sidebar-mini"> E </span>
-                                        <span class="sidebar-normal"> Entradas </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="">
-                                        <span class="sidebar-mini"> R </span>
-                                        <span class="sidebar-normal"> Sal&iacute;das </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="">
-                                        <span class="sidebar-mini"> F </span>
-                                        <span class="sidebar-normal"> Formulaci&oacute;n </span>
-                                    </a>
-                                </li>
+                    {% if request.user.is_staff %}
+                        <li class="nav-item ">
+                            <a class="nav-link" data-toggle="collapse" href="#cat">
+                                <i class="material-icons">language</i>
+                                <p> Productos
+                                    <b class="caret"></b>
+                                </p>
+                            </a>
+                            <div class="collapse" id="cat">
+                                <ul class="nav">
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="{% url 'catalogos:categoria_list' %}">
+                                            <span class="sidebar-mini"> C </span>
+                                            <span class="sidebar-normal"> Categor&iacute;as </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="{% url 'catalogos:subcategoria_list' %}">
+                                            <span class="sidebar-mini"> E </span>
+                                            <span class="sidebar-normal"> Subcategor&iacute;as</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="{% url 'catalogos:productos_list' %}">
+                                            <span class="sidebar-mini"> P </span>
+                                            <span class="sidebar-normal"> Productos</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="{% url 'catalogos:tarifas_iva' %}">
+                                            <span class="sidebar-mini"> T </span>
+                                            <span class="sidebar-normal"> Tarifas de IVA</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" data-toggle="collapse" href="#ads">
+                                <i class="material-icons">language</i>
+                                <p> Inventario
+                                    <b class="caret"></b>
+                                </p>
+                            </a>
+                            <div class="collapse" id="ads">
+                                <ul class="nav">
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="{% url 'catalogos:catalogo' %}">
+                                            <span class="sidebar-mini"> C </span>
+                                            <span class="sidebar-normal"> Cat&aacute;logo </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="{% url 'catalogos:movimientos' %}">
+                                            <span class="sidebar-mini"> E </span>
+                                            <span class="sidebar-normal"> Entradas </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="{% url 'catalogos:movimientos' %}">
+                                            <span class="sidebar-mini"> R </span>
+                                            <span class="sidebar-normal"> Sal&iacute;das </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="">
+                                            <span class="sidebar-mini"> F </span>
+                                            <span class="sidebar-normal"> Formulaci&oacute;n </span>
+                                        </a>
+                                    </li>
 
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item ">
-                        <a class="nav-link" data-toggle="collapse" href="#monitoreoRadio">
-                            <i class="material-icons">track_changes</i>
-                            <p> Facturar
-                                <b class="caret"></b>
-                            </p>
-                        </a>
-                        <div class="collapse" id="monitoreoRadio">
-                            <ul class="nav">
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="">
-                                        <span class="sidebar-mini"> FA </span>
-                                        <span class="sidebar-normal"> Generar Factura  </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="">
-                                        <span class="sidebar-mini"> AN </span>
-                                        <span class="sidebar-normal"> Anular Factura </span>
-                                    </a>
-                                </li>
-                                <!--<li class="nav-item ">
-                                    <a class="nav-link" href="/static/base/examples/forms/extended.html">
-                                        <span class="sidebar-mini"> ES </span>
-                                        <span class="sidebar-normal"> Escuchar radio </span>
-                                    </a>
-                                </li>-->
-                            </ul>
-                        </div>
-                    </li>
-                    
-            
-                    <li class="nav-item ">
-                        <a class="nav-link" data-toggle="collapse" href="#pagesExamples">
-                            <i class="material-icons">language</i>
-                            <p> Admin
-                                <b class="caret"></b>
-                            </p>
-                        </a>
-                        <div class="collapse" id="pagesExamples">
-                            <ul class="nav">
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="">
-                                        <span class="sidebar-mini"> G </span>
-                                        <span class="sidebar-normal"> Gastos </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" data-toggle="collapse" href="#pagesFacturas">
-                                        <span class="sidebar-mini"> C </span>
-                                        <p>Cuentas x Cobrar 
-                                            <b class="caret"></b>
-                                        </p>
-                                    </a>
-                                    <div class="collapse" id="pagesFacturas">
-                                        <ul class="nav">
-                                            <li class="nav-item ">
-                                                <a class="nav-link" href="">
-                                                    <span class="sidebar-mini"> GF </span>
-                                                    <span class="sidebar-normal"> Generar </span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item ">
-                                                <a class="nav-link" href="">
-                                                    <span class="sidebar-mini"> VE </span>
-                                                    <span class="sidebar-normal"> Estado</span>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item ">
-                                                <a class="nav-link" href="/">
-                                                    <span class="sidebar-mini"> PA </span>
-                                                    <span class="sidebar-normal"> Pagos y Abonos</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" data-toggle="collapse" href="#monitoreoRadio">
+                                <i class="material-icons">track_changes</i>
+                                <p> Facturar
+                                    <b class="caret"></b>
+                                </p>
+                            </a>
+                            <div class="collapse" id="monitoreoRadio">
+                                <ul class="nav">
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="">
+                                            <span class="sidebar-mini"> FA </span>
+                                            <span class="sidebar-normal"> Generar Factura  </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="">
+                                            <span class="sidebar-mini"> AN </span>
+                                            <span class="sidebar-normal"> Anular Factura </span>
+                                        </a>
+                                    </li>
+                                    <!--<li class="nav-item ">
+                                        <a class="nav-link" href="/static/base/examples/forms/extended.html">
+                                            <span class="sidebar-mini"> ES </span>
+                                            <span class="sidebar-normal"> Escuchar radio </span>
+                                        </a>
+                                    </li>-->
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" data-toggle="collapse" href="#pagesExamples">
+                                <i class="material-icons">language</i>
+                                <p> Admin
+                                    <b class="caret"></b>
+                                </p>
+                            </a>
+                            <div class="collapse" id="pagesExamples">
+                                <ul class="nav">
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="">
+                                            <span class="sidebar-mini"> G </span>
+                                            <span class="sidebar-normal"> Gastos </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" data-toggle="collapse" href="#pagesFacturas">
+                                            <span class="sidebar-mini"> C </span>
+                                            <p>Cuentas x Cobrar 
+                                                <b class="caret"></b>
+                                            </p>
+                                        </a>
+                                        <div class="collapse" id="pagesFacturas">
+                                            <ul class="nav">
+                                                <li class="nav-item ">
+                                                    <a class="nav-link" href="">
+                                                        <span class="sidebar-mini"> GF </span>
+                                                        <span class="sidebar-normal"> Generar </span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item ">
+                                                    <a class="nav-link" href="">
+                                                        <span class="sidebar-mini"> VE </span>
+                                                        <span class="sidebar-normal"> Estado</span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item ">
+                                                    <a class="nav-link" href="/">
+                                                        <span class="sidebar-mini"> PA </span>
+                                                        <span class="sidebar-normal"> Pagos y Abonos</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
 
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="/static/base/examples/pages/timeline.html">
-                                        <span class="sidebar-mini"> N </span>
-                                        <span class="sidebar-normal"> Notas </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li class="nav-item ">
-                        <a class="nav-link" data-toggle="collapse" href="#inrai-indi">
-                            <i class="material-icons">insert_chart_outlined</i>
-                            <p> Indicadores
-                                <b class="caret"></b>
-                            </p>
-                        </a>
-                        <div class="collapse" id="inrai-indi">
-                            <ul class="nav">
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="">
-                                        <span class="sidebar-mini"> VR</span>
-                                        <span class="sidebar-normal"> Ventas regionales </span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="/">
-                                        <span class="sidebar-mini"> VC</span>
-                                        <span class="sidebar-normal"> Ventas Cliente </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="/static/base/examples/pages/timeline.html">
+                                            <span class="sidebar-mini"> N </span>
+                                            <span class="sidebar-normal"> Notas </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" data-toggle="collapse" href="#inrai-indi">
+                                <i class="material-icons">insert_chart_outlined</i>
+                                <p> Indicadores
+                                    <b class="caret"></b>
+                                </p>
+                            </a>
+                            <div class="collapse" id="inrai-indi">
+                                <ul class="nav">
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="">
+                                            <span class="sidebar-mini"> VR</span>
+                                            <span class="sidebar-normal"> Ventas regionales </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link" href="/">
+                                            <span class="sidebar-mini"> VC</span>
+                                            <span class="sidebar-normal"> Ventas Cliente </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -315,7 +316,12 @@
                                     <!--<a class="dropdown-item" href="#">Perfil</a>
                                     <a class="dropdown-item" href="#">Configuración</a>-->
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{% url 'generales:logout' %}">Cerrar sesión</a>
+                                    {% if request.user.is_staff %}
+                                        <a class="dropdown-item" href="{% url 'generales:logout' %}">Cerrar sesión</a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{% url 'generales:login' %}">Ingresar</a>
+                                    {% endif %}
+                                    
                                 </div>
                             </li>
                         </ul>

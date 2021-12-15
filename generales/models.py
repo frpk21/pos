@@ -14,8 +14,13 @@ class ClaseModelo(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     foto = models.FileField("Archivo con Foto del Usuario", upload_to="fotos/", blank=False, null=False, default="")
+    logo = models.FileField("Logo del Usuario", upload_to="fotos/", blank=False, null=False, default="")
     nit  = models.CharField('NIT / CC #', blank=False, null=False, max_length=30, default="")
     empresa = models.CharField('Empresa', blank=False, null=False, max_length=100, default="")
+    direccion = models.CharField('Direccion Comercial', blank=False, null=False, max_length=100, default="")
+    telefono = models.CharField('Telefono Comercial', blank=False, null=False, max_length=100, default="")
+    email = models.CharField('Telefono Comercial', blank=False, null=False, max_length=100, default="")
+    
     #sede = models.ForeignKey(Sedes, on_delete=models.CASCADE, default=0, null=False, blank=False)
  
     def save(self):
@@ -95,10 +100,10 @@ class Terceros(ClaseModelo):
     ret_fuente = models.DecimalField('RETEFUENTE %', max_digits=5, decimal_places=2, default=0, blank=True, null=True)
     ret_ica = models.DecimalField('RETEICA', max_digits=5, decimal_places=2, default=0, blank=True, null=True)
     ret_iva = models.DecimalField('RETEIVA', max_digits=5, decimal_places=2, default=0, blank=True, null=True)
-    porc_iva = models.DecimalField('PORCENTAJE IVA', max_digits=5, decimal_places=2, default=0)
+    porc_iva = models.DecimalField('PORCENTAJE IVA', max_digits=5, decimal_places=2, default=0, blank=True, null=True)
     cta_banco = models.CharField('Cuenta Bancaria', default='', blank=True, null=True, max_length=20)
     banco = models.CharField('Nombre Banco Cuenta', default='', blank=True, null=True, max_length=50)
-    dias_credito = models.IntegerField(choices=CHOICES, default=0, blank=True, null=True)
+    dias_credito = models.IntegerField(default=0, blank=True, null=True)
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
 
     def __str__(self):

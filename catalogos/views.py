@@ -1,8 +1,9 @@
+from datetime import datetime
 from django.shortcuts import render
 
 from django.views import generic
 
-from catalogos.models import Categoria, SubCategoria, Producto, Iva
+from catalogos.models import Categoria, SubCategoria, Producto, Iva, Movimientos
 
 from generales.models import Terceros
 
@@ -10,7 +11,7 @@ from django.db import connections
 
 from collections import namedtuple
 
-from catalogos.forms import CategoriaForm, SubCategoriaForm, ProductoForm, IvaForm
+from catalogos.forms import CategoriaForm, SubCategoriaForm, ProductoForm, IvaForm, MovimientosEncForm, DetalleMovimientosFormSet
 
 from django.urls import reverse_lazy
 
@@ -30,6 +31,9 @@ class CategoriaView(LoginRequiredMixin, generic.ListView):
     template_name = "catalogos/categorias.html"
     context_object_name = "obj"
     login_url='generales:login'
+    
+    def get_queryset(self):
+        return Categoria.objects.filter(usuario=self.request.user)
 
 
 class CategoriaNew(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, generic.CreateView):
@@ -68,6 +72,9 @@ class SubCategoriaView(LoginRequiredMixin, generic.ListView):
     template_name = "catalogos/subcategorias.html"
     context_object_name = "obj"
     login_url='generales:login'
+    
+    def get_queryset(self):
+        return SubCategoria.objects.filter(categoria__usuario=self.request.user)
 
 class SubCategoriaNew(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, generic.CreateView):
     permission_required='catalogos.add_subcategoria'
@@ -105,6 +112,85 @@ class ProductoView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return Producto.objects.filter(usuario=self.request.user)
     
+    
+    
+class CatalogoView(LoginRequiredMixin, generic.ListView):
+    model = Producto
+    template_name = "catalogos/catalogo.html"
+    context_object_name = "obj"
+    login_url='generales:login'
+
+    def get_queryset(self):
+        return Producto.objects.filter(usuario=self.request.user)
+    
+    
+
+class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, generic.CreateView):
+    permission_required = 'facturas.add_facturas'
+    model = Movimientos
+    login_url = 'generales:login'
+    template_name = 'catalogos/movimientosform.html'
+    form_class = MovimientosEncForm
+    success_url = reverse_lazy('generales:home')
+
+    def get(self, request, *args, **kwargs):
+        ctx = {'fecha': datetime.today(), 'tipo': 1, 'tercero': 0, 'ubicacion': 1, }
+
+        self.object = None
+
+        form = MovimientosEncForm(initial=ctx)
+
+        detalle_movimientos_formset = DetalleMovimientosFormSet()
+
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                detalle_movimientos=detalle_movimientos_formset,
+                titulo_tipo="ENTRADA DE ALMACEN"
+            
+            )
+        )
+
+    def post(self, request, *args, **kwargs):
+        form = MovimientosEncForm(request.POST)
+        detalle_movimientos = DetalleMovimientosFormSet(request.POST)
+        #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+        #print(form.errors)
+        #print(detalle_movimientos.errors)
+        if form.is_valid() and detalle_movimientos.is_valid():
+            return self.form_valid(form, detalle_movimientos)
+        else:
+            return self.form_invalid(form, detalle_movimientos)
+
+    def form_valid(self, form, detalle_movimientos):
+        self.object = form.save(commit=False)
+        self.object.usuario = self.request.user
+        self.object = form.save()
+        detalle_movimientos.instance = self.object
+        detalle_movimientos.save()
+        
+        return HttpResponseRedirect(reverse_lazy("generales:home"))
+        #return JsonResponse(
+        #    {
+        #        'content': {
+        #            'message': 'Generado Documento No. '+str(self.object.id)+' exitosamente.'
+        #        }
+        #    }
+        #)
+
+
+    def form_invalid(self, form, detalle_movimientos):
+        self.object=form
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                detalle_movimientos=detalle_movimientos
+            )
+        )
+
+
+
+
 
 class ProductoNew(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, generic.CreateView):
     permission_required='catalogos.add_producto'
@@ -112,17 +198,17 @@ class ProductoNew(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, gener
     template_name="catalogos/productos_form.html"
     context_object_name = 'obj'
     form_class = ProductoForm
-    success_url = reverse_lazy("catalogos:productos_list")
     success_message='Producto creado satisfactoriamente'
 
-    def get(self, request, *args, **kwargs): 
+    def get(self, request, *args, **kwargs):
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
 
         return self.render_to_response(
             self.get_context_data(
-                form=form
+                form=form,
+                retorna=kwargs["pk"]
             )
         )
 
@@ -132,15 +218,18 @@ class ProductoNew(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, gener
         #print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
         #print(form.errors)
         if form.is_valid():
-            return self.form_valid(form)
+            return self.form_valid(form,kwargs["pk"])
         else:
             return self.form_invalid(form)
 
-    def form_valid(self, form):
+    def form_valid(self, form, pk):
         self.object = form.save(commit=False)
         self.object.usuario = self.request.user
         self.object = form.save()
-        return HttpResponseRedirect(self.success_url)
+        if pk == 1:
+            return HttpResponseRedirect(reverse_lazy("catalogos:productos_list"))
+        else:
+            return HttpResponseRedirect(reverse_lazy("catalogos:catalogo"))
 
     def form_invalid(self, form):
         self.object = form
@@ -220,3 +309,35 @@ def get_ajaxTerceros(request, *args, **kwargs):
         return JsonResponse(terceros, safe=False) 
     else: 
         return JsonResponse(data={'success': False, 'errors': 'No encuentro resultados.'}) 
+
+
+
+def get_ajaxBarcode(request, *args, **kwargs): 
+    bar_code = request.GET.get('bar_code', None)
+    if not bar_code:
+        return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})
+    else:
+        bar_code = Producto.objects.filter(codigo_de_barra=bar_code).last()
+        if bar_code:
+            return JsonResponse(data={"nombre": bar_code.nombre, "costo_unidad": bar_code.costo_unidad}, safe=False)
+        else: 
+            return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})
+
+
+
+
+def get_ajaxProducto(request, *args, **kwargs): 
+    query = request.GET.get('q', None)
+    if query: 
+        terceros = Producto.objects.filter(nombre__icontains=query).values("id","nombre") 
+        terceros = list(terceros)
+        return JsonResponse(terceros, safe=False) 
+    else: 
+        return JsonResponse(data={'success': False, 'errors': 'No encuentro resultados.'})
+    
+    
+
+def get_additem(request, *args, **kwargs):
+    detalle_movimientos_formset = DetalleMovimientosFormSet()
+    detalle_movimientos_formset.extra += 1
+    return JsonResponse(data={'detalle_movimientos':detalle_movimientos_formset})

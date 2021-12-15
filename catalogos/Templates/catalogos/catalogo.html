@@ -1,0 +1,188 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+{% load humanize %}
+    
+    <script src="/static/base/assets/js/core/jquery.min.js"></script>
+    
+    <div class="content">
+        <div class="container-fluid">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="card-header card-header-icon card-header-warning">
+                                <div class="card-icon">
+                                    <i class="material-icons">assignment</i>
+                                </div>
+                                <h4 class="card-title "><strong> Cat&aacute;logo de Productos</strong></h4>
+                                <hr class="sidebar-divider">
+                                <a href="{% url 'catalogos:producto_new' 2 %}" class="btn btn-info"><span class="fa fa-plus-circle"></span>Nuevo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="material-datatables">
+                            <div class="table-responsive">
+                                <table id="lista_table" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%; font-size:12px;">
+                                    <thead>
+                                        <th style="font-size:12px; background: gray; color: white;">PRODUCTO</th>
+                                        <th style="font-size:12px; background: gray; color: white;">DESCRIPCION</th>
+                                        <th style="font-size:12px; background: gray; color: white;" class="text-center">EXISTENCIA</th>
+                                        <th style="font-size:12px; background: gray; color: white;" class="text-center">ESTADO</th>
+                                        <th style="font-size:12px; background: gray; color: white;" class="text-center">CREADO</th>
+                                        <th style="font-size:12px; background: gray; color: yellow;" data-orderable="false" class="text-center">Acciones</th>
+                                    </thead>
+                                    <tfoot>
+                                        <th>Producto</th>
+                                        <th>Descripción</th>
+                                        <th class="text-center">Existencia</th>
+                                        <th class="text-center">Estado</th>
+                                        <th class="text-center">Creado</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tfoot>
+                                    <tbody>
+                                        {% for item in obj %}
+                                            <tr>
+                                                <td>{{item.subcategoria}}</td>
+                                                <td><strong>{{item.nombre}}</strong></td>
+                                                {% if item.existencia > 0 %}
+                                                    <td class="text-center" style="color: rgb(16, 3, 199);"><strong>{{item.existencia|intcomma}}</strong>
+                                                        {% if item.unidad_de_medida == 1 %}
+                                                            Und
+                                                        {% elif item.unidad_de_medida == 2 %}
+                                                            Kg
+                                                        {% elif item.unidad_de_medida == 3 %}
+                                                            Gr
+                                                        {% elif item.unidad_de_medida == 4 %}
+                                                            Mgr
+                                                        {% elif item.unidad_de_medida == 5 %}
+                                                            Mtro
+                                                        {% elif item.unidad_de_medida == 6 %}
+                                                            Mm
+                                                        {% elif item.unidad_de_medida == 7 %}
+                                                            Mmtro
+                                                        {% elif item.unidad_de_medida == 8 %}
+                                                            Mlr
+                                                        {% elif item.unidad_de_medida == 9 %}
+                                                            Clr
+                                                        {% elif item.unidad_de_medida == 10 %}
+                                                            M2
+                                                        {% elif item.unidad_de_medida == 11 %}
+                                                            Mtro2
+                                                        {% elif item.unidad_de_medida == 12 %}
+                                                            Cm2
+                                                        {% else %}
+                                                            Ltr
+                                                        {% endif %}
+                                                    </td>
+                                                {% else %}
+                                                    <td class="text-center" style="color: rgb(199, 16, 3);"><strong>{{item.existencia|intcomma}}</strong>
+                                                        {% if item.unidad_de_medida == 1 %}
+                                                            Und
+                                                        {% elif item.unidad_de_medida == 2 %}
+                                                            Kg
+                                                        {% elif item.unidad_de_medida == 3 %}
+                                                            Gr
+                                                        {% elif item.unidad_de_medida == 4 %}
+                                                            Mgr
+                                                        {% elif item.unidad_de_medida == 5 %}
+                                                            Mtro
+                                                        {% elif item.unidad_de_medida == 6 %}
+                                                            Mm
+                                                        {% elif item.unidad_de_medida == 7 %}
+                                                            Mmtro
+                                                        {% elif item.unidad_de_medida == 8 %}
+                                                            Mlr
+                                                        {% elif item.unidad_de_medida == 9 %}
+                                                            Clr
+                                                        {% elif item.unidad_de_medida == 10 %}
+                                                            M2
+                                                        {% elif item.unidad_de_medida == 11 %}
+                                                            Mtro2
+                                                        {% elif item.unidad_de_medida == 12 %}
+                                                            Cm2
+                                                        {% else %}
+                                                            Ltr
+                                                        {% endif %}
+                                                    </td>
+                                                {% endif %}
+                                                <td class="text-center">{{item.activo|yesno:"Activo,Inactivo"}}</td>
+                                                <td class="text-center">{{item.creado|date:'d/m/Y'}}</td>
+                                                <td class="td-actions text-center">
+                                                    <a href="#">
+                                                        <button type="button" rel="tooltip" class="btn btn-info btn-round">
+                                                        <i class="material-icons">search</i>
+                                                        </button>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+          $('#lista_table').DataTable({
+            "pagingType": "full_numbers",
+            "pageLength": 25,
+            "order": [0,"desc"],
+            "lengthMenu": [
+              [10, 25, 50, -1],
+              [10, 25, 50, "Todo"]
+            ],
+            responsive: true,
+            "language": {
+              "sProcessing":    "Procesando...",
+              "sLengthMenu":    "Mostrar _MENU_ registros",
+              "sZeroRecords":   "No se encontraron resultados",
+              "sEmptyTable":    "Ningún dato disponible en esta tabla",
+              "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+              "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+              "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+              "sInfoPostFix":   "",
+              "sSearch":        "Buscar:",
+              "sUrl":           "",
+              "sInfoThousands":  ",",
+              "sLoadingRecords": "Cargando...",
+              "oPaginate": {
+                  "sFirst":    "Primero",
+                  "sLast":    "Último",
+                  "sNext":    "Siguiente",
+                  "sPrevious": "Anterior"
+              }}
+          });
+      
+          var table = $('#lista_table').DataTable();
+      
+          // Edit record
+          table.on('click', '.edit', function() {
+            $tr = $(this).closest('tr');
+            var data = table.row($tr).data();
+            alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+          });
+      
+          // Delete a record
+          table.on('click', '.remove', function(e) {
+            $tr = $(this).closest('tr');
+            table.row($tr).remove().draw();
+            e.preventDefault();
+          });
+      
+          //Like record
+          table.on('click', '.like', function() {
+            alert('You clicked on Like button');
+          });
+        });
+    </script>
+{% endblock contenido %}

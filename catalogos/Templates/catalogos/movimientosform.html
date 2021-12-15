@@ -1,0 +1,430 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_tags %}
+{% block contenido%}
+
+{% load humanize %}
+
+{% if form.errors %}
+    {% for field in form %}
+        {% if field.errors %}
+            <div class="alert alert-danger fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {% for error in field.errors %}
+                    <strong>{{ error|escape }}</strong>
+            {% endfor %}
+            </div>
+        {% endif %} 
+    {% endfor %}
+    {% if form.non_field_errors%}
+        <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {% for error in form.non_field_errors %}
+            
+                <strong>{{ error|escape }}</strong>
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endif %}
+
+
+<div class="content">
+    <div class="container-fluid">
+        <form id="id_form_invoice" name="form1" method="POST" action=".">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-warning">
+                            <h5>
+                                <strong>MOVIMIENTOS DE MERCANCIA</strong>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <div style="display: none">
+                                        {{form.tipo}}
+                                        {{form.ubicacion}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Fecha</label><br>
+                                        {{form.fecha}}
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="control-label">Proveedor</label>
+                                    {{form.tercero}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h3>{% trans titulo_tipo %}</h3>
+                                            <div id="sale_item_form_set_management_form">
+                                                {{ detalle_movimientos.management_form }}
+                                            </div>
+                                            <div id="sale_item_form_set_non_form_errors" class="text-danger">
+                                                {{ detalle_movimientos.non_form_errors }}
+                                            </div>
+
+                                            <div id="formset_wrapper" class="border-top border-dark">
+                                                {% for item in detalle_movimientos %}
+                                                    <div style="display: none">
+                                                        {{ forloop.counter0 }}
+                                                    </div>
+                                                    <div class="form-invoice-item-content">
+                                                        <div class="form-row" id="formset-{{ forloop.counter0 }}">
+                                                            <div class="col-md-2">
+                                                                <label class="control-label col-form-label"
+                                                                        for="{{ field.id_for_label }}">
+                                                                    {{ item.codigo_de_barra.label }} {% if item.codigo_de_barra.field.required %}*{% endif %}
+                                                                </label>
+                                                                <div class="form-group bmd-form-group">
+                                                                    {{ item.codigo_de_barra | add_classes:'form-control' }}
+                                                                    <div class="text-danger">
+                                                                        {% for error in item.codigo_de_barra.errors %}
+                                                                            <li>{{ error|escape }} </li>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="control-label col-form-label"
+                                                                        for="{{ field.id_for_label }}">
+                                                                    Descripci&oacute;n
+                                                                </label>
+                                                                <div class="form-group bmd-form-group">
+                                                                    {{ item.producto | add_classes:'form-control' }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="control-label col-form-label"
+                                                                        for="{{ field.id_for_label }}">
+                                                                    {{ item.cantidad.label }} {% if item.cantidad.field.required %}*{% endif %}
+                                                                </label>
+                                                                <div class="form-group bmd-form-group">
+                                                                    {{ item.cantidad | add_classes:'form-control' }}
+                                                                    <div class="text-danger">
+                                                                        {% for error in item.cantidad.errors %}
+                                                                            <li>{{ error|escape }} </li>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="control-label col-form-label"
+                                                                        for="{{ field.id_for_label }}">
+                                                                    {{ item.costo.label }} {% if item.costo.field.required %}*{% endif %}
+                                                                </label>
+                                                                <div class="form-group bmd-form-group">
+                                                                    {{ item.costo | add_classes:'form-control costo_string' }}
+                                                                    <div class="text-danger">
+                                                                        {% for error in item.costo.errors %}
+                                                                            <li>{{ error|escape }} </li>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="control-label col-form-label"
+                                                                        for="{{ field.id_for_label }}">
+                                                                    Total
+                                                                </label>
+                                                                <div class="form-group bmd-form-group">
+                                                                    {{ item.total | add_classes:'form-control' }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="text-right">
+                                                <button type="button" class="btn btn-success"
+                                                    id="add_more">{% trans '+ Producto' %}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <br />
+                                                <p style="text-align: right;">Total Dcoumento:   </p>
+                                         
+                                        </div>
+                                        <div class="col-md-2 text-right">
+                                            <div class="form-group bmd-form-group">
+                                                {{ form.valor_documento }}
+                                            </div>
+                                        </div><br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="text-center">
+                                <button id="btn_save" type="submit" class="btn btn-social-icon btn-danger" name="submit" onclick="return ConfirmaGrabar()"><i class="fa fa-save"></i> Guardar</button>
+                                <a class="btn btn-social-icon btn-warning" href="{% url 'generales:home' %}"><i class="fa fa-times"></i> Cancelar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div style="display: none">
+    {% with detalle_movimientos.empty_form as item_form %}
+        <div id="movimientos_item_empty_form">
+            <div class="form-invoice-item-content">
+                <div class="form-row" id="formset-{{ forloop.counter0 }}">
+                    {% for field in item_form.visible_fields %}
+                        <div class="col-md-2">
+                            <label class="control-label col-form-label"
+                                for="{{ field.id_for_label }}">
+                                {{ field.label }} {% if field.field.required %}*{% endif %}
+                            </label>
+                            <div class="form-group bmd-form-group">
+                                {{ field | add_classes:'form-control' }}
+                                <div class="text-danger">
+                                    {% for error in field.errors %}
+                                        <li>{{ error|escape }} </li>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+</div>
+
+{{ detalle_movimientos.media }}
+
+
+<script>
+    
+    $(document).ready(function () {
+
+        $('#add_more').click(function () {
+            let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
+            let form_idx = total_form.val();
+            let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
+            let formset_wrapper = document.getElementById('formset_wrapper')
+            let e = document.createElement('div');
+            e.innerHTML = new_html;
+            formset_wrapper.appendChild(e.firstElementChild);
+            total_form.val(parseInt(form_idx) + 1);
+            
+        });
+
+        $('#find_producto').click(function () {
+            swal({
+                title: 'Seleccione un producto',
+                buttonsStyling: false,
+                confirmButtonClass: "btn btn-success",
+                html: '<select name="movimientos_detalle_set-0-producto" class="form-control select2-hidden-accessible" id="id_movimientos_detalle_set-0-producto" data-select2-id="select2-data-id_movimientos_detalle_set-0-producto" tabindex="-1" aria-hidden="true"></select>'
+            }).catch(swal.noop)
+        });
+
+    });
+
+    function validacbarra(itemn) {
+        var r = $("#"+itemn).val();
+        var datos = {'bar_code':r};
+        $.get( "{% url 'catalogos:valida_bar_code' %}", datos, function( data ) {
+            console.log(data);
+            if (data.errors){
+                swal({
+                    title: data.errors,
+                    showCancelButton: false,
+                    confirmButtonClass: 'btn btn-success',
+                    //cancelButtonClass: 'btn btn-danger',
+                    buttonsStyling: false
+                }).catch(swal.noop);
+                $("#"+id_costo).val(0);
+            }
+            else {
+                id_costo=itemn.replace("codigo_de_barra", "costo");
+                id_nombre=itemn.replace("codigo_de_barra", "producto");
+                var entrada = data.costo_unidad.split(',');
+                parteEntera = entrada[0].replace(/\./g, '');
+                parteDecimal = entrada[1];
+                salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+                data.costo_unidad = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+                $("#"+id_costo).val(data.costo_unidad);
+                $("#"+id_nombre).val(data.nombre);
+               
+            }
+            var separador = document.getElementById(id_costo);
+            separador.addEventListener('.costo_string', (e) => {
+                var entrada = e.target.value.split(','),
+                parteEntera = entrada[0].replace(/\./g, ''),
+                parteDecimal = entrada[1],
+                salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+                e.target.value = salida + (parteDecimal !== undefined ? ',' + parteDecimal : '');
+            }, false);
+        } );
+    }
+
+
+    function validacantidad(itemn) {
+        var cantidad = $("#"+itemn).val();
+        id_costo=itemn.replace("cantidad", "costo");
+        id_total=itemn.replace("cantidad", "total");
+        var costo = $("#"+id_costo).val();
+        costo = costo.replace (/\./g, '');   // convierte string  (con separadores) a float para hacer calculos matematicos
+        tot = String(parseFloat(cantidad) * parseFloat(costo));
+        var entrada = tot.split(',');
+        parteEntera = entrada[0].replace(/\./g, '');
+        parteDecimal = entrada[1];
+        salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+        $("#"+id_total).val(tot);
+        sumar(itemn);
+    }
+
+
+    function validacosto(itemn) {
+        var costo = $("#"+itemn).val();
+        id_cantidad=itemn.replace("costo", "cantidad");
+        id_total=itemn.replace("costo", "total");
+        var cantidad = $("#"+id_cantidad).val();
+        costo = costo.replace (/\./g, '');   // convierte string  (con separadores) a float para hacer calculos matematicos
+        tot = String(parseFloat(cantidad) * parseFloat(costo));
+        var entrada = costo.split(',');
+        parteEntera = entrada[0].replace(/\./g, '');
+        parteDecimal = entrada[1];
+        salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        $("#"+id_costo).val(salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00'));
+        var entrada = tot.split(',');
+        parteEntera = entrada[0].replace(/\./g, '');
+        parteDecimal = entrada[1];
+        salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+        $("#"+id_total).val(tot);
+        
+    }
+
+
+    $(document).ready(function(){ 
+        var count = $('#tabla_detalle tr').length;
+        for (i = 0; i < count; i++) {
+            $("#id_movimientos_detalle_set-"+i+"-producto").select2({ 
+                tags: true, 
+                multiple: false,
+                tokenSeparators: [',', ' '], 
+                minimumInputLength: 2,
+                delay: 200,
+                minimumResultsForSearch: 20, 
+                ajax: { 
+                    url: '{% url 'catalogos:producto_select2' %}', 
+                    dataType: "json", 
+                    type: "GET", 
+                    data: function (params) { var queryParameters = { q: params.term } 
+                    return queryParameters; 
+                }, 
+                processResults: function (data) {
+                    return { 
+                        results: $.map(data, function (item) { 
+                            return { 
+                                text: item.nombre, 
+                                id: item.id
+                            } 
+                        }) 
+                    }; 
+                } 
+            }});
+        }
+    });
+
+
+    function ConfirmaGrabar(){
+        var respuesta = confirm("Grabar documento ?");
+
+        if (respuesta == true)
+            {
+                let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS').val();
+                tot_tot=0
+                for (i = 0; i < total_form; i++) {
+                    id_cantidad = "id_movimientos_detalle_set-"+i+"-cantidad";
+                    var cantidad = $("#"+id_cantidad).val();
+                    var id_costo = "id_movimientos_detalle_set-"+i+"-costo";
+                    var id_total = "id_movimientos_detalle_set-"+i+"-total";
+                    costo = $("#"+id_costo).val()
+                    costo = costo.replace (/\./g, '');
+                    tot_tot += parseFloat(cantidad) * parseFloat(costo);
+                    $("#"+id_costo).val(parseFloat(costo));
+                    $("#"+id_total).val(parseFloat(cantidad) * parseFloat(costo));
+                };
+                valor_documento = $("#id_valor_documento").val()
+                valor_documento = valor_documento.replace (/\./g, '');
+                $("#id_valor_documento").val(parseFloat(valor_documento));
+                return true;
+            }
+        else
+            {
+                return false;
+            }
+    }
+
+
+
+function sumar(itemn){
+    let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS').val();
+    tot_tot=0
+    for (i = 0; i < total_form; i++) {
+        id_cantidad = "id_movimientos_detalle_set-"+i+"-cantidad";
+        var cantidad = $("#"+id_cantidad).val();
+        var id_costo = "id_movimientos_detalle_set-"+i+"-costo";
+        costo = $("#"+id_costo).val()
+        costo = costo.replace (/\./g, '');
+        tot_tot += parseFloat(cantidad) * parseFloat(costo);
+        
+    };
+    tot_tot = String(tot_tot);
+    var entrada = tot_tot.split(',');
+    parteEntera = entrada[0].replace(/\./g, '');
+    parteDecimal = entrada[1];
+    salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    tot_tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+    $("#id_valor_documento").val(tot_tot);
+}
+
+
+
+$(document).ready(function(){ 
+        $("#id_tercero").select2({ 
+            tags: true, 
+            multiple: false,
+            tokenSeparators: [',', ' '], 
+            minimumInputLength: 3,
+            delay: 200,
+            minimumResultsForSearch: 20, 
+            ajax: { 
+                url: '{% url 'catalogos:terceros_select2' %}', 
+                dataType: "json", 
+                type: "GET", 
+                data: function (params) { var queryParameters = { q: params.term } 
+                return queryParameters; 
+            }, 
+            processResults: function (data) {
+                return { 
+                    results: $.map(data, function (item) { 
+                        return { 
+                            text: item.rzn_social, 
+                            id: item.id
+                        } 
+                    }) 
+                }; 
+            } 
+        } 
+    }); 
+});
+</script>
+
+
+{% endblock contenido %}

@@ -6,6 +6,8 @@ from generales.models import Terceros, Ciudad
 
 from django.contrib.auth.models import User
 
+from datetime import datetime
+
 # Create your models here.
 
 class Categoria(ClaseModelo):
@@ -21,6 +23,7 @@ class Categoria(ClaseModelo):
 
     def save(self):
         self.nombre = self.nombre.upper()
+        self.usuario = self.request.user
         super(Categoria, self).save()
 
     class Meta:
@@ -59,6 +62,7 @@ class Ubicaciones(ClaseModelo):
 
     def save(self):
         self.descripcion = self.descripcion.upper()
+        self.usuario = self.request.user
         super(Ubicaciones, self).save()
 
     class Meta:
@@ -91,7 +95,8 @@ class Producto(ClaseModelo):
     CHOICES = ( (1,'UNIDAD'),(2,'KILOGRAMO'),(3,'GRAMO'),(4,'MILIGRAMO'),(5,'METRO'),(6,'CENTIMETRO'),(7,'MILIMETRO'),\
         (8,'LITRO'), (9,'MILILITRO'), (10,'CENTILITRO'), (11,'METRO CUADRADO'), (12,'CENTIMETRO CUADRADO'), (13,'LITRO') )
     unidad_de_medida = models.IntegerField(choices=CHOICES, default=1, blank=False, null=False)
-    proveedor = models.ForeignKey(Terceros, models.DO_NOTHING, blank=True, null=True, default=0)
+    proveedor = models.ManyToManyField(Terceros, related_name='Proveedores_del_producto') 
+    #models.ForeignKey(Terceros, models.DO_NOTHING, blank=True, null=True, default=0)
     existencia = models.DecimalField('EXISTENCIA', max_digits=12, decimal_places=2, default=0, blank=True, null=True)
     stock_minimo = models.DecimalField('STOCK MINIMO', max_digits=10, decimal_places=0, default=0, blank=True, null=True)
     stock_maximo = models.DecimalField('STOCK MAXIMO', max_digits=10, decimal_places=0, default=0, blank=True, null=True)
@@ -116,3 +121,57 @@ class Producto(ClaseModelo):
 
     class Meta:
         verbose_name_plural = "Productos"
+        
+
+
+
+class Tipos_movimientos(ClaseModelo):
+    nombre = models.CharField(max_length=100, help_text='Nombre Tipo de Movimiento', unique=True)
+    tipo = models.IntegerField(default=1, blank=False, null=False)
+
+    def __str__(self):
+        return '{}'.format(self.nombre)
+
+    def save(self):
+        self.nombre = self.nombre.upper()
+        super(Tipos_movimientos, self).save()
+
+    class Meta:
+        verbose_name_plural = "Tipos de Movimientos"
+
+      
+class Movimientos(ClaseModelo):
+    usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
+    fecha = models.DateTimeField('Fecha documento', blank=False, null=False, default=datetime.today())
+    tipo =  models.ForeignKey(Tipos_movimientos, on_delete=models.CASCADE)
+    tercero =  models.ForeignKey(Terceros, on_delete=models.CASCADE)
+    ubicacion = models.ForeignKey(Ubicaciones, on_delete=models.DO_NOTHING, default=1, null=False, blank=False)
+    valor_documento = models.DecimalField('Valor documento', max_digits=12, decimal_places=0, default=0, blank=True, null=True)
+
+    def __str__(self):
+        return '{}:{}'.format(self.tipo.nombre,self.id)
+
+    def save(self):
+        super(Movimientos, self).save()
+
+    class Meta:
+        verbose_name_plural = "Movimientos"
+        
+        
+        
+class Movimientos_detalle(ClaseModelo):
+    movimiento = models.ForeignKey(Movimientos, on_delete=models.CASCADE)
+    producto =  models.CharField(max_length=100, help_text='Nombre del producto', blank=True, null=True, default='')
+    codigo_de_barra = models.CharField(max_length=100, help_text='Código de Barra', blank=True, null=True, default='')
+    cantidad = models.DecimalField('Cantidad', max_digits=12, decimal_places=2, default=0, blank=True, null=True)
+    costo = models.DecimalField('Precio de Compra', max_digits=12, decimal_places=0, default=0, blank=True, null=True)
+    total = models.DecimalField('Total', max_digits=12, decimal_places=0, default=0, blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.producto)
+
+    def save(self):
+        super(Movimientos_detalle, self).save()
+
+    class Meta:
+        verbose_name_plural = "Movimientos Detalles"
