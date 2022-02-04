@@ -142,7 +142,7 @@ class Tipos_movimientos(ClaseModelo):
       
 class Movimientos(ClaseModelo):
     usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
-    fecha = models.DateTimeField('Fecha documento', blank=False, null=False, default=datetime.today())
+    fecha = models.DateTimeField('Fecha documento', blank=False, null=False)
     tipo =  models.ForeignKey(Tipos_movimientos, on_delete=models.CASCADE)
     tercero =  models.ForeignKey(Terceros, on_delete=models.CASCADE)
     ubicacion = models.ForeignKey(Ubicaciones, on_delete=models.DO_NOTHING, default=1, null=False, blank=False)
