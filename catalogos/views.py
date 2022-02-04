@@ -142,7 +142,7 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
 
         detalle_movimientos_formset = DetalleMovimientosFormSet()
 
-        return self.render_to_response(
+        return self.render_to_response( 
             self.get_context_data(
                 form=form,
                 detalle_movimientos=detalle_movimientos_formset,
