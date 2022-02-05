@@ -86,6 +86,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pos.wsgi.application'
 
+# Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pos',
+        'USER': 'postgres',
+        'PASSWORD': '0268',
+        'HOST': 'localhost',
+        'PORT': '5432',
+       },
+    
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -105,20 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pos',
-        'USER': 'postgres',
-        'PASSWORD': '0268',
-        'HOST': 'localhost',
-        'PORT': '5432',
-       },
-    
-}
 
 
 
@@ -136,7 +137,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-USE_THOUSAND_SEPARATOR = True
+USE_THOUSAND_SEPARATOR = False
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
@@ -152,6 +153,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "medios@sistemainrai.net"
 EMAIL_HOST_PASSWORD = "j786796679"
 
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
@@ -162,7 +165,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 ALLOWED_HOSTS = ['*']
-DEFAULT_BAG_PER_UNIT_AMOUNT = Decimal(51)
+#DEFAULT_BAG_PER_UNIT_AMOUNT = Decimal(51)
 try:
    exec(open(os.path.join(BASE_DIR, 'pos/settings_local.py')).read())
 except IOError:
