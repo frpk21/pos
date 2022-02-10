@@ -5,7 +5,7 @@ from django.views import generic
 
 from catalogos.models import Categoria, SubCategoria, Producto, Iva, Movimientos
 
-from generales.models import Terceros
+from generales.models import Terceros, Profile
 
 from django.db import connections
 
@@ -134,7 +134,7 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
     success_url = reverse_lazy('generales:home')
 
     def get(self, request, *args, **kwargs):
-        ctx = {'fecha': datetime.today(), 'tipo': 1, 'tercero': 0, 'ubicacion': 1, }
+        ctx = {'fecha': datetime.today(), 'tipo': kwargs["tipo"], 'tercero': 0, 'ubicacion': 1, }
 
         self.object = None
 
@@ -145,31 +145,47 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
         return self.render_to_response( 
             self.get_context_data(
                 form=form,
-                detalle_movimientos=detalle_movimientos_formset,
-                titulo_tipo="ENTRADA DE ALMACEN"
-            
+                detalle_movimientos=detalle_movimientos_formset            
             )
         )
 
     def post(self, request, *args, **kwargs):
         form = MovimientosEncForm(request.POST)
         detalle_movimientos = DetalleMovimientosFormSet(request.POST)
+        tipor = kwargs["tipo"]
         #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
         #print(form.errors)
         #print(detalle_movimientos.errors)
         if form.is_valid() and detalle_movimientos.is_valid():
-            return self.form_valid(form, detalle_movimientos)
+            return self.form_valid(form, detalle_movimientos, tipor)
         else:
-            return self.form_invalid(form, detalle_movimientos)
+            return self.form_invalid(form, detalle_movimientos, tipor)
 
-    def form_valid(self, form, detalle_movimientos):
+    def form_valid(self, form, detalle_movimientos, tipor):
         self.object = form.save(commit=False)
+        profile = Profile.objects.filter(user=self.request.user.id).get()
+        if tipor == 1:
+            self.object.documento_no = profile.entrada + 1
+            profile.entrada = profile.entrada + 1
+        else:
+            self.object.documento_no = profile.salida + 1
+            profile.salida = profile.salida + 1
+        profile.save()
         self.object.usuario = self.request.user
         self.object = form.save()
         detalle_movimientos.instance = self.object
         detalle_movimientos.save()
+        for detalle in detalle_movimientos:
+            if detalle.cleaned_data["cantidad"] is not None:
+                producto=Producto.objects.filter(codigo_de_barra=detalle.cleaned_data["codigo_de_barra"], usuario=self.request.user.id).get()
+                if tipor == 1:
+                    producto.existencia = producto.existencia + detalle.cleaned_data["cantidad"]
+                else:
+                    producto.existencia = producto.existencia - detalle.cleaned_data["cantidad"]
+                producto.save()
         
-        return HttpResponseRedirect(reverse_lazy("generales:home"))
+        
+        return HttpResponseRedirect(reverse_lazy("catalogos:catalogo"))
         #return JsonResponse(
         #    {
         #        'content': {
@@ -179,7 +195,7 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
         #)
 
 
-    def form_invalid(self, form, detalle_movimientos):
+    def form_invalid(self, form, detalle_movimientos, tipor):
         self.object=form
         return self.render_to_response(
             self.get_context_data(
@@ -317,7 +333,7 @@ def get_ajaxBarcode(request, *args, **kwargs):
     if not bar_code:
         return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})
     else:
-        bar_code = Producto.objects.filter(codigo_de_barra=bar_code).last()
+        bar_code = Producto.objects.filter(codigo_de_barra=bar_code, ).last()
         if bar_code:
             return JsonResponse(data={"nombre": bar_code.nombre, "costo_unidad": bar_code.costo_unidad}, safe=False)
         else: 
@@ -329,7 +345,7 @@ def get_ajaxBarcode(request, *args, **kwargs):
 def get_ajaxProducto(request, *args, **kwargs): 
     query = request.GET.get('q', None)
     if query: 
-        terceros = Producto.objects.filter(nombre__icontains=query).values("id","nombre") 
+        terceros = Producto.objects.filter(nombre__icontains=query, usuario=request.user).values("id","nombre") 
         terceros = list(terceros)
         return JsonResponse(terceros, safe=False) 
     else: 
@@ -341,3 +357,19 @@ def get_additem(request, *args, **kwargs):
     detalle_movimientos_formset = DetalleMovimientosFormSet()
     detalle_movimientos_formset.extra += 1
     return JsonResponse(data={'detalle_movimientos':detalle_movimientos_formset})
+
+
+def get_ajaxCantidad(request, *args, **kwargs): 
+    cantidad = request.GET.get('cantidad', None)
+    bar_code = request.GET.get('producto', None)
+    if not cantidad:
+        return JsonResponse(data={'existencia': '', 'errors': 'No encuentro producto.'})
+    else:
+        existencia = Producto.objects.filter(codigo_de_barra=bar_code, usuario=request.user).last()
+        if bar_code:
+            if int(cantidad) > existencia.existencia:
+                return JsonResponse(data={"errors": "CANTIDAD NO PUEDE SER SUPERIOR A LA EXISTENCIA DEL PRODUCTO"}, safe=False)
+            else:
+                return JsonResponse(data={"errors": ""}, safe=False)
+        else: 
+            return JsonResponse(data={'errors': 'No encuentro producto.'})

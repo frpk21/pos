@@ -20,6 +20,8 @@ class Profile(models.Model):
     direccion = models.CharField('Direccion Comercial', blank=False, null=False, max_length=100, default="")
     telefono = models.CharField('Telefono Comercial', blank=False, null=False, max_length=100, default="")
     email = models.CharField('Telefono Comercial', blank=False, null=False, max_length=100, default="")
+    entrada = models.IntegerField('CONSECUTIVO ENTRADAS DE ALMACEN', default=0, blank=True, null=True)
+    salida = models.IntegerField('CONSECUTIVO SALIDAS DE ALMACEN', default=0, blank=True, null=True)
     
     #sede = models.ForeignKey(Sedes, on_delete=models.CASCADE, default=0, null=False, blank=False)
  

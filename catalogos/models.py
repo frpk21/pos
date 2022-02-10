@@ -141,6 +141,7 @@ class Tipos_movimientos(ClaseModelo):
 
       
 class Movimientos(ClaseModelo):
+    documento_no = models.IntegerField('CONSECUTIVO ENTRADAS DE ALMACEN', default=0, blank=False, null=False)
     usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
     fecha = models.DateTimeField('Fecha documento', blank=False, null=False)
     tipo =  models.ForeignKey(Tipos_movimientos, on_delete=models.CASCADE)

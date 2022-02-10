@@ -138,13 +138,13 @@
                                         </a>
                                     </li>
                                     <li class="nav-item ">
-                                        <a class="nav-link" href="{% url 'catalogos:movimientos' %}">
+                                        <a class="nav-link" href="{% url 'catalogos:movimientos' 1 %}">
                                             <span class="sidebar-mini"> E </span>
                                             <span class="sidebar-normal"> Entradas </span>
                                         </a>
                                     </li>
                                     <li class="nav-item ">
-                                        <a class="nav-link" href="{% url 'catalogos:movimientos' %}">
+                                        <a class="nav-link" href="{% url 'catalogos:movimientos' 2 %}">
                                             <span class="sidebar-mini"> R </span>
                                             <span class="sidebar-normal"> Sal&iacute;das </span>
                                         </a>
@@ -407,7 +407,7 @@
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
     <script src="/static/base/assets/demo/demo.js"></script>
   
-    <script>
+    <!--<script>
       $(document).ready(function() {
         // Javascript method's body can be found in assets/js/demos.js
         md.initDashboardPageCharts();
@@ -415,9 +415,10 @@
         md.initVectorMap();
 
       });
-    </script>
+    </script>-->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     
+    {% block extra_js %}{% endblock extra_js %}
       
 </body>
 

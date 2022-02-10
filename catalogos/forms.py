@@ -181,11 +181,19 @@ class MovimientosDetForm(forms.ModelForm):
         cantidad = self.cleaned_data["cantidad"]
         if not cantidad:
             raise forms.ValidationError("Cantidad Requerida.")
+        return cantidad
     
     def clean_costo(self):
         costo = self.cleaned_data["costo"]
         if not costo:
             raise forms.ValidationError("Costo Requerido.")
+        return costo
+        
+    def clean_codigo_de_barra(self):
+        codigo_de_barra = self.cleaned_data["codigo_de_barra"]
+        if not codigo_de_barra:
+            raise forms.ValidationError("Codigo de Barra Requerido.")
+        return codigo_de_barra
 
 DetalleMovimientosFormSet = inlineformset_factory(Movimientos,Movimientos_detalle,form=MovimientosDetForm, extra=1,
     min_num=0,
