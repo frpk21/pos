@@ -87,7 +87,6 @@ class Iva(ClaseModelo):
 
 
 class Producto(ClaseModelo):
-    usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
     subcategoria = models.ForeignKey(SubCategoria, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100, help_text='Nombre del producto')
     descripcion = models.CharField(max_length=100, help_text='Descripción del producto')
@@ -176,3 +175,38 @@ class Movimientos_detalle(ClaseModelo):
 
     class Meta:
         verbose_name_plural = "Movimientos Detalles"
+
+
+class Formulacion(ClaseModelo):
+    
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=100, help_text='Nombre de Formula')
+    usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
+    
+
+    def __str__(self):
+        return '{}'.format(self.nombre)
+
+    def save(self):
+        self.nombre = self.nombre.upper()
+        super(Formulacion, self).save()
+
+    class Meta:
+        verbose_name_plural = "Formulas"
+        
+        
+class Formulacion1(ClaseModelo):
+    
+    formula = models.ForeignKey(Formulacion, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.DecimalField('Cantidad', max_digits=12, decimal_places=2, default=0, blank=True, null=True)
+    
+
+    def __str__(self):
+        return '{}'.format(self.formula)
+
+    def save(self):
+        super(Formulacion1, self).save()
+
+    class Meta:
+        verbose_name_plural = "Detalles Formula"
