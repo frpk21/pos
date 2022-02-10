@@ -134,7 +134,8 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
     success_url = reverse_lazy('generales:home')
 
     def get(self, request, *args, **kwargs):
-        ctx = {'fecha': datetime.today(), 'tipo': kwargs["tipo"], 'tercero': 0, 'ubicacion': 1, }
+
+        ctx = {'fecha': datetime.today(), 'tipo': kwargs["tipoe"], 'tercero': 0, 'ubicacion': 1, }
 
         self.object = None
 
