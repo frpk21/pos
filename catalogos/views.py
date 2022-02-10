@@ -146,6 +146,7 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
         return self.render_to_response( 
             self.get_context_data(
                 form=form,
+                tipo=kwargs["tipoe"],
                 detalle_movimientos=detalle_movimientos_formset            
             )
         )
