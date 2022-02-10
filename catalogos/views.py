@@ -154,7 +154,7 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
     def post(self, request, *args, **kwargs):
         form = MovimientosEncForm(request.POST)
         detalle_movimientos = DetalleMovimientosFormSet(request.POST)
-        tipor = kwargs["tipo"]
+        tipor = kwargs["tipoe"]
         #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
         #print(form.errors)
         #print(detalle_movimientos.errors)
@@ -312,7 +312,7 @@ class TarifaIvaDel(LoginRequiredMixin, SinPrivilegios, generic.DeleteView):
 def get_ajaxSubcategoria(request, *args, **kwargs): 
     query = request.GET.get('q', None)
     if query: 
-        terceros = SubCategoria.objects.filter(nombre__icontains=query).values("id","nombre") 
+        terceros = SubCategoria.objects.filter(nombre__icontains=query, categoria__usuario=request.user).values("id","nombre") 
         terceros = list(terceros)
         return JsonResponse(terceros, safe=False) 
     else: 
@@ -322,7 +322,7 @@ def get_ajaxSubcategoria(request, *args, **kwargs):
 def get_ajaxTerceros(request, *args, **kwargs): 
     query = request.GET.get('q', None)
     if query: 
-        terceros = Terceros.objects.filter(rzn_social__icontains=query).values("id","rzn_social") 
+        terceros = Terceros.objects.filter(rzn_social__icontains=query, user=request.user).values("id","rzn_social") 
         terceros = list(terceros)
         return JsonResponse(terceros, safe=False) 
     else: 
@@ -335,7 +335,7 @@ def get_ajaxBarcode(request, *args, **kwargs):
     if not bar_code:
         return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})
     else:
-        bar_code = Producto.objects.filter(codigo_de_barra=bar_code, ).last()
+        bar_code = Producto.objects.filter(codigo_de_barra=bar_code, usuario=request.user).last()
         if bar_code:
             return JsonResponse(data={"nombre": bar_code.nombre, "costo_unidad": bar_code.costo_unidad}, safe=False)
         else: 
