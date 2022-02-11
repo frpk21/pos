@@ -12,7 +12,9 @@ from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from pos.utilidades import enviar_mail, numero_to_letras
-
+from datetime import date
+from datetime import datetime, timedelta
+from django.db.models import Sum
 
 
 
@@ -141,3 +143,138 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
 #SinPrivilegios, 
 class FacturaEdit(generic.UpdateView):
     pass
+
+
+
+def MenuView(request, *args, **kwargs):
+    template_name="facturas/menu.html"
+    hoy = date.today()
+    #form = SedesForm()
+    anoR = hoy.year
+    ventas=[]
+    ene=0
+    feb=0
+    mar=0
+    abr=0
+    may=0
+    jun=0
+    jul=0
+    ago=0
+    sep=0
+    oct=0
+    nov=0
+    dic=0
+        
+    for mes in range(1,13):
+        lista=[]
+        r = Facturas.objects.filter(fecha_factura__month=mes, fecha_factura__year=anoR).aggregate(
+            Sum('valor_factura'),
+            Sum('valor_iva'),
+            Sum('reteica'),
+            Sum('reteiva'),
+            Sum('retfuente'),
+            Sum('saldo'))
+        
+        anulados = Facturas.objects.filter(fecha_factura__month=mes, fecha_factura__year=anoR, anulado=True).aggregate(
+            Sum('valor_factura'),
+            Sum('valor_iva'),
+            Sum('reteica'),
+            Sum('reteiva'),
+            Sum('retfuente'),
+            Sum('saldo'))
+
+       # nd = NotasDebito.objects.filter(fecha__month=mes, fecha__year=anoR, sede=1).aggregate(
+       #     Sum('factura__factura__valor_factura'),
+       #     Sum('factura__factura__valor_iva'),
+       #     Sum('factura__factura__reteica'),
+      #     Sum('factura__factura__reteiva'),
+       #     Sum('factura__factura__retfuente'),
+       #     Sum('factura__factura__saldo'))
+
+       # nc = FacturasAnuladas.objects.filter(fecha__month=mes, fecha__year=anoR, sede=1).aggregate(
+       #     Sum('factura__factura__valor_factura'),
+       #     Sum('factura__factura__valor_iva'),
+       #     Sum('factura__factura__reteica'),
+       #     Sum('factura__factura__reteiva'),
+       #     Sum('factura__factura__retfuente'),
+        #    Sum('factura__factura__saldo'))
+
+        if r["valor_factura__sum"] is not None:
+            if mes == 1:
+                ene = ene + r["valor_factura__sum"]
+            elif mes == 2:
+                feb = feb + r["valor_factura__sum"]
+            elif mes == 3:
+                mar = mar + r["valor_factura__sum"]
+            elif mes == 4:
+                abr = abr + r["valor_factura__sum"]
+            elif mes == 5:
+                may = may + r["valor_factura__sum"]
+            elif mes == 6:
+                jun = jun + r["valor_factura__sum"]
+            elif mes == 7:
+                jul = jul + r["valor_factura__sum"]
+            elif mes == 8:
+                ago = ago + r["valor_factura__sum"]
+            elif mes == 9:
+                sep = sep + r["valor_factura__sum"]
+            elif mes == 10:
+                oct = oct + r["valor_factura__sum"]
+            elif mes == 11:
+                nov = nov + r["valor_factura__sum"]
+            else:
+                dic = dic + r["valor_factura__sum"]
+
+        lista.append(r)
+        lista.append(anulados)
+        #lista.append(nd)
+        #lista.append(nc)
+        context={}
+        context['tot_'+str(mes)] = lista
+
+    ventas.append(int(ene))
+    ventas.append(int(feb))
+    ventas.append(int(mar))
+    ventas.append(int(abr))
+    ventas.append(int(may))
+    ventas.append(int(jun))
+    ventas.append(int(jul))
+    ventas.append(int(ago))
+    ventas.append(int(sep))
+    ventas.append(int(oct))
+    ventas.append(int(nov))
+    ventas.append(int(dic))
+    context['ventas'] = ventas
+    context['hoy'] = hoy
+
+    resul = Facturas.objects.filter(saldo__gte=0,anulado=False)
+    vencimientos=[]
+    sdo30=0
+    sdo60=0
+    sdo90=0
+    sdootros=0
+    total=0
+    for i, item in enumerate(resul):
+        total += int(item.saldo)
+        if (hoy-item.fecha_factura).days<=31:
+            sdo30 += int(item.saldo)
+        elif (hoy-item.fecha_factura).days<=61:
+            sdo60 += int(item.saldo)
+        elif (hoy-item.fecha_factura).days<=91:
+            sdo90 += int(item.saldo)
+        else:
+            sdootros += int(item.saldo)
+    
+    vencimientos.append(sdo30)
+    vencimientos.append(sdo60)
+    vencimientos.append(sdo90)
+    vencimientos.append(sdootros)
+    context['vencimientos'] = vencimientos
+    context['total'] = total
+    #p=Emisoras.objects.filter(categoria__lte=3, url_streaming=None).aggregate(sin_url = Count('id'))
+    #context['sin_url'] = p['sin_url']
+    #r=Emisoras.objects.filter(categoria__lte=3).aggregate(total=Count('id'))
+    #context['total_emisoras'] = r['total']
+    #context['netos'] = r['total']-p['sin_url']
+
+    return render(request, template_name, context)

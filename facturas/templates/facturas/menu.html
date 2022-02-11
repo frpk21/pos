@@ -1,0 +1,169 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+{% load humanize %}
+
+<script src="/static/base/js/plugins/chartist.min.js"></script>
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card card-chart">
+          <div class="card-header card-header-rose" data-header-animation="false">
+            <div class="ct-chart" id="websiteViewsChart"></div>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Ejecuci&oacute;n</h4>
+            <p class="card-category">Bogot&aacute;</p>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">access_time</i> {{hoy}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-chart">
+          <div class="card-header card-header-info" data-header-animation="false">
+            <div class="ct-chart1" id="websiteViewsChart"></div>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Cartera</h4>
+            <p class="card-category">Organizaci&oacute;n</p>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">access_time</i> {{hoy}}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+
+
+      <div class="col-md-12">
+        <div class="card-header card-header-warning card-header-icon">
+            <h4 class="card-title text-center"><strong>Facturaci&oacute;n</strong></h4>
+        </div>
+        <div class="row">
+          
+          <div class="col-sm-2">
+            <div class="card card-stats text-center">
+              <a href="">
+                <i class="material-icons">account_circle</i>
+                <br /><br />
+                <h4 class="card-title">Generar Factura</h4>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="card card-stats text-center">
+              <a href="">
+                <i class="material-icons">check_circle_outline</i>
+                <br /><br />
+                <h4 class="card-title">DIAN</h4>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="card card-stats text-center">
+              <a href="">
+                <i class="material-icons">fact_check</i>
+                <br /><br />
+                <h4 class="card-title">Facturas Generadas</h4>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="card card-stats text-center">
+              <a href="">
+                <i class="material-icons">done_all</i>
+                <br /><br />
+                <h4 class="card-title">Totales</h4>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="card card-stats text-center">
+              <a href="">
+                <i class="material-icons">delete</i>
+                <br /><br />
+                <h4 class="card-title">Anular Factura</h4>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="card card-stats text-center">
+              <a href="">
+                <i class="material-icons">NDe</i>
+                <br /><br />
+                <h4 class="card-title">Notas D&eacute;bito</h4>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="card card-stats text-center">
+              <a href="">
+                <i class="material-icons">close</i>
+                <br /><br />
+                <h4 class="card-title">Cierre de Caja</h4>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  new Chartist.Bar('.ct-chart', {
+    labels: ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+    series: [
+        {{ventas}}
+    ]
+    }, {
+    stackBars: true,
+    axisY: {
+        labelInterpolationFnc: function(value) {
+        return (value / 1000000) + 'M';
+        }
+    }
+    }).on('draw', function(data) {
+    if(data.type === 'bar') {
+        data.element.attr({
+        style: 'stroke-width: 15px'
+        });
+    }
+    });
+     
+
+  /*  **************** Public Preferences - Pie Chart ******************** */
+
+  new Chartist.Bar('.ct-chart1', {
+    labels: ['30d', '60d', '90d', '+90d'],
+    series: [{{vencimientos}}]
+    }, {
+    stackBars: true,
+    axisY: {
+        labelInterpolationFnc: function(value) {
+        return (value / 1000000) + 'M';
+        }
+    }
+    }).on('draw', function(data) {
+    if(data.type === 'bar') {
+        data.element.attr({
+        style: 'stroke-width: 25px'
+        });
+    }
+    });
+
+</script>
+
+{% endblock contenido %}

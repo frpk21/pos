@@ -44,7 +44,8 @@
                 <div class="user">
                     <div class="photo">
                         {% if request.user.is_staff %}
-                            <img src="{{ user.profile.foto.url }}"/>
+                            <!--<img src="{{ user.profile.foto.url }}"/>-->
+                            <i class="material-icons">person</i>
                         {% endif %}
                     </div>
                     <div class="user-info">
@@ -160,10 +161,10 @@
                             </div>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" data-toggle="collapse" href="#monitoreoRadio">
+                            <a class="nav-link" href="{% url 'facturas:menu' %}">
                                 <i class="material-icons">track_changes</i>
-                                <p> Facturar
-                                    <b class="caret"></b>
+                                <p> Facturaci&oacute;n
+                                    
                                 </p>
                             </a>
                             <div class="collapse" id="monitoreoRadio">

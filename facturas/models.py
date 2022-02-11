@@ -9,6 +9,14 @@ from catalogos.models import Producto
 class Facturas(ClaseModelo):
     fecha_factura = models.DateField()
     observacion = models.CharField(max_length=200, null=True,blank=True)
+    valor_factura = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    porc_iva = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    valor_iva = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    reteica = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    reteiva = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    retfuente = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    saldo = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    anulado = models.BooleanField(default=False, blank=True, null=True)
     usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.DO_NOTHING)
 
     def __str__(self):
