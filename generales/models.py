@@ -13,8 +13,8 @@ class ClaseModelo(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    foto = models.FileField("Archivo con Foto del Usuario", upload_to="fotos/", blank=False, null=False, default="")
-    logo = models.FileField("Logo del Usuario", upload_to="fotos/", blank=False, null=False, default="")
+    foto = models.FileField("Archivo con Foto del Usuario", upload_to="fotos/", blank=False, null=False)
+    logo = models.FileField("Logo del Usuario", upload_to="fotos/", blank=False, null=False)
     nit  = models.CharField('NIT / CC #', blank=False, null=False, max_length=30, default="")
     empresa = models.CharField('Empresa', blank=False, null=False, max_length=100, default="")
     direccion = models.CharField('Direccion Comercial', blank=False, null=False, max_length=100, default="")

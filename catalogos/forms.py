@@ -1,6 +1,6 @@
 from django import forms
 
-from catalogos.models import Categoria, SubCategoria, Producto, Iva, Movimientos, Movimientos_detalle
+from catalogos.models import Categoria, SubCategoria, Producto, Iva, Movimientos, Movimientos_detalle, Formulacion, Formulacion1
 
 from django.forms.models import inlineformset_factory
 
@@ -196,5 +196,61 @@ class MovimientosDetForm(forms.ModelForm):
         return codigo_de_barra
 
 DetalleMovimientosFormSet = inlineformset_factory(Movimientos,Movimientos_detalle,form=MovimientosDetForm, extra=1,
+    min_num=0,
+    validate_min=True, can_delete=False)
+
+
+
+
+class FormulacionEncForm(forms.ModelForm):
+    class Meta:
+        model=Formulacion
+        fields = ['producto', 'nombre',]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })
+
+    def clean_producto(self):
+        producto = self.cleaned_data["producto"]
+        if not producto:
+            raise forms.ValidationError("Debe seleccionar un producto.")
+        return producto
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data["nombre"]
+        if not nombre:
+            raise forms.ValidationError("Nombre formula requerido.")
+        return nombre
+
+
+class FormulacionDetForm(forms.ModelForm):
+    class Meta:
+        model = Formulacion1
+        fields = ['producto', 'cantidad',]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })
+        
+    def clean_producto(self):
+        producto = self.cleaned_data["producto"]
+        if not producto:
+            raise forms.ValidationError("Producto Requerido.")
+        return producto
+    
+    def clean_cantidad(self):
+        cantidad = self.cleaned_data["cantidad"]
+        if not cantidad:
+            raise forms.ValidationError("Cantidad Requerida.")
+        return cantidad
+
+DetalleFormulacionFormSet = inlineformset_factory(Formulacion, Formulacion1, form=FormulacionDetForm, extra=0,
     min_num=0,
     validate_min=True, can_delete=False)

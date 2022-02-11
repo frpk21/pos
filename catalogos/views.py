@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from django.views import generic
 
-from catalogos.models import Categoria, SubCategoria, Producto, Iva, Movimientos
+from catalogos.models import Categoria, SubCategoria, Producto, Iva, Movimientos, Formulacion
 
 from generales.models import Terceros, Profile
 
@@ -11,7 +11,7 @@ from django.db import connections
 
 from collections import namedtuple
 
-from catalogos.forms import CategoriaForm, SubCategoriaForm, ProductoForm, IvaForm, MovimientosEncForm, DetalleMovimientosFormSet
+from catalogos.forms import CategoriaForm, SubCategoriaForm, ProductoForm, IvaForm, MovimientosEncForm, DetalleMovimientosFormSet, FormulacionEncForm, FormulacionDetForm, DetalleFormulacionFormSet
 
 from django.urls import reverse_lazy
 
@@ -209,7 +209,6 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
 
 
 
-
 class ProductoNew(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, generic.CreateView):
     permission_required='catalogos.add_producto'
     model = Producto
@@ -375,3 +374,61 @@ def get_ajaxCantidad(request, *args, **kwargs):
                 return JsonResponse(data={"errors": ""}, safe=False)
         else: 
             return JsonResponse(data={'errors': 'No encuentro producto.'})
+        
+        
+        
+        
+        
+class FormulacionView(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, generic.CreateView):
+    permission_required = 'formulacion.add_formulacion'
+    model = Formulacion
+    login_url = 'generales:login'
+    template_name = 'catalogos/formulacionform.html'
+    form_class = FormulacionEncForm
+    success_url = reverse_lazy('generales:home')
+
+    def get(self, request, *args, **kwargs):
+
+        self.object = None
+
+        form = FormulacionEncForm()
+
+        detalle_movimientos_formset = DetalleFormulacionFormSet()
+
+        return self.render_to_response( 
+            self.get_context_data(
+                form=form,
+                detalle_movimientos=detalle_movimientos_formset            
+            )
+        )
+
+    def post(self, request, *args, **kwargs):
+        
+        form = FormulacionEncForm(request.POST)
+        detalle_movimientos = DetalleFormulacionFormSet(request.POST)
+        #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+        #print(form.errors)
+        #print(detalle_movimientos.errors)
+        if form.is_valid() and detalle_movimientos.is_valid():
+            return self.form_valid(form, detalle_movimientos)
+        else:
+            return self.form_invalid(form, detalle_movimientos)
+
+    def form_valid(self, form, detalle_movimientos):
+        self.object = form.save(commit=False)
+        self.object.usuario = self.request.user
+        self.object = form.save()
+        detalle_movimientos.instance = self.object
+        detalle_movimientos.save()
+
+        return HttpResponseRedirect(reverse_lazy("generales:home"))
+
+    def form_invalid(self, form, detalle_movimientos):
+        self.object=form
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                detalle_movimientos=detalle_movimientos
+            )
+        )
+

@@ -178,8 +178,7 @@ class Movimientos_detalle(ClaseModelo):
 
 
 class Formulacion(ClaseModelo):
-    
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, default=0, null=False, blank=False)
     nombre = models.CharField(max_length=100, help_text='Nombre de Formula')
     usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
     
@@ -196,7 +195,6 @@ class Formulacion(ClaseModelo):
         
         
 class Formulacion1(ClaseModelo):
-    
     formula = models.ForeignKey(Formulacion, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.DecimalField('Cantidad', max_digits=12, decimal_places=2, default=0, blank=True, null=True)
