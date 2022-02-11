@@ -57,9 +57,17 @@ class CategoriaNew(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, gene
         self.object.usuario = self.request.user
         self.object = form.save()
         
+        return HttpResponseRedirect(reverse_lazy("catalogos:categoria_list"))
+
 
     def form_invalid(self, form, detalle_movimientos, tipor):
         self.object=form
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                detalle_movimientos=detalle_movimientos
+            )
+        )
 
 
 class CategoriaEdit(LoginRequiredMixin, SinPrivilegios, generic.UpdateView):
