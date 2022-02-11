@@ -49,11 +49,11 @@ class SubCategoriaForm(forms.ModelForm):
 
 
 class ProductoForm(forms.ModelForm):
-    subcategoria = forms.ModelChoiceField(
-        queryset = SubCategoria.objects.filter(activo=True).
-        order_by('categoria__nombre','nombre'),
-        empty_label = "Seleccione una sub categoría"
-    )
+    #subcategoria = forms.ModelChoiceField(
+    #    queryset = SubCategoria.objects.filter(activo=True).
+    #    order_by('categoria__nombre','nombre'),
+    #    empty_label = "Seleccione una sub categoría"
+    #)
     archivo_foto = forms.FileField(required=False)
 
     class Meta:
