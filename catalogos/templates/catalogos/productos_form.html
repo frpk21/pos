@@ -24,8 +24,8 @@
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="col-sm-8 form-group has-success">
-                                        <label class="control-label bmd-label-floating" for="inputSuccess">Categoria</label><br>
-                                        <select class="js-data-example-ajax" style="width: 60%;" name='subcategoria' id='subcategoria'>
+                                        <label class="control-label bmd-label-floating" for="inputSuccess">Categoria</label><br><br>
+                                        <select class="js-data-example-ajax" name='subcategoria' id='id_subcategoria' style="width: 100%;">
                                         </select>
                                     </div>
                                 </div>
@@ -155,63 +155,70 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function(){ 
-            $("#subcategoria").select2({ 
-                tags: true, 
-                multiple: false,
-                tokenSeparators: [',', ' '], 
-                minimumInputLength: 3,
-                delay: 200,
-                minimumResultsForSearch: 20, 
-                ajax: { 
-                    url: '{% url 'catalogos:subcategoria_select2' %}', 
-                    dataType: "json", 
-                    type: "GET", 
-                    data: function (params) { var queryParameters = { q: params.term } 
-                    return queryParameters; 
-                }, 
-                processResults: function (data) {
-                    return { 
-                        results: $.map(data, function (item) { 
-                            return { 
-                                text: item.nombre, 
-                                id: item.id
-                            } 
-                        }) 
-                    }; 
-                } 
-            } 
-        }); }); 
-    </script>
-
-    <script>
-        $(document).ready(function(){ 
-            $("#proveedor").select2({ 
-                tags: true, 
-                multiple: false,
-                tokenSeparators: [',', ' '], 
-                minimumInputLength: 3,
-                delay: 200,
-                minimumResultsForSearch: 20, 
-                ajax: { 
-                    url: '{% url 'catalogos:terceros_select2' %}', 
-                    dataType: "json", 
-                    type: "GET", 
-                    data: function (params) { var queryParameters = { q: params.term } 
-                    return queryParameters; 
-                }, 
-                processResults: function (data) {
-                    return { 
-                        results: $.map(data, function (item) { 
-                            return { 
-                                text: item.rzn_social, 
-                                id: item.id
-                            } 
-                        }) 
-                    }; 
-                } 
-            } 
-        }); }); 
-    </script>
+    
 {% endblock contenido %}
+
+
+{% block extra_js %}
+
+<script>
+    $(document).ready(function(){ 
+        $("#id_subcategoria").select2({ 
+            tags: true, 
+            multiple: false,
+            tokenSeparators: [',', ' '], 
+            minimumInputLength: 3,
+            delay: 200,
+            minimumResultsForSearch: 20, 
+            ajax: { 
+                url: '{% url 'catalogos:subcategoria_select2' %}', 
+                dataType: "json", 
+                type: "GET", 
+                data: function (params) { var queryParameters = { q: params.term } 
+                return queryParameters; 
+            }, 
+            processResults: function (data) {
+          
+                return { 
+                    results: $.map(data, function (item) { 
+                        
+                        return { 
+                            text: item.nombre, 
+                            id: item.id
+                        } 
+                    }) 
+                }; 
+            }
+        } 
+    }); });
+    
+
+    $(document).ready(function(){ 
+        $("#proveedor").select2({ 
+            tags: true, 
+            multiple: false,
+            tokenSeparators: [',', ' '], 
+            minimumInputLength: 3,
+            delay: 200,
+            minimumResultsForSearch: 20, 
+            ajax: { 
+                url: '{% url 'catalogos:terceros_select2' %}', 
+                dataType: "json", 
+                type: "GET", 
+                data: function (params) { var queryParameters = { q: params.term } 
+                return queryParameters; 
+            }, 
+            processResults: function (data) {
+                return { 
+                    results: $.map(data, function (item) { 
+                        return { 
+                            text: item.rzn_social, 
+                            id: item.id
+                        } 
+                    }) 
+                }; 
+            } 
+        } 
+    }); }); 
+</script>
+{% endblock extra_js %}
