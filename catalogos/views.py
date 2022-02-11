@@ -334,7 +334,7 @@ class TarifaIvaDel(LoginRequiredMixin, SinPrivilegios, generic.DeleteView):
 def get_ajaxSubcategoria(request, *args, **kwargs): 
     query = request.GET.get('q', None)
     if query: 
-        terceros = SubCategoria.objects.filter(nombre__icontains=query, categoria__usuario=request.user).values("id","nombre") 
+        terceros = SubCategoria.objects.filter(nombre__icontains=query).values("id","nombre") 
         terceros = list(terceros)
         return JsonResponse(terceros, safe=False) 
     else: 
@@ -344,7 +344,7 @@ def get_ajaxSubcategoria(request, *args, **kwargs):
 def get_ajaxTerceros(request, *args, **kwargs): 
     query = request.GET.get('q', None)
     if query: 
-        terceros = Terceros.objects.filter(rzn_social__icontains=query, user=request.user).values("id","rzn_social") 
+        terceros = Terceros.objects.filter(rzn_social__icontains=query).values("id","rzn_social") 
         terceros = list(terceros)
         return JsonResponse(terceros, safe=False) 
     else: 
