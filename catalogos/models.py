@@ -23,7 +23,6 @@ class Categoria(ClaseModelo):
 
     def save(self):
         self.nombre = self.nombre.upper()
-        self.usuario = self.request.user
         super(Categoria, self).save()
 
     class Meta:
@@ -62,7 +61,6 @@ class Ubicaciones(ClaseModelo):
 
     def save(self):
         self.descripcion = self.descripcion.upper()
-        self.usuario = self.request.user
         super(Ubicaciones, self).save()
 
     class Meta:

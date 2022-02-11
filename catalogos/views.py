@@ -45,6 +45,21 @@ class CategoriaNew(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, gene
     success_url=reverse_lazy("catalogos:categoria_list")
     success_message='Categoría creada satisfactoriamente'
 #    login_url='generales:login'
+    def post(self, request, *args, **kwargs):
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.usuario = self.request.user
+        self.object = form.save()
+        
+
+    def form_invalid(self, form, detalle_movimientos, tipor):
+        self.object=form
 
 
 class CategoriaEdit(LoginRequiredMixin, SinPrivilegios, generic.UpdateView):
