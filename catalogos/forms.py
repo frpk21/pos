@@ -120,7 +120,7 @@ class MovimientosEncForm(forms.ModelForm):
     valor_documento = forms.CharField()
     class Meta:
         model=Movimientos
-        fields = ['fecha', 'tipo', 'tercero', 'ubicacion','valor_documento',]
+        fields = ['fecha', 'tipo', 'tercero', 'ubicacion','valor_documento','tipo_movimiento',]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
