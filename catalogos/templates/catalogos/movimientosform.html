@@ -63,7 +63,11 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="control-label">Tipo de Movimiento</label>
-                                    {{form.tipo_movimiento}}
+                                    <select class="js-data-example-ajax" style="width: 60%;" name='tipo_movimiento' id='tipo_movimiento'>
+                                        {% for option in tipo_movimiento %}
+                                            <option value={{option.id}}> {{option.nombre}}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                             <div class="row">
