@@ -177,7 +177,7 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
 
     def get(self, request, *args, **kwargs):
 
-        ctx = {'fecha': datetime.today(), 'tipo': kwargs["tipoe"], 'tercero': 0, 'ubicacion': 1, 'tipo_movimiento': Tipos_movimientos.objects.filter(tipo=kwargs["tipoe"],usuario=request.self.request.user) }
+        ctx = {'fecha': datetime.today(), 'tipo': kwargs["tipoe"], 'tercero': 0, 'ubicacion': 1, 'tipo_movimiento': Tipos_movimientos.objects.filter(tipo=kwargs["tipoe"],usuario=self.request.user) }
 
         self.object = None
 
