@@ -148,6 +148,12 @@ class MovimientosEncForm(forms.ModelForm):
         if not tercero:
             raise forms.ValidationError("Proveedor requerido.")
         return tercero
+    
+    def clean_tipo_movimiento(self):
+        tipo_movimiento = self.cleaned_data["tipo_movimiento"]
+        if not tipo_movimiento:
+            raise forms.ValidationError("Tipo de documento requerido.")
+        return tipo_movimiento
 
    
 
