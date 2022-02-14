@@ -123,7 +123,7 @@ class Producto(ClaseModelo):
 
 
 class Tipos_movimientos(ClaseModelo):
-    nombre = models.CharField(max_length=100, help_text='Nombre Tipo de Movimiento', unique=True)
+    nombre = models.CharField(max_length=100, help_text='Nombre Tipo de Movimiento')
     tipo = models.IntegerField(default=1, blank=False, null=False)
     usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
 
