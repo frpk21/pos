@@ -130,6 +130,7 @@ class MovimientosEncForm(forms.ModelForm):
             })
         self.fields['valor_documento'].widget.attrs['readonly'] = 'readonly'
         self.fields['valor_documento'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
+        self.fields['id_tipo_movimiento'].widget.attrs.update({'option value="1"': 'saldos iniciales'})
 
     def clean_fecha(self):
         fecha = self.cleaned_data["fecha"]
