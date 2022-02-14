@@ -125,6 +125,7 @@ class Producto(ClaseModelo):
 class Tipos_movimientos(ClaseModelo):
     nombre = models.CharField(max_length=100, help_text='Nombre Tipo de Movimiento', unique=True)
     tipo = models.IntegerField(default=1, blank=False, null=False)
+    usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return '{}'.format(self.nombre)
@@ -141,7 +142,8 @@ class Movimientos(ClaseModelo):
     documento_no = models.IntegerField('CONSECUTIVO ENTRADAS DE ALMACEN', default=0, blank=False, null=False)
     usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
     fecha = models.DateTimeField('Fecha documento', blank=False, null=False)
-    tipo =  models.ForeignKey(Tipos_movimientos, on_delete=models.CASCADE)
+    tipo =  models.IntegerField(default=19, blank=False, null=False)
+    tipo_movimiento =  models.ForeignKey(Tipos_movimientos, on_delete=models.CASCADE)
     tercero =  models.ForeignKey(Terceros, on_delete=models.CASCADE)
     ubicacion = models.ForeignKey(Ubicaciones, on_delete=models.DO_NOTHING, default=1, null=False, blank=False)
     valor_documento = models.DecimalField('Valor documento', max_digits=12, decimal_places=0, default=0, blank=True, null=True)

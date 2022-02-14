@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from django.views import generic
 
-from catalogos.models import Categoria, SubCategoria, Producto, Iva, Movimientos, Formulacion
+from catalogos.models import Categoria, SubCategoria, Producto, Iva, Movimientos, Formulacion, Tipos_movimientos
 
 from generales.models import Terceros, Profile
 
@@ -177,7 +177,7 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
 
     def get(self, request, *args, **kwargs):
 
-        ctx = {'fecha': datetime.today(), 'tipo': kwargs["tipoe"], 'tercero': 0, 'ubicacion': 1, }
+        ctx = {'fecha': datetime.today(), 'tipo': kwargs["tipoe"], 'tercero': 0, 'ubicacion': 1, 'tipo_movimiento': Tipos_movimientos.objects.filter(tipo=kwargs["tipoe"]) }
 
         self.object = None
 
