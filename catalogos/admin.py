@@ -58,6 +58,6 @@ class UbicacionesAdmin(admin.ModelAdmin):
 
 admin.site.register(Formulacion, FormulacionAdmin)"""
 admin.site.register(Ubicaciones, UbicacionesAdmin)
-admin.site.register(Tipos_movimientos)
+admin.site.register(Tipos_movimientos, Tipos_movimientosAdmin)
 
 
