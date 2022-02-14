@@ -64,8 +64,8 @@
                                 <div class="col-sm-4">
                                     <label class="control-label">Tipo de Movimiento</label>
                                     <select class="js-data-example-ajax" style="width: 60%;" name='tipo_movimiento' id='tipo_movimiento'>
-                                        {% for option in tipo_movimiento %}
-                                            <option value={{option.id}}> {{option.nombre}}</option>
+                                        {% for option in  opc_tipo_movimiento %}
+                                            <option value="{{option.id}}">{{option.nombre}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>

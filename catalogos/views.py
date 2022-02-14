@@ -177,7 +177,7 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
 
     def get(self, request, *args, **kwargs):
 
-        ctx = {'fecha': datetime.today(), 'tipo': kwargs["tipoe"], 'tercero': 0, 'ubicacion': 1, 'tipo_movimiento': Tipos_movimientos.objects.filter(tipo=kwargs["tipoe"],usuario=self.request.user) }
+        ctx = {'fecha': datetime.today(), 'tipo': kwargs["tipoe"], 'tercero': 0, 'ubicacion': 1, 'tipo_movimiento': 1}
 
         self.object = None
 
@@ -189,6 +189,7 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
             self.get_context_data(
                 form=form,
                 tipo=kwargs["tipoe"],
+                opc_tipo_movimiento= Tipos_movimientos.objects.filter(tipo=kwargs["tipoe"],usuario=self.request.user),
                 detalle_movimientos=detalle_movimientos_formset            
             )
         )
