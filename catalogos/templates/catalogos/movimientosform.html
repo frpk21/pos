@@ -62,7 +62,7 @@
                                     {{form.tercero}}
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="control-label">Tipo de Movimiento</label>
+                                    <label class="control-label">Tipo de Movimiento</label><br>
                                     <select class="js-data-example-ajax" style="width: 60%;" name='tipo_movimiento' id='tipo_movimiento'>
                                         {% for option in  opc_tipo_movimiento %}
                                             <option value="{{option.id}}">{{option.nombre}}</option>
@@ -274,7 +274,7 @@
                     //parteEntera = entrada[0].replace(/\./g, '');
                     //parteDecimal = entrada[1];
                     //salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-                    data.costo_unidad = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+                    //data.costo_unidad = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#"+id_costo).val(data.costo_unidad);
                     $("#"+id_nombre).val(data.nombre);
                 
