@@ -6,6 +6,8 @@ from catalogos.views import CategoriaView, CategoriaNew, CategoriaEdit, Categori
 
 
 urlpatterns = [
+    path('mainprod', views.MenuView, name='menu'),
+    path('maininv', views.MenuInvView, name='menu_inv'),
     path('categorias', CategoriaView.as_view(), name='categoria_list'),
     path('categorias/new', CategoriaNew.as_view(), name='categoria_new'),
     path('categorias/edit/<int:pk>', CategoriaEdit.as_view(), name='categoria_edit'),

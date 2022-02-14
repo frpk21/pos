@@ -25,6 +25,25 @@ from django.http import JsonResponse
 
 from django.http import HttpResponseRedirect
 
+from datetime import date
+
+from datetime import datetime, timedelta
+
+from django.db.models import Sum
+
+
+def MenuView(request, *args, **kwargs):
+    template_name="catalogos/menu.html"
+    context={'hoy': date.today()}
+   
+    return render(request, template_name, context)
+
+def MenuInvView(request, *args, **kwargs):
+    template_name="catalogos/menu_inv.html"
+    context={'hoy': date.today()}
+   
+    return render(request, template_name, context)
+
 
 class CategoriaView(LoginRequiredMixin, generic.ListView):
     model = Categoria
@@ -205,6 +224,7 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
                 producto=Producto.objects.filter(codigo_de_barra=detalle.cleaned_data["codigo_de_barra"], usuario=self.request.user.id).get()
                 if tipor == 1:
                     producto.existencia = producto.existencia + detalle.cleaned_data["cantidad"]
+                    producto.costo_unidad = detalle.cleaned_data["costo"]
                 else:
                     producto.existencia = producto.existencia - detalle.cleaned_data["cantidad"]
                 producto.save()
@@ -386,19 +406,21 @@ def get_additem(request, *args, **kwargs):
 def get_ajaxCantidad(request, *args, **kwargs): 
     cantidad = request.GET.get('cantidad', None)
     bar_code = request.GET.get('producto', None)
+    tipo = int(request.GET.get('tipo', None))
     if not cantidad:
         return JsonResponse(data={'existencia': '', 'errors': 'No encuentro producto.'})
     else:
-        existencia = Producto.objects.filter(codigo_de_barra=bar_code, usuario=request.user).last()
-        if bar_code:
-            if int(cantidad) > existencia.existencia:
-                return JsonResponse(data={"errors": "CANTIDAD NO PUEDE SER SUPERIOR A LA EXISTENCIA DEL PRODUCTO"}, safe=False)
-            else:
-                return JsonResponse(data={"errors": ""}, safe=False)
-        else: 
-            return JsonResponse(data={'errors': 'No encuentro producto.'})
-        
-        
+        if tipo > 1:
+            existencia = Producto.objects.filter(codigo_de_barra=bar_code, usuario=request.user).last()
+            if bar_code:
+                if int(cantidad) > existencia.existencia:
+                    return JsonResponse(data={"errors": "CANTIDAD NO PUEDE SER SUPERIOR A LA EXISTENCIA DEL PRODUCTO"}, safe=False)
+                else:
+                    return JsonResponse(data={"errors": ""}, safe=False)
+            else: 
+                return JsonResponse(data={'errors': 'No encuentro producto.'})
+        else:
+            return JsonResponse(data={"errors": ""}, safe=False)
         
         
         

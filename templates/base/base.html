@@ -90,77 +90,16 @@
                     </li>
                     {% if request.user.is_staff %}
                         <li class="nav-item ">
-                            <a class="nav-link" data-toggle="collapse" href="#cat">
+                            <a class="nav-link" href="{% url 'catalogos:menu' %}">
                                 <i class="material-icons">language</i>
-                                <p> Productos
-                                    <b class="caret"></b>
-                                </p>
+                                <span class="sidebar-normal"> Productos </span>
                             </a>
-                            <div class="collapse" id="cat">
-                                <ul class="nav">
-                                    <li class="nav-item ">
-                                        <a class="nav-link" href="{% url 'catalogos:categoria_list' %}">
-                                            <span class="sidebar-mini"> C </span>
-                                            <span class="sidebar-normal"> Categor&iacute;as </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item ">
-                                        <a class="nav-link" href="{% url 'catalogos:subcategoria_list' %}">
-                                            <span class="sidebar-mini"> E </span>
-                                            <span class="sidebar-normal"> Subcategor&iacute;as</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item ">
-                                        <a class="nav-link" href="{% url 'catalogos:productos_list' %}">
-                                            <span class="sidebar-mini"> P </span>
-                                            <span class="sidebar-normal"> Productos</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item ">
-                                        <a class="nav-link" href="{% url 'catalogos:tarifas_iva' %}">
-                                            <span class="sidebar-mini"> T </span>
-                                            <span class="sidebar-normal"> Tarifas de IVA</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" data-toggle="collapse" href="#ads">
+                            <a class="nav-link" href="{% url 'catalogos:menu_inv' %}">
                                 <i class="material-icons">language</i>
-                                <p> Inventario
-                                    <b class="caret"></b>
-                                </p>
+                                <span class="sidebar-normal"> Inventario </span>
                             </a>
-                            <div class="collapse" id="ads">
-                                <ul class="nav">
-                                    <li class="nav-item ">
-                                        <a class="nav-link" href="{% url 'catalogos:catalogo' %}">
-                                            <span class="sidebar-mini"> C </span>
-                                            <span class="sidebar-normal"> Cat&aacute;logo </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item ">
-                                        <a class="nav-link" href="{% url 'catalogos:movimientos' 1 %}">
-                                            <span class="sidebar-mini"> E </span>
-                                            <span class="sidebar-normal"> Entradas </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item ">
-                                        <a class="nav-link" href="{% url 'catalogos:movimientos' 2 %}">
-                                            <span class="sidebar-mini"> R </span>
-                                            <span class="sidebar-normal"> Sal&iacute;das </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item ">
-                                        <a class="nav-link" href="{% url 'catalogos:formulacion' %}">
-                                            <span class="sidebar-mini"> F </span>
-                                            <span class="sidebar-normal"> Formulaci&oacute;n </span>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </div>
                         </li>
                         <li class="nav-item ">
                             <a class="nav-link" href="{% url 'facturas:menu' %}">

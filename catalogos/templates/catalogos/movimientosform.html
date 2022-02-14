@@ -262,11 +262,11 @@
                 else {
                     id_costo=itemn.replace("codigo_de_barra", "costo");
                     id_nombre=itemn.replace("codigo_de_barra", "producto");
-                    var entrada = data.costo_unidad.split(',');
-                    parteEntera = entrada[0].replace(/\./g, '');
-                    parteDecimal = entrada[1];
-                    salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-                    data.costo_unidad = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+                    //var entrada = data.costo_unidad.split(',');
+                    //parteEntera = entrada[0].replace(/\./g, '');
+                    //parteDecimal = entrada[1];
+                    //salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+                    //data.costo_unidad = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#"+id_costo).val(data.costo_unidad);
                     $("#"+id_nombre).val(data.nombre);
                 
@@ -287,7 +287,8 @@
             var cantidad = parseFloat($("#"+itemn).val());
             id_bar_code = itemn.replace("cantidad", "codigo_de_barra");
             var bar_code = $("#"+id_bar_code).val();
-            var datos = {'cantidad':cantidad, 'producto':bar_code};
+            var tipo = $("#id_tipo").val();
+            var datos = {'cantidad':cantidad, 'producto':bar_code, 'tipo':tipo};
             $.get( "{% url 'catalogos:valida_cantidad' %}", datos, function( data ) {
                 console.log(data);
                 if (data.errors){
