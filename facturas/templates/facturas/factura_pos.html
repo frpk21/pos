@@ -81,7 +81,7 @@
                                                             <div class="col-md-2">
                                                                 <label class="control-label col-form-label"
                                                                         for="{{ field.id_for_label }}">
-                                                                    Descripci&oacute;n
+                                                                    Producto
                                                                 </label>
                                                                 <div class="form-group bmd-form-group">
                                                                     {{ item.producto | add_classes:'form-control' }}
@@ -169,10 +169,10 @@
                 <div class="form-row" id="formset-__prefix__">
                     {% for field in item_form.visible_fields %}
                         <div id="col" class="col-md-__ancho__">
-                            <label class="control-label col-form-label"
+                            <!--<label class="control-label col-form-label"
                                 for="{{ field.id_for_label }}">
                                 {{ field.label }} {% if field.field.required %}*{% endif %}
-                            </label>
+                            </label>-->
                             <div class="form-group bmd-form-group">
                                 {{ field | add_classes:'form-control' }}
                                 <div class="text-danger">
