@@ -118,6 +118,20 @@
                                                             <div class="col-md-2">
                                                                 <label class="control-label col-form-label"
                                                                         for="{{ field.id_for_label }}">
+                                                                    {{ item.descuento.label }} {% if item.descuento.field.required %}*{% endif %}
+                                                                </label>
+                                                                <div class="form-group bmd-form-group">
+                                                                    {{ item.descuento | add_classes:'form-control costo_string' }}
+                                                                    <div class="text-danger">
+                                                                        {% for error in item.descuento.errors %}
+                                                                            <li>{{ error|escape }} </li>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="control-label col-form-label"
+                                                                        for="{{ field.id_for_label }}">
                                                                     Total
                                                                 </label>
                                                                 <div class="form-group bmd-form-group">
