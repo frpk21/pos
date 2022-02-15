@@ -38,39 +38,18 @@
                     <div class="card">
                         <div class="card-header card-header-warning">
                             <h5>
-                                <strong>MOVIMIENTOS DE MERCANCIA</strong>
+                                <strong>P O S</strong>
                             </h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <div style="display: none">
-                                        {{form.tipo}}
-                                        {{form.ubicacion}}
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Fecha</label><br>
-                                        {{form.fecha}}
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label class="control-label">Proveedor</label>
-                                    {{form.tercero}}
-                                </div>
-                                <div class="col-sm-4">
-                                    <label class="control-label">Tipo de Movimiento</label><br>
-                                    <select class="js-data-example-ajax" style="width: 60%;" name='tipo_movimiento' id='tipo_movimiento'>
-                                        {% for option in  opc_tipo_movimiento %}
-                                            <option value="{{option.id}}">{{option.nombre}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+                            <div style="display: none">
+                                {{form.tipo}}
+                                {{form.ubicacion}}
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h3>ENTRADA DE ALMACEN</h3>
                                             <div id="sale_item_form_set_management_form">
                                                 {{ detalle_movimientos.management_form }}
                                             </div>
