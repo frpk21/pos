@@ -8,6 +8,7 @@ from catalogos.models import Producto
 
 class Facturas(ClaseModelo):
     fecha_factura = models.DateField()
+    factura = models.IntegerField(default=0)
     observacion = models.CharField(max_length=200, null=True,blank=True)
     valor_factura = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     porc_iva = models.DecimalField(max_digits=5, decimal_places=2, default=0)
@@ -29,16 +30,19 @@ class Facturas(ClaseModelo):
 
 class Factp(ClaseModelo):
     factura=models.ForeignKey(Facturas, on_delete=models.CASCADE)
-    producto=models.ForeignKey(Producto, on_delete=models.CASCADE)
+    producto =  models.CharField(max_length=100, help_text='Nombre del producto', blank=True, null=True, default='')
+    codigo_de_barra = models.CharField(max_length=100, help_text='Código de Barra', blank=True, null=True, default='')
     cantidad=models.IntegerField(default=0)
-    precio=models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    total=models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    porc_iva = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    valor_iva = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    valor_unidad = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    descuento = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    valor_total = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
     def __str__(self):
         return '{}-{}'.format(self.factura, self.producto)
 
     def save(self):
-        self.total = Decimal(self.cantidad) * Decimal(self.precio)
         super(Factp,self).save()
 
     class Meta:

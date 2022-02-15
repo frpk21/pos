@@ -5,7 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import Facturas, Factp
-from .forms import FacturaEncForm, FacturaDetForm, DetalleFacFormSet
+from generales.models import Terceros, Profile
+from catalogos.models import Producto
+from .forms import FacturaEncForm, FacturaDetForm, DetalleFacFormSet, FacturaPosEncForm, FacturaPosDetalleForm, DetalleMovimientosFormSet
 from generales.views import SinPrivilegios
 from fact_digital.utilidades import facturaDian, consultaRangos, fechaDian, HoraDian, AnulaFactura
 from django.http import JsonResponse
@@ -17,9 +19,6 @@ from datetime import datetime, timedelta
 from django.db.models import Sum
 
 
-
-
-
 class FacturaList(LoginRequiredMixin, generic.ListView):
     login_url = 'generales:login'
     model=Facturas
@@ -27,118 +26,85 @@ class FacturaList(LoginRequiredMixin, generic.ListView):
     context_object_name="facturas"
 
 
-
-
-
-
 class FacturaNew(LoginRequiredMixin, generic.CreateView):
-    permission_required =  'facturas.add_facturas'
+    permission_required = 'Facturas.add_facturas'
     model = Facturas
-    login_url = 'generales:home'
-    template_name = 'salidas/factura_form.html'
-    form_class = FacturaEncForm
-    success_url = reverse_lazy('salidas:factura_list')
+    login_url = 'generales:login'
+    template_name = 'facturas/factura_pos.html'
+    form_class = FacturaPosEncForm
+    success_url = reverse_lazy('generales:home')
 
-    def get(self, request, *args, **kwargs): 
+    def get(self, request, *args, **kwargs):
+
+        ctx = {'fecha_factura': datetime.today()}
+
         self.object = None
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        detalle_factura_formset = DetalleFacFormSet()
-        return self.render_to_response(
+
+        form = FacturaPosEncForm(initial=ctx)
+
+        detalle_movimientos_formset = DetalleMovimientosFormSet()
+
+        return self.render_to_response( 
             self.get_context_data(
                 form=form,
-                detalle_factura=detalle_factura_formset
+                detalle_movimientos=detalle_movimientos_formset            
             )
         )
 
     def post(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        detalle_factura = DetalleFacFormSet(request.POST)
-
-        if form.is_valid() and detalle_factura.is_valid():
-            return self.form_valid(form, detalle_factura)
+        form =FacturaPosEncForm(request.POST)
+        detalle_movimientos = DetalleMovimientosFormSet(request.POST)
+        tipor = kwargs["tipoe"]
+        #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+        #print(form.errors)
+        #print(detalle_movimientos.errors)
+        if form.is_valid() and detalle_movimientos.is_valid():
+            return self.form_valid(form, detalle_movimientos)
         else:
-            return self.form_invalid(form, detalle_factura)
+            return self.form_invalid(form, detalle_movimientos)
 
-    def form_valid(self, form, detalle_factura):
-        cons_fact = consultaRangos()
-        facturanew = int(cons_fact['generalResult']['ranges'][2]['last'])+1
+    def form_valid(self, form, detalle_movimientos):
         self.object = form.save(commit=False)
-        try:
-            validate_email(self.object.contrato.nit_cliente.email.strip())
-        except ValidationError as e:
-            return self.form_invalid(form, detalle_factura)
-        else:
-            self.object.factura = facturanew
-            self.object.user = self.request.user
-            self.object.sede = self.request.user.profile.sede
-            self.object = form.save()
-            detalle_factura.instance = self.object
-            detalle_factura.factura = facturanew
-            detalle_factura.save()
-            tipo_entidad = self.object.contrato.nit_cliente.tipo_entidad
-            if tipo_entidad==1:
-                tipo_entidad=2
-            else:
-                tipo_entidad=1
-            data_dian = {}
-            data_dian['rangeKey'] = cons_fact['generalResult']['ranges'][2]['rangeKey']
-            data_dian['intID'] = self.object.id
-            data_dian['issueDate'] = fechaDian(self.object.fecha_factura)
-            data_dian['issueTime'] = HoraDian()
-            data_dian['dueDate'] = fechaDian(self.object.fecha_factura+timedelta(days=30))
-            data_dian['note1'] = numero_to_letras(self.object.saldo)
-            data_dian['note2'] = self.object.observacion
-            data_dian['additionalAccountID'] = str(tipo_entidad)
-            data_dian['name'] = self.object.contrato.nit_cliente.rzn_social
-            data_dian['city'] = self.object.contrato.nit_cliente.ciudad.nombre_ciudad
-            data_dian['countryEntity'] = str(self.object.contrato.nit_cliente.ciudad.departamento.cod_dane).strip()
-            data_dian['countrySubentity'] = str(self.object.contrato.nit_cliente.ciudad.cod_dane).strip()
-            data_dian['addressLine'] = self.object.contrato.nit_cliente.direccion
-            data_dian['documentNumber'] = str(self.object.contrato.nit_cliente.nit).strip()
-            data_dian['documentType'] = str(self.object.contrato.nit_cliente.tipo_nit).strip()
-            data_dian['telephone'] = self.object.contrato.nit_cliente.tel1
-            data_dian['email'] = self.object.contrato.nit_cliente.email
-            data_dian['totalAmount'] =  str(self.object.valor_factura)
-            data_dian['discountAmount'] = "0.00"
-            data_dian['extraAmount'] = "0.00"
-            data_dian['taxAmount'] = str(self.object.valor_iva)
-            data_dian['payAmount'] = str(self.object.saldo)
-            data_dian['unitPrice'] = str(self.object.valor_factura)
-            data_dian['total'] = str(self.object.valor_factura)
-            data_dian['description'] = "SERVICIO DE PUBLICIDAD SEGUN ORDEN # " + self.object.contrato.no_publicidad
-            data_dian['brand'] = "INRAI"
-            data_dian['model'] = "N/A"
-            data_dian['ID'] = "01"  # 01 = IVA   02=ICA   03=consumo    04=bolsas   22=bolsas
-            r = facturaDian(data_dian)
-            if r['invoiceResult']['status']['code'] == 200:
-                return JsonResponse(
-                    {
-                        'content': {
-                            'message': 'Generada la Factura No. '+str(facturanew)+' exitosamente.'
-                        }
-                    }
-                )
-            else:
-                Factp.objects.filter(factura=facturanew).delete()
-                Facturas.objects.filter(factura=facturanew).delete()
-                return JsonResponse(
-                    {
-                        'content': {
-                            'message': 'ERROR en la Factura No. '+str(facturanew)+', no fue generada (por favor corrija y vuelva a intentarlo). >>ERROR = '+str(r)
-                        }
-                    }
-                )
+        profile = Profile.objects.filter(user=self.request.user.id).get()
+        fact = profile.factura + 1
+        profile.factura = profile.factura + 1
+        profile.save()
+        total, iva = 0
+        for detalle in detalle_movimientos:
+            total += detalle.cleaned_data["valor_total"]
+            iva += detalle.cleaned_data["valor_iva"]
+            producto=Producto.objects.filter(codigo_de_barra=detalle.cleaned_data["producto.codigo_de_barra"], usuario=self.request.user.id).get()
+            producto.existencia = producto.existencia - detalle.cleaned_data["cantidad"]
+            producto.save()
+        self.object.usuario = self.request.user
+        self.object.factura = fact,
+        self.object.observacion = "Factura POS",
+        self.object.valor_factura = total,
+        self.object.valor_iva = iva,
+        self.object.usuario = self.request.user        
+        self.object = form.save()
+        detalle_movimientos.instance = self.object
+        detalle_movimientos.save()
+        
+        return HttpResponseRedirect(reverse_lazy("catalogos:catalogo"))
+        #return JsonResponse(
+        #    {
+        #        'content': {
+        #            'message': 'Generado Documento No. '+str(self.object.id)+' exitosamente.'
+        #        }
+        #    }
+        #)
 
-    def form_invalid(self, form, detalle_factura):
+
+    def form_invalid(self, form, detalle_movimientos):
+        self.object=form
         return self.render_to_response(
             self.get_context_data(
                 form=form,
-                detalle_factura=detalle_factura
+                detalle_movimientos=detalle_movimientos
             )
         )
-
+    
 
 #SinPrivilegios, 
 class FacturaEdit(generic.UpdateView):
