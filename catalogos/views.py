@@ -170,7 +170,7 @@ class CatalogoView(LoginRequiredMixin, generic.ListView):
     
     
 
-class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, generic.CreateView):
+class MovimientosMercanciaView(generic.CreateView):
     #permission_required = 'movimientos.add_movimientos'
     model = Movimientos
     login_url = 'generales:login'
