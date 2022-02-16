@@ -11,7 +11,7 @@ class ClaseModelo(models.Model):
         abstract=True
 
 
-class Profile(models.Model):
+class Profile(models.Model): 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     foto = models.FileField("Archivo con Foto del Usuario", upload_to="fotos/", blank=False, null=False)
     logo = models.FileField("Logo del Usuario", upload_to="fotos/", blank=False, null=False)

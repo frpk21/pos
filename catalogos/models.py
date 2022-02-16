@@ -87,7 +87,7 @@ class Iva(ClaseModelo):
 class Producto(ClaseModelo):
     subcategoria = models.ForeignKey(SubCategoria, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100, help_text='Nombre del producto')
-    descripcion = models.CharField(max_length=100, help_text='Descripción del producto')
+    descripcion = models.CharField(max_length=100, help_text='Descripción del producto', blank=True, null=True, default='')
     archivo_foto = models.FileField(upload_to="fotos/", blank=True, null=True, default='')
     CHOICES = ( (1,'UNIDAD'),(2,'KILOGRAMO'),(3,'GRAMO'),(4,'MILIGRAMO'),(5,'METRO'),(6,'CENTIMETRO'),(7,'MILIMETRO'),\
         (8,'LITRO'), (9,'MILILITRO'), (10,'CENTILITRO'), (11,'METRO CUADRADO'), (12,'CENTIMETRO CUADRADO'), (13,'LITRO') )

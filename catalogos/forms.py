@@ -58,9 +58,8 @@ class ProductoForm(forms.ModelForm):
 
     class Meta:
         model = Producto
-        fields = ['subcategoria','nombre','descripcion','archivo_foto','unidad_de_medida','proveedor','stock_minimo',\
-            'stock_maximo','costo_unidad','tarifa_iva','precio_de_venta','codigo_de_barra','cuenta_contable_ventas_locales',\
-                'cuenta_contable_ventas_exterior', 'ubicacion']
+        fields = ['subcategoria','nombre','descripcion','archivo_foto','unidad_de_medida','proveedor',\
+            'costo_unidad','tarifa_iva','precio_de_venta','codigo_de_barra', 'ubicacion']
         widget = {'descripcion': forms.TextInput()}    
 
     def __init__(self,*args,**kwargs):

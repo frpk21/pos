@@ -6,6 +6,7 @@
     4. Ejecuta este script.
     Ante cualquier duda: https://parzibyte.me/blog/2021/02/09/presentando-plugin-impresoras-termicas-version-2/
 """
+"""
 from conectorplugin import Conector, AccionBarcodeJan13, AlineacionCentro
 
 # Esto es para obtener las impresoras. No es obligatorio hacerlo siempre que se quiera imprimir
@@ -37,8 +38,29 @@ c.cortar()
 c.abrirCajon()
 print("Imprimiendo...")
 # Recuerda cambiar por el nombre de tu impresora
-respuesta = c.imprimirEn("ZJ-58")
+respuesta = c.imprimirEn("POS-90")
 if respuesta == True:
     print("Impresión correcta")
 else:
     print(f"Error. El mensaje es: {respuesta}")
+    
+    
+"""
+
+import os
+from tkinter.font import BOLD
+
+def archivoImprime(di, me, an, texto):
+    fecha=str(an)+str(me)+str(di)
+    fecha=str(fecha+".txt")
+    escritura=open(fecha,"w")
+    escritura.write(texto+"\n")
+    escritura.write("texto\b")
+    escritura.close()
+    
+#    print(texto)
+    os.startfile(fecha,"print")
+    
+    
+
+archivoImprime(14,11,19,"prueba de impresion")

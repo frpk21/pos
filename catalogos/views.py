@@ -31,6 +31,8 @@ from datetime import datetime, timedelta
 
 from django.db.models import Sum
 
+from facturas.conectorplugin import Conector, AccionBarcodeJan13, AlineacionCentro
+
 
 def MenuView(request, *args, **kwargs):
     template_name="catalogos/menu.html"
@@ -225,13 +227,13 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
                 producto=Producto.objects.filter(codigo_de_barra=detalle.cleaned_data["codigo_de_barra"], usuario=self.request.user.id).get()
                 if tipor == 1:
                     producto.existencia = producto.existencia + detalle.cleaned_data["cantidad"]
-                    producto.costo_unidad = detalle.cleaned_data["costo"]
+                   # producto.costo_unidad = detalle.cleaned_data["costo"]
                 else:
                     producto.existencia = producto.existencia - detalle.cleaned_data["cantidad"]
                 producto.save()
         
         
-        return HttpResponseRedirect(reverse_lazy("catalogos:catalogo"))
+        return HttpResponseRedirect(reverse_lazy("catalogos:menu_inv"))
         #return JsonResponse(
         #    {
         #        'content': {
@@ -478,3 +480,42 @@ class FormulacionView(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, g
             )
         )
 
+def printer(self):
+    profile = Profile.objects.filter(user=self.request.user.id).get()
+    c = Conector()
+    #c.texto("Imagen local:\n")
+    # Recuerda que la imagen debe existir y debe ser legible para el plugin. Si no, comenta las líneas
+    #c.imagenLocal(profile.logo)
+    c.establecerJustificacion(AlineacionCentro)
+    c.establecerTamanioFuente(2, 2)
+    c.texto(profile.empresa+"\n")
+    c.establecerTamanioFuente(1, 0)
+    c.textoConAcentos(profile.nit+"\n")
+    c.establecerEnfatizado(1)
+    c.texto("titulo"+"\n")
+    c.establecerEnfatizado(0)
+    c.texto("Sin enfatizado\n")
+    c.establecerTamanioFuente(2, 2)
+    c.texto("Texto de 2, 2\n")
+    c.establecerTamanioFuente(1, 1)
+    c.establecerJustificacion(AlineacionCentro)
+    c.texto("Texto centrado\n")
+    c.texto("Código de barras:\n")
+    c.codigoDeBarras("7506129445966", AccionBarcodeJan13)
+    c.qrComoImagen("Parzibyte")
+    c.texto("Imagen de URL:\n")
+    #c.imagenDesdeUrl("https://github.com/parzibyte.png")
+    c.texto("Imagen local:\n")
+    # Recuerda que la imagen debe existir y debe ser legible para el plugin. Si no, comenta las líneas
+    #c.imagenLocal(
+    #    "C:\\Users\\Luis Cabrera Benito\\Desktop\\cliente_python_impresoras_termicas\\python-logo.png")
+    c.feed(5)
+    c.cortar()
+    c.abrirCajon()
+    print("Imprimiendo...")
+    # Recuerda cambiar por el nombre de tu impresora
+    respuesta = c.imprimirEn("POS-90")
+    if respuesta == True:
+        return JsonResponse(data={"errors": ""}, safe=False)
+    else:
+        return JsonResponse(data={"errors": "Error. El mensaje es: {respuesta}"}, safe=False)
