@@ -1,4 +1,5 @@
 from datetime import datetime
+from unicodedata import decimal
 from django.shortcuts import render
 
 from django.views import generic
@@ -200,9 +201,9 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
         form = MovimientosEncForm(request.POST)
         detalle_movimientos = DetalleMovimientosFormSet(request.POST)
         tipor = kwargs["tipoe"]
-        print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
-        print(form.errors)
-        print(detalle_movimientos.errors)
+        #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+        #print(form.errors)
+        #print(detalle_movimientos.errors)
         if form.is_valid() and detalle_movimientos.is_valid():
             return self.form_valid(form, detalle_movimientos, tipor)
         else:
@@ -227,7 +228,8 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
                 producto=Producto.objects.filter(codigo_de_barra=detalle.cleaned_data["codigo_de_barra"], usuario=self.request.user.id).get()
                 if tipor == 1:
                     producto.existencia = producto.existencia + detalle.cleaned_data["cantidad"]
-                   # producto.costo_unidad = detalle.cleaned_data["costo"]
+                    if producto.costo_unidad != int(detalle.cleaned_data["costo"]):
+                        producto.costo_unidad = (int(detalle.cleaned_data["costo"]) + producto.costo_unidad) / 2
                 else:
                     producto.existencia = producto.existencia - detalle.cleaned_data["cantidad"]
                 producto.save()
@@ -357,7 +359,7 @@ class TarifaIvaDel(LoginRequiredMixin, SinPrivilegios, generic.DeleteView):
 def get_ajaxSubcategoria(request, *args, **kwargs): 
     query = request.GET.get('q', None)
     if query: 
-        terceros = SubCategoria.objects.filter(nombre__icontains=query).values("id","nombre") 
+        terceros = SubCategoria.objects.filter(nombre__icontains=query, categoria__usuario=request.user).values("id","nombre") 
         terceros = list(terceros)
         return JsonResponse(terceros, safe=False) 
     else: 
@@ -367,7 +369,7 @@ def get_ajaxSubcategoria(request, *args, **kwargs):
 def get_ajaxTerceros(request, *args, **kwargs): 
     query = request.GET.get('q', None)
     if query: 
-        terceros = Terceros.objects.filter(rzn_social__icontains=query).values("id","rzn_social") 
+        terceros = Terceros.objects.filter(rzn_social__icontains=query, user=request.user).values("id","rzn_social") 
         terceros = list(terceros)
         return JsonResponse(terceros, safe=False) 
     else: 
