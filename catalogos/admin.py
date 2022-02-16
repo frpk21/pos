@@ -62,3 +62,4 @@ admin.site.register(Tipos_movimientos, Tipos_movimientosAdmin)
 admin.site.register(Iva)
 
 
+
