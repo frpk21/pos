@@ -112,7 +112,7 @@
                                                         {% endif %}
                                                     </td>
                                                 {% endif %}
-                                                <td class="text-center">${{item.precio_de_venta|intcomma}}</td>
+                                                <td class="text-center">$ {{item.precio_de_venta|intcomma}}</td>
                                                 <td class="text-center">{{item.activo|yesno:"Activo,Inactivo"}}</td>
                                                 <td class="text-center">{{item.creado|date:'d/m/Y'}}</td>
                                                 <td class="td-actions text-center">
