@@ -171,7 +171,7 @@ class MovimientosDetForm(forms.ModelForm):
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
             })
-        self.fields['codigo_de_barra'].widget.attrs.update({'onblur: 'validacbarra(id)'})
+        self.fields['codigo_de_barra'].widget.attrs.update({'onblur': 'validacbarra(id)'})
         self.fields['cantidad'].widget.attrs.update({'onblur': 'validacantidad(id)', 'step':1})
         self.fields['producto'].widget.attrs['readonly'] = 'readonly'
         self.fields['producto'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
