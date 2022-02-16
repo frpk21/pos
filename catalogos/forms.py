@@ -171,13 +171,13 @@ class MovimientosDetForm(forms.ModelForm):
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
             })
-        self.fields['codigo_de_barra'].widget.attrs.update({'onchange': 'validacbarra(id)'})
-        self.fields['cantidad'].widget.attrs.update({'onchange': 'validacantidad(id)', 'step':1})
+        self.fields['codigo_de_barra'].widget.attrs.update({'onblur: 'validacbarra(id)'})
+        self.fields['cantidad'].widget.attrs.update({'onblur': 'validacantidad(id)', 'step':1})
         self.fields['producto'].widget.attrs['readonly'] = 'readonly'
         self.fields['producto'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         self.fields['total'].widget.attrs['readonly'] = 'readonly'
         self.fields['total'].widget.attrs.update({'style': 'color: red; background: rgb(255, 255,255);'})
-        self.fields['costo'].widget.attrs.update({'onchange': 'validacosto(id)'})
+        self.fields['costo'].widget.attrs.update({'onblur': 'validacosto(id)'})
         #self.fields['cantidad'].widget.attrs.update({'class': 'text-right form-control'})
         #self.fields['costo'].widget.attrs.update({'type': 'text', 'class': 'text-right form-control'})
         
