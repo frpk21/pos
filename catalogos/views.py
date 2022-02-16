@@ -200,9 +200,9 @@ class MovimientosMercanciaView(SuccessMessageMixin, LoginRequiredMixin, SinPrivi
         form = MovimientosEncForm(request.POST)
         detalle_movimientos = DetalleMovimientosFormSet(request.POST)
         tipor = kwargs["tipoe"]
-        #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
-        #print(form.errors)
-        #print(detalle_movimientos.errors)
+        print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+        print(form.errors)
+        print(detalle_movimientos.errors)
         if form.is_valid() and detalle_movimientos.is_valid():
             return self.form_valid(form, detalle_movimientos, tipor)
         else:
