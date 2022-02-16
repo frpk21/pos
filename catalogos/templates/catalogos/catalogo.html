@@ -32,6 +32,7 @@
                                         <th style="font-size:12px; background: gray; color: white;">PRODUCTO</th>
                                         <th style="font-size:12px; background: gray; color: white;">DESCRIPCION</th>
                                         <th style="font-size:12px; background: gray; color: white;" class="text-center">EXISTENCIA</th>
+                                        <th style="font-size:12px; background: gray; color: white;" class="text-center">PRECIO UNIDAD</th>
                                         <th style="font-size:12px; background: gray; color: white;" class="text-center">ESTADO</th>
                                         <th style="font-size:12px; background: gray; color: white;" class="text-center">CREADO</th>
                                         <th style="font-size:12px; background: gray; color: yellow;" data-orderable="false" class="text-center">Acciones</th>
@@ -40,6 +41,7 @@
                                         <th>Producto</th>
                                         <th>Descripción</th>
                                         <th class="text-center">Existencia</th>
+                                        <th class="text-center">Precio unidad</th>
                                         <th class="text-center">Estado</th>
                                         <th class="text-center">Creado</th>
                                         <th class="text-center">Acciones</th>
@@ -47,8 +49,8 @@
                                     <tbody>
                                         {% for item in obj %}
                                             <tr>
-                                                <td>{{item.subcategoria}}</td>
                                                 <td><strong>{{item.nombre}}</strong></td>
+                                                <td>{{item.subcategoria}}</td>
                                                 {% if item.existencia > 0 %}
                                                     <td class="text-center" style="color: rgb(16, 3, 199);"><strong>{{item.existencia|intcomma}}</strong>
                                                         {% if item.unidad_de_medida == 1 %}
@@ -110,6 +112,7 @@
                                                         {% endif %}
                                                     </td>
                                                 {% endif %}
+                                                <td class="text-center">{{item.valor_unidad|intcomma}}</td>
                                                 <td class="text-center">{{item.activo|yesno:"Activo,Inactivo"}}</td>
                                                 <td class="text-center">{{item.creado|date:'d/m/Y'}}</td>
                                                 <td class="td-actions text-center">
