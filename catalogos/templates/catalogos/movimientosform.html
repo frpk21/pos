@@ -344,6 +344,7 @@
             salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
             tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
             $("#"+id_total).val(tot);
+            validacantidad(id_cantidad);
             
         }
 

@@ -8,7 +8,7 @@ class ClaseModelo(models.Model):
     modificado = models.DateField(auto_now=True, null=True)
 
     class Meta:
-        abstract=True
+        abstract=True 
 
 
 class Profile(models.Model): 

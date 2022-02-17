@@ -61,6 +61,4 @@ def archivoImprime(di, me, an, texto):
 #    print(texto)
     os.startfile(fecha,"print")
     
-    
-
 archivoImprime(14,11,19,"prueba de impresion")
