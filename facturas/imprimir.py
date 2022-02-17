@@ -47,7 +47,7 @@ else:
     
 """
 
-import os
+import os, sys, win32api
 from tkinter.font import BOLD
 
 def archivoImprime(di, me, an, texto):
@@ -57,8 +57,18 @@ def archivoImprime(di, me, an, texto):
     escritura.write(texto+"\n")
     escritura.write("texto\b")
     escritura.close()
+    import win32print
     
 #    print(texto)
     os.startfile(fecha,"print")
+    fname="C:\\somePDF.pdf"
+    p = win32print.OpenPrinter ('POS-90')
+    job = win32print.StartDocPrinter (p, 1, ("test of raw data", None, "RAW")) 
+    win32print.StartPagePrinter (p) 
+    win32print.WritePrinter (p, job) 
+    win32print.EndPagePrinter (p)
+   # win32api.ShellExecute(0, 'open', 'gsprint.exe', '-printer "\\\\localhost\\POS-90"D:\python\proyecto\pos\facturas\cot.pdf', '.', 0)
+   # win32api.ShellExecute(0, 'open', 'gsprint.exe', '-printer "\\\\' + self.server + '\\' + self.printer_name + '" ' + file, '.', 0)
     
-archivoImprime(14,11,19,"prueba de impresion")
+archivoImprime(0,0,0,"prueba de impresionxxxxxxxxxxxxxxx")
+

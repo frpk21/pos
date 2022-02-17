@@ -103,7 +103,7 @@ class Producto(ClaseModelo):
     tarifa_iva = models.ForeignKey(Iva, models.DO_NOTHING)
     precio_de_venta = models.DecimalField('PRECIO DE VENTA', max_digits=12, decimal_places=0, default=0, blank=True, null=True)
     fecha_de_vencimiento = models.DateTimeField('Fecha de Vencimiento', blank=True, null=True)
-    codigo_de_barra = models.CharField(max_length=100, help_text='Código de Barra', blank=True, null=True, default='')
+    codigo_de_barra = models.CharField(max_length=100, help_text='Código de Barra', blank=True, null=True, default='', unique=True)
     ubicacion = models.ForeignKey(Ubicaciones, on_delete=models.DO_NOTHING, default=1, null=False, blank=False)
     cuenta_contable_ventas_locales = models.CharField('Cuenta de contabilidad para ventas locales', blank=True, null=True, max_length=20, default="")
     cuenta_contable_ventas_exterior = models.CharField('Cuenta de contabilidad para ventas al exterior', blank=True, null=True, max_length=20, default="")
