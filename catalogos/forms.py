@@ -58,7 +58,7 @@ class ProductoForm(forms.ModelForm):
 
     class Meta:
         model = Producto
-        fields = ['subcategoria','nombre','descripcion','archivo_foto','unidad_de_medida','proveedor',\
+        fields = ['subcategoria','nombre','descripcion', 'archivo_foto','unidad_de_medida','proveedor',\
             'costo_unidad','tarifa_iva','precio_de_venta','codigo_de_barra', 'ubicacion']
         widget = {'descripcion': forms.TextInput()}    
 
@@ -96,6 +96,7 @@ class ProductoForm(forms.ModelForm):
         if precio_de_venta <= 0:
             raise forms.ValidationError("Precio de Venta Incorrecto")
         return precio_de_venta
+    
 
 
 
