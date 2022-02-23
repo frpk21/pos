@@ -27,6 +27,7 @@ urlpatterns = [
     path('cantidad/', views.get_ajaxCantidad, name='valida_cantidad'),
     path('productos', ProductoView.as_view(), name='productos_list'),
     path('catalogo', CatalogoView.as_view(), name='catalogo'),
+    path('catalogo/print', views.imprimirCatalogo, name='imp_catalogo'),
     path('catalogo/cod/<pk>', views.BarCodePrint, name='imp_barcode'),
     path('productos/new/<int:pk>', ProductoNew.as_view(), name='producto_new'),
     path('productos/edit/<int:pk>', ProductoEdit.as_view(), name='producto_edit'),

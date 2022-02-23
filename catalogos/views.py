@@ -813,37 +813,16 @@ def imprimirCatalogo(request):
                           spaceShrinkage=0.05,
                           ))
     mov_res = (Producto.objects.filter(usuario=request.user).order_by('nombre','codigo_de_barra'))
-    total_doc = 0
-    for i,item in enumerate(mov_res):
-        movimiento = item
-        no_doc = item.movimiento.documento_no
-        producto =  item.producto
-        codigo_de_barra = item.codigo_de_barra
-        cantidad = item.cantidad
-        costo = item.costo
-        total = item.total 
-        total_doc = total_doc + total       
-
-    if tipo == 1:
-        filename = "Entreda_{}.pdf".format(documento_no)
-        titulo = "ENTRADA DE ALMACEN # {}".format(documento_no)
-    else:
-        filename = "Salid_{}.pdf".format(documento_no)
-        titulo = "SALIDA DE ALMACEN # {}".format(documento_no)
-    subtitulo = movimiento.movimiento.tipo_movimiento.nombre
-    #qr = QRCodeImage(str(codigo_de_barra), size=30 * mm)
-    #qr.hAlign = "RIGHT"
     
-
 
     t=Table(
         data=[
-            ['','',titulo,'',''],
-            ['','','',subtitulo,''],
-            ['TERCERO', '',movimiento.movimiento.tercero.rzn_social,'FECHA',movimiento.movimiento.fecha.strftime('%d/%m/%Y')],
-            ['CIUDAD', '',movimiento.movimiento.ubicacion.ciudad.nombre_ciudad,'',''],
-            ['DIRECCION', '',movimiento.movimiento.tercero.direccion,'VALOR  ','${:,}'.format(total_doc)],
-            ['TELEFONO', '',movimiento.movimiento.tercero.tel1,'', '']
+            ['','',request.user.profile.empresa,'',''],
+            ['','','',"EXISTENCIAS DE ALMACEN",''],
+            ['', '','','FECHA',date.today().strftime('%d/%m/%Y')],
+            ['CIUDAD', '','','',''],
+            ['DIRECCION', '','',' ',''],
+            ['TELEFONO', '','','', '']
         ],
         colWidths=[30,14,316,40,140],
         style=[
@@ -896,33 +875,26 @@ def imprimirCatalogo(request):
     ordenes.append(t)
     ordenes.append(Spacer(1, 5))
 
-    headings0 = ('PRODUCTO', 'CODIGO DE BARRA', 'COSTO', 'CANTIDAD', 'TOTAL')
+    headings0 = ('NOMBRE', 'DESCRIPCION', 'UND', 'EXISTENCIA', 'PRECIO')
     recibos2=[]
-    t_cantidad = 0
+    total_existencia, total_precio = 0
     for lin, reg in enumerate(mov_res):
-        if reg.cantidad is not None:
-            t_cantidad = t_cantidad +  reg.cantidad
-            barcode_value = str(reg.codigo_de_barra)
-            barcode128 = code128.Code128(
-                barcode_value,
-                barHeight=15,
-                barWidth=1,
-                fontSize=10,
-                humanReadable = False
-            )
+        if reg.existencia is not None:
+            total_existencia = total_existencia +  reg.existencia
+            total_precio = total_precio + reg.costo_unidad
             recibos2.append([
-                reg.producto,
-                barcode128,
-                '${:,}'.format(reg.costo),
-                '{:,}'.format(reg.cantidad),
-                '${:,}'.format(reg.total)
+                reg.nombre,
+                reg.descripcion,
+                reg.unidad_de_medida,
+                '{:,}'.format(reg.existencia),
+                '{:,}'.format(reg.costo_unidad)
                 ])
     recibos2.append([
         'TOTAL',
         '',
         '',
-        '{:,}'.format(t_cantidad),
-        '${:,}'.format(total_doc)
+        '{:,}'.format(total_existencia),
+        '${:,}'.format(total_precio)
         ])
 
     t0 = Table([headings0] + recibos2, colWidths=[180,180,60,60,60])
