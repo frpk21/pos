@@ -956,7 +956,7 @@ def imprimirCatalogoXls(request):
         ws.cell(row=cont,column=9).value = item.ubicacion.descripcion
         cont = cont + 1
 
-    nombre_archivo = "inventario-"+date.today()+".xls"
+    nombre_archivo = "inventario-"+date.today().strftime('%d/%m/%Y')+".xls"
     #Definimos que el tipo de respuesta a devolver es un archivo de microsoft excel
     response = HttpResponse(content_type="application/ms-excel") 
     contenido = "attachment; filename={0}".format(nombre_archivo)
