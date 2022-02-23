@@ -869,7 +869,7 @@ def imprimirCatalogo(request):
             recibos2.append([
                 reg.nombre,
                 reg.descripcion,
-                reg.und,
+                und,
                 '{:,}'.format(reg.existencia),
                 '{:,}'.format(reg.costo_unidad)
                 ])
