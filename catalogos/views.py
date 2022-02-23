@@ -541,7 +541,7 @@ class FormulacionView(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, g
 
 
 
-def imprimirMovimiento(request, pk, tipo, nombre):
+def imprimirMovimiento(request, pk, tipo, documento_no):
     import io
     import os
     from django.conf import settings
@@ -601,7 +601,7 @@ def imprimirMovimiento(request, pk, tipo, nombre):
                           splitLongWords=True,
                           spaceShrinkage=0.05,
                           ))
-    mov_res = (Movimientos_detalle.objects.filter(movimiento__id=pk))
+    mov_res = (Movimientos_detalle.objects.filter(movimiento__documento_no=documento_no))
     total_doc = 0
     for i,item in enumerate(mov_res):
         movimiento = item
@@ -614,11 +614,11 @@ def imprimirMovimiento(request, pk, tipo, nombre):
         total_doc =+ total       
 
     if tipo == 1:
-        filename = "Entreda_{}.pdf".format(no_doc)
-        titulo = "ENTRADA DE ALMACEN # {}".format(no_doc)
+        filename = "Entreda_{}.pdf".format(documento_no)
+        titulo = "ENTRADA DE ALMACEN # {}".format(documento_no)
     else:
-        filename = "Salid_{}.pdf".format(no_doc)
-        titulo = "SALIDA DE ALMACEN # {}".format(no_doc)
+        filename = "Salid_{}.pdf".format(documento_no)
+        titulo = "SALIDA DE ALMACEN # {}".format(documento_no)
     subtitulo = movimiento.movimiento.tipo_movimiento.nombre
     #qr = QRCodeImage(str(codigo_de_barra), size=30 * mm)
     #qr.hAlign = "RIGHT"
