@@ -922,7 +922,7 @@ def imprimirCatalogo(request):
                 topMargin=20,  
                 bottomMargin=8,
                 author="INRAI",
-                title=titulo,
+                title="EXISTENCIAS DE ALMACEN VALORIZADO POR VENTA",
                 icon=icon,
                 )
     
