@@ -936,13 +936,12 @@ def imprimirCatalogoXls(request):
     ws['B1'] = 'NOMBRE'
     ws['C1'] = 'DESCRIPCION'
     ws['D1'] = 'UNIDAD'
-    ws['E1'] = 'PROVEEDOR'
-    ws['F1'] = 'EXISTENCIA'
-    ws['G1'] = 'COSTO UNIDAD'
-    ws['H1'] = 'TARIFA IVA'
-    ws['I1'] = 'PRECIO DE VENTA'
-    ws['J1'] = 'CODIGO DE BARRA'
-    ws['K1'] = 'UNICACION'
+    ws['E1'] = 'EXISTENCIA'
+    ws['F1'] = 'COSTO UNIDAD'
+    ws['G1'] = 'TARIFA IVA'
+    ws['H1'] = 'PRECIO DE VENTA'
+    ws['I1'] = 'CODIGO DE BARRA'
+    ws['J1'] = 'UNICACION'
     cont=2
     #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
     for item in recibos:
@@ -950,12 +949,11 @@ def imprimirCatalogoXls(request):
         ws.cell(row=cont,column=2).value = item.nombre
         ws.cell(row=cont,column=3).value = item.descripcion
         ws.cell(row=cont,column=4).value = item.unidad_de_medida
-        ws.cell(row=cont,column=5).value = item.proveedor
-        ws.cell(row=cont,column=6).value = item.existencia
-        ws.cell(row=cont,column=7).value = item.costo_unidad
-        ws.cell(row=cont,column=8).value = item.tarifa_iva
-        ws.cell(row=cont,column=9).value = item.precio_de_venta
-        ws.cell(row=cont,column=10).value = item.ubicacion.descripcion
+        ws.cell(row=cont,column=5).value = item.existencia
+        ws.cell(row=cont,column=6).value = item.costo_unidad
+        ws.cell(row=cont,column=7).value = item.tarifa_iva
+        ws.cell(row=cont,column=8).value = item.precio_de_venta
+        ws.cell(row=cont,column=9).value = item.ubicacion.descripcion
         cont = cont + 1
 
     nombre_archivo = "inventario-"+date.today()+".xls"
