@@ -817,57 +817,18 @@ def imprimirCatalogo(request):
 
     t=Table(
         data=[
-            ['','',request.user.profile.empresa,'',''],
-            ['','','',"EXISTENCIAS DE ALMACEN",''],
-            ['', '','','FECHA',date.today().strftime('%d/%m/%Y')],
-            ['CIUDAD', '','','',''],
-            ['DIRECCION', '','',' ',''],
-            ['TELEFONO', '','','', '']
+            [request.user.profile.empresa],
+            ["EXISTENCIAS DE ALMACEN"],
+            [date.today().strftime('%d/%m/%Y')]
         ],
-        colWidths=[30,14,316,40,140],
+        colWidths=[540],
         style=[
-                ("FONT", (0,2), (0,2), "Helvetica", 7, 7),
-                ("FONT", (0,3), (0,3), "Helvetica", 7, 7),
-                ("FONT", (0,4), (0,4), "Helvetica", 7, 7),
-                ("FONT", (0,5), (0,5), "Helvetica", 7, 7),
-                ("FONT", (2,3), (2,3), "Helvetica-Bold", 7, 7),
-                ("FONT", (2,4), (2,4), "Helvetica-Bold", 7, 7),
-                ("FONT", (2,5), (2,5), "Helvetica-Bold", 7, 7),
-                ("FONT", (2,0), (2,0), "Helvetica-Bold", 14, 14),
-                ("FONT", (3,0), (3,0), "Helvetica-Bold", 11, 11),
-                ("FONT", (3,1), (3,1), "Helvetica", 7, 7),
-                ("FONT", (3,2), (3,4), "Helvetica", 7, 7),
-                ("FONT", (3,5), (3,5), "Helvetica", 7, 7),
-                ("FONT", (4,5), (4,5), "Helvetica", 9, 9),
+                ("FONT", (0,0), (0,0), "Helvetica-Bold", 14, 14),
+                ("FONT", (1,0), (1,0), "Helvetica-Bold", 12, 12),
+                ("FONT", (2,0), (2,0), "Helvetica", 9, 9),
 
-                ('VALIGN',(3,2), (4,4),'MIDDLE'),
-                ('ALIGN',(4,2),(4,4),'CENTRE'),
-                ('VALIGN',(0,0), (1,0),'BOTTOM'),
-                ('VALIGN',(3,0), (4,0),'MIDDLE'),
-                ('VALIGN',(3,1), (4,1),'TOP'),
-                ('VALIGN',(3,5), (3,5),'MIDDLE'),
-                ('VALIGN',(4,5), (4,5),'MIDDLE'),
-                ('ALIGN',(4,5),(4,5),'CENTRE'),
- 
-                ('ALIGN',(2,0),(2,0),'RIGHT'),
-                
-                ('LINEBELOW', (0,2),(2,4), .5, colors.gray),
-                ('LINEBELOW', (3,2),(3,4), .5, colors.gray),
-                #('LINEBELOW', (3,2),(3,4), .5, colors.gray),
-
-                ('SPAN',(2,0),(4,0)),
-                
-                ('SPAN',(3,2),(3,3)),  #fecha
-                ('SPAN',(4,2),(4,3)),  # valor fecha
-                
-                ('SPAN',(3,4),(3,5)),  # titulo valor
-                ('SPAN',(4,4),(4,5)),  # valor total documento
-
-                ('VALIGN',(0,2),(2,5),'MIDDLE'),
-                ('BOX',(0,2),(2,5),.5,colors.gray),
-                ('BOX',(3,2),(4,5),.5,colors.gray),
-                ('BOX',(3,2),(4,5),.5,colors.gray),
-                ('LINEBELOW', (4,2),(4,4), .5, colors.gray),
+                ('VALIGN',(0,0), (2,0),'MIDDLE'),
+                ('ALIGN',(0,0),(2,0),'CENTRE'),
             ]
         )
 
