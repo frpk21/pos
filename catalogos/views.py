@@ -619,7 +619,7 @@ def imprimirMovimiento(request, pk, tipo, nombre):
     else:
         filename = "Salid_{}.pdf".format(no_doc)
         titulo = "SALIDA DE ALMACEN # {}".format(no_doc)
-        
+    subtitulo = movimiento.movimiento.tipo_movimiento.nombre
     #qr = QRCodeImage(str(codigo_de_barra), size=30 * mm)
     #qr.hAlign = "RIGHT"
     
@@ -628,7 +628,7 @@ def imprimirMovimiento(request, pk, tipo, nombre):
     t=Table(
         data=[
             ['','',titulo,'',''],
-            ['','','','',''],
+            ['','','','subtitulo',''],
             ['TERCERO', '',movimiento.movimiento.tercero.rzn_social,'FECHA',movimiento.movimiento.fecha.strftime('%d/%m/%Y')],
             ['CIUDAD', '',movimiento.movimiento.ubicacion.ciudad.nombre_ciudad,'',''],
             ['DIRECCION', '',movimiento.movimiento.tercero.direccion,'VALOR  ','${:,}'.format(total_doc)],
@@ -644,6 +644,7 @@ def imprimirMovimiento(request, pk, tipo, nombre):
                 ("FONT", (2,4), (2,4), "Helvetica-Bold", 7, 7),
                 ("FONT", (2,5), (2,5), "Helvetica-Bold", 7, 7),
                 ("FONT", (2,0), (2,0), "Helvetica-Bold", 14, 14),
+                ("FONT", (3,0), (3,0), "Helvetica-Bold", 11, 11),
                 ("FONT", (3,1), (3,1), "Helvetica", 7, 7),
                 ("FONT", (3,2), (3,4), "Helvetica", 7, 7),
                 ("FONT", (3,5), (3,5), "Helvetica", 7, 7),
