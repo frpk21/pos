@@ -887,9 +887,9 @@ def imprimirCatalogo(request):
             ('GRID', (0, 0), (4, -1), 1, colors.gray),  
             ('LINEBELOW', (0, 0), (-1, 0), 1, colors.gray),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-            ('FONT', (3, 0), (3,0), "Helvetica-Bold", 10,10),
+            ('FONT', (3, 1), (3,0), "Helvetica-Bold", 10,10),
             ('FONTSIZE', (0, 0), (4, -1), 7),
-            ('FONTSIZE', (3, 0), (3, -1), 10),
+            ('FONTSIZE', (3, 0), (3, -1), 9),
             ('BACKGROUND', (0, 0), (4,0), colors.gray)  
         ]  
     ))
