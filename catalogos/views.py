@@ -844,10 +844,32 @@ def imprimirCatalogo(request):
         if reg.existencia is not None:
             total_existencia = total_existencia +  reg.existencia
             total_precio = total_precio + reg.costo_unidad
+            if reg.existencia == 1:
+                und = 'UNIDAD'
+            elif  reg.existencia == 2:
+                und = 'Kg'
+            elif  reg.existencia == 3:
+                und = 'Gr'
+            elif  reg.existencia == 4:
+                und = 'Mlg'
+            elif  reg.existencia == 5:
+                und = 'Mtro'
+            elif  reg.existencia == 6:
+                und = 'CM'
+            elif  reg.existencia == 7:
+                und = 'MILM'
+            elif  reg.existencia == 8:
+                und = 'Lit'
+            elif  reg.existencia == 9:
+                und = 'Mli'
+            elif  reg.existencia == 10:
+                und = 'Cml'
+            else:
+                und = 'CM2'
             recibos2.append([
                 reg.nombre,
                 reg.descripcion,
-                reg.unidad_de_medida,
+                reg.und,
                 '{:,}'.format(reg.existencia),
                 '{:,}'.format(reg.costo_unidad)
                 ])
