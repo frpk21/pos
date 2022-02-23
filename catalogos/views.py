@@ -628,7 +628,7 @@ def imprimirMovimiento(request, pk, tipo, nombre):
     t=Table(
         data=[
             ['','',titulo,'',''],
-            ['','','','subtitulo',''],
+            ['','','',subtitulo,''],
             ['TERCERO', '',movimiento.movimiento.tercero.rzn_social,'FECHA',movimiento.movimiento.fecha.strftime('%d/%m/%Y')],
             ['CIUDAD', '',movimiento.movimiento.ubicacion.ciudad.nombre_ciudad,'',''],
             ['DIRECCION', '',movimiento.movimiento.tercero.direccion,'VALOR  ','${:,}'.format(total_doc)],
