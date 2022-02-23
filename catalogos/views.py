@@ -918,7 +918,60 @@ def imprimirCatalogo(request):
     
     return response
 
-    
+
+def imprimirCatalogoXls(request):
+    from openpyxl import Workbook
+    recibos = Producto.objects.filter(usuario=request.user).order_by('nombre','codigo_de_barra')
+    #Creamos el libro de trabajo
+    wb = Workbook()
+    #Definimos como nuestra hoja de trabajo, la hoja activa, por defecto la primera del libro
+    ws = wb.active
+    #En la celda B1 ponemos el texto 'REPORTE DE PERSONAS'
+        ######ws['A1'] = 'REPORTE DE PERSONAS'
+    #Juntamos las celdas desde la B1 hasta la E1, formando una sola celda
+        ######ws.merge_cells('B1:E1')
+
+    #Creamos los encabezados desde la celda A1 hasta
+    ws['A1'] = 'SUB CATEGORIA'
+    ws['B1'] = 'NOMBRE'
+    ws['C1'] = 'DESCRIPCION'
+    ws['D1'] = 'UNIDAD'
+    ws['E1'] = 'PROVEEDOR'
+    ws['F1'] = 'EXISTENCIA'
+    ws['G1'] = 'COSTO UNIDAD'
+    ws['H1'] = 'TARIFA IVA'
+    ws['I1'] = 'PRECIO DE VENTA'
+    ws['J1'] = 'CODIGO DE BARRA'
+    ws['K1'] = 'UNICACION'
+    cont=2
+    #Recorremos el conjunto de personas y vamos escribiendo cada uno de los datos en las celdas
+    for item in recibos:
+        ws.cell(row=cont,column=1).value = item.subcategoria.nombre
+        ws.cell(row=cont,column=2).value = item.nombre
+        ws.cell(row=cont,column=3).value = item.descripcion
+        ws.cell(row=cont,column=4).value = item.unidad_de_medida
+        ws.cell(row=cont,column=5).value = item.proveedor.rzn_social
+        ws.cell(row=cont,column=6).value = item.existencia
+        ws.cell(row=cont,column=7).value = item.costo_unidad
+        ws.cell(row=cont,column=8).value = item.tarifa_iva
+        ws.cell(row=cont,column=9).value = item.precio_de_venta
+        ws.cell(row=cont,column=10).value = item.ubicacion.descripcion
+        cont = cont + 1
+
+    nombre_archivo = "inventario-"+date.today()+".xls"
+    #Definimos que el tipo de respuesta a devolver es un archivo de microsoft excel
+    response = HttpResponse(content_type="application/ms-excel") 
+    contenido = "attachment; filename={0}".format(nombre_archivo)
+    response["Content-Disposition"] = contenido
+    wb.save(response)
+
+    return response
+
+
+
+
+
+  
     
 def imprimir(self, form, detalle_movimientos, tipor, producto):
     import io
