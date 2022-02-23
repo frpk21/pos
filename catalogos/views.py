@@ -713,7 +713,7 @@ def imprimirMovimiento(request, pk, tipo, nombre):
         '${:,}'.format(total_doc)
         ])
 
-    t0 = Table([headings0] + recibos2, colWidths=[240,120,60,60,60])
+    t0 = Table([headings0] + recibos2, colWidths=[180,180,60,60,60])
     t0.setStyle(TableStyle(
         [  
             ('GRID', (0, 0), (4, -1), 1, colors.gray),  
