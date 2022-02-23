@@ -827,8 +827,8 @@ def imprimirCatalogo(request):
                 ("FONT", (1,0), (1,0), "Helvetica-Bold", 12, 12),
                 ("FONT", (2,0), (2,0), "Helvetica", 9, 9),
 
-                ('VALIGN',(0,0), (2,0),'MIDDLE'),
-                ('ALIGN',(0,0),(2,0),'CENTRE'),
+                ('VALIGN',(0,0), (2,2),'MIDDLE'),
+                ('ALIGN',(0,0),(2,2),'CENTRE'),
             ]
         )
 
