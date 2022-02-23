@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 from django.views import generic
 
-from catalogos.models import Categoria, SubCategoria, Producto, Iva, Movimientos, Formulacion, Tipos_movimientos
+from catalogos.models import Categoria, Movimientos_detalle, SubCategoria, Producto, Iva, Movimientos, Formulacion, Tipos_movimientos
 
 from generales.models import Terceros, Profile
 
@@ -14,7 +14,7 @@ from collections import namedtuple
 
 from catalogos.forms import CategoriaForm, SubCategoriaForm, ProductoForm, IvaForm, MovimientosEncForm, DetalleMovimientosFormSet, FormulacionEncForm, FormulacionDetForm, DetalleFormulacionFormSet
 
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -35,9 +35,32 @@ from django.db.models import Sum
 from facturas.conectorplugin import Conector, AccionBarcodeJan13, AlineacionCentro
 
 
+
+
+import io
+import os
+from django.conf import settings
+from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
+from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib import colors  
+from reportlab.lib.pagesizes import letter, landscape, portrait
+from reportlab.platypus import Table
+from reportlab.lib.units import inch, mm
+from reportlab.platypus import Image, PageBreak, Paragraph, Spacer
+from django.core.mail import EmailMessage
+from io import StringIO
+from reportlab.pdfgen import canvas
+from reportlab_qrcode import QRCodeImage
+from reportlab.graphics.barcode import code128
+from barcode.writer import ImageWriter
+from barcode.ean import EuropeanArticleNumber13
+import barcode
+
+
 def MenuView(request, *args, **kwargs):
     template_name="catalogos/menu.html"
-    context={'hoy': date.today()}
+    context={'hoy': date.today(), 'mes':date.today().month, 'ano': date.today().year}
    
     return render(request, template_name, context)
 
@@ -427,8 +450,63 @@ def get_ajaxCantidad(request, *args, **kwargs):
         else:
             return JsonResponse(data={"errors": ""}, safe=False)
         
+      
+def get_ajaxInformeMovimientos1(request, *args, **kwargs):
+    ano = int(request.GET.get('periodo')[0:4])
+    mes = int(request.GET.get('periodo')[5:7])
+    if not ano:
+        return JsonResponse(data={'errors': 'No hay datos.'})
+    else:
+        return HttpResponseRedirect(reverse('catalogos:info_movimientos1_resul', kwargs={'ano': ano,'mes':mes}))
+
+
+
+
+class InformeMovimientos1View(LoginRequiredMixin, generic.ListView):
+    
+    model = Movimientos
+    template_name = "catalogos/info_movimientos1.html"
+    context_object_name = "obj"
+    login_url='generales:login'
+
+    def get(self, request, *args, **kwargs):
+        ano = int(request.GET.get('periodo')[0:4])
+        mes = int(request.GET.get('periodo')[5:7])
+        movimientos = Movimientos_detalle.objects.filter(movimiento__fecha__month=mes, movimiento__fecha__year=ano, movimiento__usuario=request.user)
+        print("MOVIMIENTO CONSULTA>>>>>>>>>>>>>>>>>>>>>>", movimientos)
+        context = {}
+        context['mes'] = mes
+        context['ano'] = ano
+        context['empresa'] = request.user.profile.empresa
+        context['movimientos'] = movimientos
+        self.object_list = context
+
+        return self.render_to_response(
+            self.get_context_data(
+                context = context
+            )
+        )
         
         
+#   ********  barcode imprimir      
+def BarCodePrint(request,pk):
+    codigo=pk
+    if len(codigo) < 12:
+        codigo = '0' * (12-len(codigo))
+    codigo = codigo + pk
+    template_name = 'catalogos/barcode_print.html'
+    ean = EuropeanArticleNumber13(str(codigo), writer=ImageWriter())
+    img=ean.save("media/barcode")
+    producto = Producto.objects.filter(id=int(pk)).last()
+    context={}
+    context['producto'] = producto
+    context['codigo'] = img
+
+    return render(request, template_name, context)
+
+
+
+
 class FormulacionView(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, generic.CreateView):
     permission_required = 'formulacion.add_formulacion'
     model = Formulacion
@@ -485,22 +563,7 @@ class FormulacionView(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, g
 
 
 def imprimirxxxxxxxxxxxxxxxx(self, form, detalle_movimientos, tipor, producto):
-    import io
-    import os
-    from django.conf import settings
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
-    from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
-    from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-    from reportlab.lib import colors  
-    from reportlab.lib.pagesizes import letter, landscape, portrait
-    from reportlab.platypus import Table
-    from reportlab.lib.units import inch, mm
-    from reportlab.platypus import Image, PageBreak, Paragraph, Spacer
-    from django.core.mail import EmailMessage
-    from io import StringIO
-    from reportlab.pdfgen import canvas
-    from reportlab_qrcode import QRCodeImage
-    from reportlab.graphics.barcode import code128
+    
 
     response = HttpResponse(content_type='application/pdf')  
     buffer = io.BytesIO()

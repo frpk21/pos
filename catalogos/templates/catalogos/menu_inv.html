@@ -10,93 +10,52 @@
 
 <div class="content">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card card-chart">
-          <div class="card-header card-header-rose" data-header-animation="false">
-            <div class="ct-chart" id="websiteViewsChart"></div>
-          </div>
-          <div class="card-body">
-            <h4 class="card-title">Ejecuci&oacute;n</h4>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">access_time</i> {{hoy}}
-            </div>
-          </div>
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <div class="card-header card-header-warning card-header-icon" style="background-color: gray;">
+          <h6 class="card-title text-center" style="background-color:gray; color: yellow;">MOVIMIENTOS DE INVENTARIO</h6>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="card card-chart">
-          <div class="card-header card-header-info" data-header-animation="false">
-            <div class="ct-chart1" id="websiteViewsChart"></div>
-          </div>
-          <div class="card-body">
-            <h4 class="card-title">Cartera</h4>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">access_time</i> {{hoy}}
-            </div>
-          </div>
+      <div class="col-sm-2">
+        <div class="card card-stats text-center">
+          <a href="{% url 'catalogos:catalogo' %}">
+            <i class="material-icons">account_circle</i>
+            <br /><br />
+            <h6 class="card-title">Cat&aacute;logo</h6>
+          </a>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="card card-chart">
-          <div class="card-header card-header-warning" data-header-animation="false">
-            <div class="ct-chart2" id="websiteViewsChart"></div>
-          </div>
-          <div class="card-body">
-            <h4 class="card-title">Gastos</h4>
-          </div>
-          <div class="card-footer">
-            <div class="stats">
-              <i class="material-icons">access_time</i> {{hoy}}
-            </div>
-          </div>
+      <div class="col-sm-2">
+        <div class="card card-stats text-center">
+          <a href="{% url 'catalogos:movimientos' 1 %}">
+            <i class="material-icons">check_circle_outline</i>
+            <br /><br />
+            <h6 class="card-title">Entradas</h6>
+          </a>
         </div>
       </div>
-
+      <div class="col-sm-2">
+        <div class="card card-stats text-center">
+          <a href="{% url 'catalogos:movimientos' 2 %}">
+            <i class="material-icons">fact_check</i>
+            <br /><br />
+            <h6 class="card-title">Sal&iacute;das</h6>
+          </a>
+        </div>
+      </div>
+    </div><br>
+    <div class="row justify-content-center">
       <div class="col-md-12">
         <div class="card-header card-header-warning card-header-icon">
-          <h4 class="card-title text-center">INVENTARIO</h4>
+          <h6 class="card-title text-center">CONSULTAS</h6>
         </div>
-        <div class="row justify-content-center">
-          <div class="col-sm-2">
-            <div class="card card-stats text-center">
-              <a href="{% url 'catalogos:catalogo' %}">
-                <i class="material-icons">account_circle</i>
-                <br /><br />
-                <h6 class="card-title">Cat&aacute;logo</h6>
-              </a>
-            </div>
-          </div>
-          <div class="col-sm-2">
-            <div class="card card-stats text-center">
-              <a href="{% url 'catalogos:movimientos' 1 %}">
-                <i class="material-icons">check_circle_outline</i>
-                <br /><br />
-                <h6 class="card-title">Entradas</h6>
-              </a>
-            </div>
-          </div>
-          <div class="col-sm-2">
-            <div class="card card-stats text-center">
-              <a href="{% url 'catalogos:movimientos' 2 %}">
-                <i class="material-icons">fact_check</i>
-                <br /><br />
-                <h6 class="card-title">Sal&iacute;das</h6>
-              </a>
-            </div>
-          </div>
-          <div class="col-sm-2">
-            <div class="card card-stats text-center">
-              <a href="{% url 'catalogos:formulacion' %}">
-                <i class="material-icons">done_all</i>
-                <br /><br />
-                <h6 class="card-title">Formulaci&oacute;n</h6>
-              </a>
-            </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="card card-stats text-center">
+          <i class="material-icons">done_all</i>
+          <div class="card-body text-center">
+            <h5 class="card-text">Reporte de movimientos</h5>
+            <button class="btn btn-rose btn-fill" onclick="ver_movimientos()">Consultar</button>
           </div>
         </div>
       </div>
@@ -105,6 +64,43 @@
 </div>
 
 <script>
+  function reporte1(itemn) {
+    var r = $("#"+itemn).val();
+    var datos = {'periodo':r};
+    window.location.href="{% url 'catalogos:info_movimientos1_resul' %}?periodo="+r
+
+
+
+    //$.get( "{% url 'catalogos:info_movimientos1_resul' %}", datos, function( data ) {
+    //    console.log(data);
+    //    if (data){
+            //swal({
+            //    title: data.errors,
+            //    showCancelButton: false,
+            //    html: data,
+            //    confirmButtonClass: 'btn btn-success',
+            //    //cancelButtonClass: 'btn btn-danger',
+            //    buttonsStyling: false
+            //}).catch(swal.noop);
+            
+    //    }
+    //} );
+  }
+
+
+  function ver_movimientos() {
+    swal({
+      title: 'Consulta de Movimientos',
+      html: '<div class="form-group">' +
+        '<input class="form-control" id="reporte" type="month" name="cambio_mes" value="" placeholder="Cambiar mes y a&nacute;o" onblur="reporte1(id)">' +
+        '</div>',
+      showCancelButton: true,
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      buttonsStyling: false
+    }).catch(swal.noop)
+  }
+
   new Chartist.Bar('.ct-chart', {
     labels: ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
     series: [
@@ -167,3 +163,18 @@
 </script>
 
 {% endblock contenido %}
+<!--
+then(function(result) {
+      var r = $("#reporte").val();
+      var mes = parseInt(r.substr(5,7));
+      var ano = parseInt(r.substr(0,4));
+      swal({
+        type: 'success',
+        html: 'You can use <b>bold text</b>, ' +
+          '<a href={% url 'catalogos:info_movimientos1_resul'  %}">links</a> ' +
+          'and other HTML tags',
+        confirmButtonClass: 'btn btn-success',
+        buttonsStyling: false
+
+      })
+    }).-->

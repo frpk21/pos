@@ -1,0 +1,28 @@
+
+
+{% load static %}
+
+{% block contenido %}
+
+{% load humanize %}
+
+    <link href="/static/base/assets/css/impresion.css" rel="stylesheet" />
+    
+    <div class="content">
+            <div class="ticket">
+                <img src="/{{codigo}}" />
+                <p class="centrado">/{{codigo}}</p>
+            </div>
+
+            <div>
+                <button class="oculto-impresion" onclick="imprimir()">Imprimir</button>
+            </div>
+                
+    </div>
+
+    <script>
+        function imprimir() {
+            window.print();
+        }
+    </script>
+{% endblock contenido %}

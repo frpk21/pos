@@ -46,8 +46,7 @@
                 <div class="user">
                     <div class="photo">
                         {% if request.user.is_staff %}
-                            <!--<img src="{{ user.profile.foto.url }}"/>-->
-                            <i class="material-icons">person</i>
+                            <img src="{{ user.profile.foto.url }}"/>
                         {% endif %}
                     </div>
                     <div class="user-info">

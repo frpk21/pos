@@ -119,9 +119,9 @@
                                                 <td class="text-center">{{item.activo|yesno:"Activo,Inactivo"}}</td>
                                                 <td class="text-center">{{item.creado|date:'d/m/Y'}}</td>
                                                 <td class="td-actions text-center">
-                                                    <a href="#">
+                                                    <a href="{% url 'catalogos:imp_barcode' item.id %}">
                                                         <button type="button" rel="tooltip" class="btn btn-info btn-round">
-                                                        <i class="material-icons">search</i>
+                                                        <i class="material-icons">qr_code_2</i>
                                                         </button>
                                                     </a>
                                                 </td>

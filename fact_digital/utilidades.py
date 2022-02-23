@@ -10,9 +10,15 @@ LF_INVOICE="/invoice/"
 
 
 # PARAMETRO PARA MODO PRUEBAS:
-USR = "usr-38717bdca536b4f02ec8bd20e941d548-v300"
-PWD = "pwd-6cc499d5968c5290e90803e5c486c5fcx-v300"
+
+#USR = "usr-38717bdca536b4f02ec8bd20e941d548-v300"
+#PWD = "pwd-6cc499d5968c5290e90803e5c486c5fcx-v300"
+USR = "usr-0a9c805119ddc2d54c8c15403d73ffd5-v300"
+PWD = "pwd-3a06517ea4e92258304ddff2b8b41d19x-v300"
 URL = "https://play.tas-la.com/facturacion.v30"
+
+
+
 
 
 # PARAMETRO PARA MODO PRODUCCION:
