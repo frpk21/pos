@@ -709,7 +709,7 @@ def imprimirMovimiento(request, pk, tipo, nombre):
         'TOTAL',
         '',
         '',
-        '${:,}'.format(t_cantidad),
+        '{:,}'.format(t_cantidad),
         '${:,}'.format(total_doc)
         ])
 
