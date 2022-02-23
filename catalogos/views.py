@@ -728,7 +728,7 @@ def imprimirMovimiento(request, pk, tipo, nombre):
     ordenes.append(t0)
 
     ordenes.append(Spacer(1, 5))
-    icon_path = "static/base/images/favicon.png"
+    icon_path = "/static/base/images/favicon.png"
     icon = os.path.join(settings.BASE_DIR, icon_path)
     doc = SimpleDocTemplate(buffer,
                 pagesize=portrait(letter),
