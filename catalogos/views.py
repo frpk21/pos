@@ -950,7 +950,7 @@ def imprimirCatalogoXls(request):
         ws.cell(row=cont,column=2).value = item.nombre
         ws.cell(row=cont,column=3).value = item.descripcion
         ws.cell(row=cont,column=4).value = item.unidad_de_medida
-        ws.cell(row=cont,column=5).value = item.proveedor.rzn_social
+        ws.cell(row=cont,column=5).value = item.proveedor
         ws.cell(row=cont,column=6).value = item.existencia
         ws.cell(row=cont,column=7).value = item.costo_unidad
         ws.cell(row=cont,column=8).value = item.tarifa_iva
