@@ -68,23 +68,6 @@
     var r = $("#"+itemn).val();
     var datos = {'periodo':r};
     window.location.href="{% url 'catalogos:info_movimientos1_resul' %}?periodo="+r
-
-
-
-    //$.get( "{% url 'catalogos:info_movimientos1_resul' %}", datos, function( data ) {
-    //    console.log(data);
-    //    if (data){
-            //swal({
-            //    title: data.errors,
-            //    showCancelButton: false,
-            //    html: data,
-            //    confirmButtonClass: 'btn btn-success',
-            //    //cancelButtonClass: 'btn btn-danger',
-            //    buttonsStyling: false
-            //}).catch(swal.noop);
-            
-    //    }
-    //} );
   }
 
 

@@ -451,13 +451,13 @@ def get_ajaxCantidad(request, *args, **kwargs):
             return JsonResponse(data={"errors": ""}, safe=False)
         
       
-def get_ajaxInformeMovimientos1(request, *args, **kwargs):
-    ano = int(request.GET.get('periodo')[0:4])
-    mes = int(request.GET.get('periodo')[5:7])
-    if not ano:
-        return JsonResponse(data={'errors': 'No hay datos.'})
-    else:
-        return HttpResponseRedirect(reverse('catalogos:info_movimientos1_resul', kwargs={'ano': ano,'mes':mes}))
+#def get_ajaxInformeMovimientos1(request, *args, **kwargs):
+#    ano = int(request.GET.get('periodo')[0:4])
+#    mes = int(request.GET.get('periodo')[5:7])
+#    if not ano:
+#        return JsonResponse(data={'errors': 'No hay datos.'})
+#    else:
+#        return HttpResponseRedirect(reverse('catalogos:info_movimientos1_resul', kwargs={'ano': ano,'mes':mes}))
 
 
 
@@ -473,7 +473,6 @@ class InformeMovimientos1View(LoginRequiredMixin, generic.ListView):
         ano = int(request.GET.get('periodo')[0:4])
         mes = int(request.GET.get('periodo')[5:7])
         movimientos = Movimientos_detalle.objects.filter(movimiento__fecha__month=mes, movimiento__fecha__year=ano, movimiento__usuario=request.user)
-        print("MOVIMIENTO CONSULTA>>>>>>>>>>>>>>>>>>>>>>", movimientos)
         context = {}
         context['mes'] = mes
         context['ano'] = ano

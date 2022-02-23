@@ -20,7 +20,7 @@ urlpatterns = [
     path('inv/frm/new', views.FormulacionView.as_view(), name='formulacion'),
    # path('inv/mov/add', get_additem, name='add_item'),
     path('barcode/', views.get_ajaxBarcode, name='valida_bar_code'),
-    path('repo1/', views.get_ajaxInformeMovimientos1, name='info_movimientos1'),
+   # path('repo1/', views.get_ajaxInformeMovimientos1, name='info_movimientos1'),
     path('repo1/res/', views.InformeMovimientos1View.as_view(), name='info_movimientos1_resul'),
     
     path('cantidad/', views.get_ajaxCantidad, name='valida_cantidad'),
