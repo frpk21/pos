@@ -58,14 +58,9 @@
                                             <td>{{item.valor_documento|intcomma}}</td>
                                             <td>{{item.total|intcomma}}</td>
                                             <td class="td-actions text-center">
-                                                <a href="">
+                                                <a href="{% url 'catalogos:imp_movimiento' item.id  item.movimiento.tipo_movimiento.tipo item.movimiento.tipo_movimiento.nombre %}">
                                                     <button type="button" rel="tooltip" class="btn btn-info btn-round">
-                                                    <i class="material-icons">edit</i>
-                                                    </button>
-                                                </a>
-                                                <a href="">
-                                                    <button type="button" rel="tooltip" class="btn btn-danger btn-round">
-                                                    <i class="material-icons">pdf</i>
+                                                    <i class="material-icons">print</i>
                                                     </button>
                                                 </a>
                                             </td>

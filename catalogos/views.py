@@ -34,26 +34,6 @@ from django.db.models import Sum
 
 from facturas.conectorplugin import Conector, AccionBarcodeJan13, AlineacionCentro
 
-
-
-
-import io
-import os
-from django.conf import settings
-from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
-from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.lib import colors  
-from reportlab.lib.pagesizes import letter, landscape, portrait
-from reportlab.platypus import Table
-from reportlab.lib.units import inch, mm
-from reportlab.platypus import Image, PageBreak, Paragraph, Spacer
-from django.core.mail import EmailMessage
-from io import StringIO
-from reportlab.pdfgen import canvas
-from reportlab_qrcode import QRCodeImage
-from reportlab.graphics.barcode import code128
-from barcode.writer import ImageWriter
 from barcode.ean import EuropeanArticleNumber13
 import barcode
 
@@ -561,20 +541,35 @@ class FormulacionView(SuccessMessageMixin, LoginRequiredMixin, SinPrivilegios, g
 
 
 
-def imprimirxxxxxxxxxxxxxxxx(self, form, detalle_movimientos, tipor, producto):
-    
+def imprimirMovimiento(request, pk, tipo, nombre):
+    import io
+    import os
+    from django.conf import settings
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
+    from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
+    from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+    from reportlab.lib import colors  
+    from reportlab.lib.pagesizes import letter, landscape, portrait
+    from reportlab.platypus import Table
+    from reportlab.lib.units import inch, mm
+    from reportlab.platypus import Image, PageBreak, Paragraph, Spacer
+    from django.core.mail import EmailMessage
+    from io import StringIO
+    from reportlab.pdfgen import canvas
+    from reportlab_qrcode import QRCodeImage
+    from reportlab.graphics.barcode import code128
 
     response = HttpResponse(content_type='application/pdf')  
     buffer = io.BytesIO()
 
      
     ordenes = []
-    logo_path = self.request.user.profile.logo.url
-    logo = os.path.join(settings.BASE_DIR, logo_path)
+    #logo_path = user.profile.foto.url
+    #logo = os.path.join(settings.BASE_DIR, logo_path)
     #texto_path = "static/base/images/texto-inrai.jpg"
     #texto = os.path.join(settings.BASE_DIR, texto_path)
-    image = Image(logo, 3 * inch, .8 * inch)
-    image.hAlign = "LEFT"
+    #image = Image(logo, 3 * inch, .8 * inch)
+    #image.hAlign = "LEFT"
     #image1 = Image(texto, 2.5 * inch, .8 * inch)
     #image1.hAlign = "LEFT"
     styles = getSampleStyleSheet()
@@ -606,39 +601,40 @@ def imprimirxxxxxxxxxxxxxxxx(self, form, detalle_movimientos, tipor, producto):
                           splitLongWords=True,
                           spaceShrinkage=0.05,
                           ))
-    recibo = form #(Recibos.objects.filter(no_recibo=no_recibo, sede=idsede))
-    if tipor == 1:
-        filename = "ENTRADA_{}.pdf".format(self.object.documento_no)
-        doc_no = "ENTRADA # {}".format(self.object.documento_no)
+    mov_res = (Movimientos_detalle.objects.filter(id=pk))
+    total_doc = 0
+    for i,item in enumerate(mov_res):
+        movimiento = item
+        no_doc = item.movimiento.documento_no
+        producto =  item.producto
+        codigo_de_barra = item.codigo_de_barra
+        cantidad = item.cantidad
+        costo = item.costo
+        total = item.total 
+        total_doc =+ total       
+
+    if tipo == 1:
+        filename = "Entreda_{}.pdf".format(no_doc)
+        titulo = "ENTRADA DE ALMACEN # {}".format(no_doc)
     else:
-        filename = "SALIDA_{}.pdf".format(self.object.documento_no)
-        doc_no = "SALIDA # {}".format(self.object.documento_no)
-
-
+        filename = "Salid_{}.pdf".format(no_doc)
+        titulo = "SALIDA DE ALMACEN # {}".format(no_doc)
         
-
-    #qr = QRCodeImage(str(str(idsede)+no_recibo), size=40 * mm)
+    #qr = QRCodeImage(str(codigo_de_barra), size=30 * mm)
     #qr.hAlign = "RIGHT"
-    ##barcode_value = str(str(idsede)+no_recibo)
-    #barcode128 = code128.Code128(
-    #    barcode_value,
-    #    barHeight=30,
-    #    barWidth=3,
-    #    fontSize=15,
-    #    humanReadable = False
-    #)
+    
 
 
     t=Table(
         data=[
-            ['image1','','','RECIBO DE CAJA No. '+doc_no,''],
+            ['','',titulo,'',''],
             ['','','','',''],
-            ['TERCERO', '',self.object.tercero,'FECHA',self.object.fecha.strftime('%d/%m/%Y')],
-            ['CIUDAD', '',self.object.ubicacion.ciudad.nombre_ciudad,'',''],
-            ['', '','','VALOR  ','${:,}'.format(self.object.valor_documento)],
-            ['', '','','', '']
+            ['TERCERO', '',movimiento.movimiento.tercero.rzn_social,'FECHA',movimiento.movimiento.fecha.strftime('%d/%m/%Y')],
+            ['CIUDAD', '',movimiento.movimiento.ubicacion.ciudad.nombre_ciudad,'',''],
+            ['DIRECCION', '',movimiento.movimiento.tercero.direccion,'VALOR  ','${:,}'.format(total_doc)],
+            ['TELEFONO', '',movimiento.movimiento.tercero.tel1,'', '']
         ],
-        colWidths=[5,5,20,20,20],
+        colWidths=[30,14,316,40,140],
         style=[
                 ("FONT", (0,2), (0,2), "Helvetica", 7, 7),
                 ("FONT", (0,3), (0,3), "Helvetica", 7, 7),
@@ -647,7 +643,7 @@ def imprimirxxxxxxxxxxxxxxxx(self, form, detalle_movimientos, tipor, producto):
                 ("FONT", (2,3), (2,3), "Helvetica-Bold", 7, 7),
                 ("FONT", (2,4), (2,4), "Helvetica-Bold", 7, 7),
                 ("FONT", (2,5), (2,5), "Helvetica-Bold", 7, 7),
-                ("FONT", (3,0), (3,0), "Helvetica-Bold", 14, 14),
+                ("FONT", (2,0), (2,0), "Helvetica-Bold", 14, 14),
                 ("FONT", (3,1), (3,1), "Helvetica", 7, 7),
                 ("FONT", (3,2), (3,4), "Helvetica", 7, 7),
                 ("FONT", (3,5), (3,5), "Helvetica", 7, 7),
@@ -662,15 +658,19 @@ def imprimirxxxxxxxxxxxxxxxx(self, form, detalle_movimientos, tipor, producto):
                 ('VALIGN',(4,5), (4,5),'MIDDLE'),
                 ('ALIGN',(4,5),(4,5),'CENTRE'),
  
-                #('ALIGN',(3,0),(3,5),'CENTRE'),
+                ('ALIGN',(2,0),(2,0),'RIGHT'),
                 
                 ('LINEBELOW', (0,2),(2,4), .5, colors.gray),
                 ('LINEBELOW', (3,2),(3,4), .5, colors.gray),
                 #('LINEBELOW', (3,2),(3,4), .5, colors.gray),
 
-                ('SPAN',(3,0),(3,0)),
-                #('SPAN',(3,4),(3,5)),
-                #('SPAN',(4,4),(4,5)),
+                ('SPAN',(2,0),(4,0)),
+                
+                ('SPAN',(3,2),(3,3)),  #fecha
+                ('SPAN',(4,2),(4,3)),  # valor fecha
+                
+                ('SPAN',(3,4),(3,5)),  # titulo valor
+                ('SPAN',(4,4),(4,5)),  # valor total documento
 
                 ('VALIGN',(0,2),(2,5),'MIDDLE'),
                 ('BOX',(0,2),(2,5),.5,colors.gray),
@@ -684,52 +684,60 @@ def imprimirxxxxxxxxxxxxxxxx(self, form, detalle_movimientos, tipor, producto):
     ordenes.append(t)
     ordenes.append(Spacer(1, 5))
 
-    recibos1 = detalle_movimientos
-    #Recibos1.objects.filter(recibo=no_recibo,recibo__sede=idsede).exclude(valor_pago_factura=0).values('factura__factura','valor_pago_factura','pronto_pago',\
-    #        'volumen_agencia', 'reteiva', 'retfuente','reteica', 'saldo_inicial', 'saldo_final')
-    
-    t_total = 0
-    headings0 = ('PRODUCTO', 'CANTIDAD', 'COSTO', 'TOTAL')
+    headings0 = ('PRODUCTO', 'CODIGO DE BARRA', 'COSTO', 'CANTIDAD', 'TOTAL')
     recibos2=[]
-    for detalle in detalle_movimientos:
-    #for lin, reg in enumerate(recibos1):
-        t_total = t_total + (int(detalle.cleaned_data["cantidad"]) * int(detalle.cleaned_data["costo"]))
-        recibos2.append([
-            producto.nombre,
-            '{:,}'.format(detalle.cleaned_data["cantidad"]),
-            int(detalle.cleaned_data["costo"]),
-            '${:,}'.format(int(detalle.cleaned_data["cantidad"]) * int(detalle.cleaned_data["costo"]))
-            ])
+    t_cantidad = 0
+    for lin, reg in enumerate(mov_res):
+        if reg.cantidad is not None:
+            t_cantidad = t_cantidad +  reg.cantidad
+            barcode_value = str(reg.codigo_de_barra)
+            barcode128 = code128.Code128(
+                barcode_value,
+                barHeight=15,
+                barWidth=1,
+                fontSize=10,
+                humanReadable = False
+            )
+            recibos2.append([
+                reg.producto,
+                barcode128,
+                '${:,}'.format(reg.costo),
+                '{:,}'.format(reg.cantidad),
+                '${:,}'.format(reg.total)
+                ])
     recibos2.append([
-        'TOTALES',
-        '${:,}'.format(t_total)
+        'TOTAL',
+        '',
+        '',
+        '${:,}'.format(t_cantidad),
+        '${:,}'.format(total_doc)
         ])
 
-    t0 = Table([headings0] + recibos2, colWidths=[20,10,10,10])
+    t0 = Table([headings0] + recibos2, colWidths=[240,120,60,60,60])
     t0.setStyle(TableStyle(
         [  
-            ('GRID', (0, 0), (3, -1), 1, colors.gray),  
+            ('GRID', (0, 0), (4, -1), 1, colors.gray),  
             ('LINEBELOW', (0, 0), (-1, 0), 1, colors.gray),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-            ('FONT', (0, 0), (8, -1), "Helvetica", 8,8),
-            ('FONTSIZE', (0, 0), (3, -1), 7),
-            ('BACKGROUND', (0, 0), (3,0), colors.gray)  
+            ('FONT', (0, 0), (4, -1), "Helvetica", 8,8),
+            ('FONTSIZE', (0, 0), (4, -1), 7),
+            ('BACKGROUND', (0, 0), (4,0), colors.gray)  
         ]  
     ))
     t0.hAlign = "LEFT"
     ordenes.append(t0)
 
     ordenes.append(Spacer(1, 5))
-    icon_path = "static/base/images/inrai/favicon.png"
+    icon_path = "static/base/images/favicon.png"
     icon = os.path.join(settings.BASE_DIR, icon_path)
     doc = SimpleDocTemplate(buffer,
-                pagesize=landscape((5*inch, 8*inch)),
-                rightMargin=1,
-                leftMargin=1,
-                topMargin=2,  
-                bottomMargin=2,
+                pagesize=portrait(letter),
+                rightMargin=40,
+                leftMargin=50,
+                topMargin=20,  
+                bottomMargin=8,
                 author="INRAI",
-                title="Recibo de Caja # ",
+                title=titulo,
                 icon=icon,
                 )
     
@@ -738,7 +746,7 @@ def imprimirxxxxxxxxxxxxxxxx(self, form, detalle_movimientos, tipor, producto):
     pdf = buffer.getvalue()
     buffer.close()
     
-    os.startfile(pdf,"print")
+    
     return response
 
 

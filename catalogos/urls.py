@@ -22,6 +22,7 @@ urlpatterns = [
     path('barcode/', views.get_ajaxBarcode, name='valida_bar_code'),
    # path('repo1/', views.get_ajaxInformeMovimientos1, name='info_movimientos1'),
     path('repo1/res/', views.InformeMovimientos1View.as_view(), name='info_movimientos1_resul'),
+    path('repo1/res/<int:pk>/<int:tipo>/<nombre>', views.imprimirMovimiento, name='imp_movimiento'),
     
     path('cantidad/', views.get_ajaxCantidad, name='valida_cantidad'),
     path('productos', ProductoView.as_view(), name='productos_list'),
