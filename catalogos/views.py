@@ -601,7 +601,7 @@ def imprimirMovimiento(request, pk, tipo, documento_no):
                           splitLongWords=True,
                           spaceShrinkage=0.05,
                           ))
-    mov_res = (Movimientos_detalle.objects.filter(movimiento__documento_no=documento_no))
+    mov_res = (Movimientos_detalle.objects.filter(movimiento__documento_no=documento_no, usuario=request.user))
     total_doc = 0
     for i,item in enumerate(mov_res):
         movimiento = item
@@ -750,6 +750,216 @@ def imprimirMovimiento(request, pk, tipo, documento_no):
     
     return response
 
+
+
+def imprimirCatalogo(request):
+    import io
+    import os
+    from django.conf import settings
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
+    from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
+    from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+    from reportlab.lib import colors  
+    from reportlab.lib.pagesizes import letter, landscape, portrait
+    from reportlab.platypus import Table
+    from reportlab.lib.units import inch, mm
+    from reportlab.platypus import Image, PageBreak, Paragraph, Spacer
+    from django.core.mail import EmailMessage
+    from io import StringIO
+    from reportlab.pdfgen import canvas
+    from reportlab_qrcode import QRCodeImage
+    from reportlab.graphics.barcode import code128
+
+    response = HttpResponse(content_type='application/pdf')  
+    buffer = io.BytesIO()
+
+     
+    ordenes = []
+    #logo_path = user.profile.foto.url
+    #logo = os.path.join(settings.BASE_DIR, logo_path)
+    #texto_path = "static/base/images/texto-inrai.jpg"
+    #texto = os.path.join(settings.BASE_DIR, texto_path)
+    #image = Image(logo, 3 * inch, .8 * inch)
+    #image.hAlign = "LEFT"
+    #image1 = Image(texto, 2.5 * inch, .8 * inch)
+    #image1.hAlign = "LEFT"
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name='Normal_CENTER', alignment=TA_CENTER))
+    styles.add(ParagraphStyle(name='Pie',
+                          alignment=TA_CENTER,
+                          fontName='Helvetica',
+                          fontSize=18,
+                          textColor=colors.darkgray,
+                          leading=8,
+                          textTransform='uppercase',
+                          wordWrap='LTR',
+                          splitLongWords=True,
+                          spaceShrinkage=0.05,
+                          ))
+    styles.add(ParagraphStyle(name='ejemplo',
+                          parent=styles['Normal'],
+                          fontName='Helvetica',
+                          wordWrap='LTR',
+                          alignment=TA_CENTER,
+                          fontSize=12,
+                          leading=13,
+                          textColor=colors.black,
+                          borderPadding=0,
+                          leftIndent=0,
+                          rightIndent=0,
+                          spaceAfter=0,
+                          spaceBefore=0,
+                          splitLongWords=True,
+                          spaceShrinkage=0.05,
+                          ))
+    mov_res = (Producto.objects.filter(usuario=request.user).order_by('nombre','codigo_de_barra'))
+    total_doc = 0
+    for i,item in enumerate(mov_res):
+        movimiento = item
+        no_doc = item.movimiento.documento_no
+        producto =  item.producto
+        codigo_de_barra = item.codigo_de_barra
+        cantidad = item.cantidad
+        costo = item.costo
+        total = item.total 
+        total_doc = total_doc + total       
+
+    if tipo == 1:
+        filename = "Entreda_{}.pdf".format(documento_no)
+        titulo = "ENTRADA DE ALMACEN # {}".format(documento_no)
+    else:
+        filename = "Salid_{}.pdf".format(documento_no)
+        titulo = "SALIDA DE ALMACEN # {}".format(documento_no)
+    subtitulo = movimiento.movimiento.tipo_movimiento.nombre
+    #qr = QRCodeImage(str(codigo_de_barra), size=30 * mm)
+    #qr.hAlign = "RIGHT"
+    
+
+
+    t=Table(
+        data=[
+            ['','',titulo,'',''],
+            ['','','',subtitulo,''],
+            ['TERCERO', '',movimiento.movimiento.tercero.rzn_social,'FECHA',movimiento.movimiento.fecha.strftime('%d/%m/%Y')],
+            ['CIUDAD', '',movimiento.movimiento.ubicacion.ciudad.nombre_ciudad,'',''],
+            ['DIRECCION', '',movimiento.movimiento.tercero.direccion,'VALOR  ','${:,}'.format(total_doc)],
+            ['TELEFONO', '',movimiento.movimiento.tercero.tel1,'', '']
+        ],
+        colWidths=[30,14,316,40,140],
+        style=[
+                ("FONT", (0,2), (0,2), "Helvetica", 7, 7),
+                ("FONT", (0,3), (0,3), "Helvetica", 7, 7),
+                ("FONT", (0,4), (0,4), "Helvetica", 7, 7),
+                ("FONT", (0,5), (0,5), "Helvetica", 7, 7),
+                ("FONT", (2,3), (2,3), "Helvetica-Bold", 7, 7),
+                ("FONT", (2,4), (2,4), "Helvetica-Bold", 7, 7),
+                ("FONT", (2,5), (2,5), "Helvetica-Bold", 7, 7),
+                ("FONT", (2,0), (2,0), "Helvetica-Bold", 14, 14),
+                ("FONT", (3,0), (3,0), "Helvetica-Bold", 11, 11),
+                ("FONT", (3,1), (3,1), "Helvetica", 7, 7),
+                ("FONT", (3,2), (3,4), "Helvetica", 7, 7),
+                ("FONT", (3,5), (3,5), "Helvetica", 7, 7),
+                ("FONT", (4,5), (4,5), "Helvetica", 9, 9),
+
+                ('VALIGN',(3,2), (4,4),'MIDDLE'),
+                ('ALIGN',(4,2),(4,4),'CENTRE'),
+                ('VALIGN',(0,0), (1,0),'BOTTOM'),
+                ('VALIGN',(3,0), (4,0),'MIDDLE'),
+                ('VALIGN',(3,1), (4,1),'TOP'),
+                ('VALIGN',(3,5), (3,5),'MIDDLE'),
+                ('VALIGN',(4,5), (4,5),'MIDDLE'),
+                ('ALIGN',(4,5),(4,5),'CENTRE'),
+ 
+                ('ALIGN',(2,0),(2,0),'RIGHT'),
+                
+                ('LINEBELOW', (0,2),(2,4), .5, colors.gray),
+                ('LINEBELOW', (3,2),(3,4), .5, colors.gray),
+                #('LINEBELOW', (3,2),(3,4), .5, colors.gray),
+
+                ('SPAN',(2,0),(4,0)),
+                
+                ('SPAN',(3,2),(3,3)),  #fecha
+                ('SPAN',(4,2),(4,3)),  # valor fecha
+                
+                ('SPAN',(3,4),(3,5)),  # titulo valor
+                ('SPAN',(4,4),(4,5)),  # valor total documento
+
+                ('VALIGN',(0,2),(2,5),'MIDDLE'),
+                ('BOX',(0,2),(2,5),.5,colors.gray),
+                ('BOX',(3,2),(4,5),.5,colors.gray),
+                ('BOX',(3,2),(4,5),.5,colors.gray),
+                ('LINEBELOW', (4,2),(4,4), .5, colors.gray),
+            ]
+        )
+
+    t.hAlign = "LEFT"
+    ordenes.append(t)
+    ordenes.append(Spacer(1, 5))
+
+    headings0 = ('PRODUCTO', 'CODIGO DE BARRA', 'COSTO', 'CANTIDAD', 'TOTAL')
+    recibos2=[]
+    t_cantidad = 0
+    for lin, reg in enumerate(mov_res):
+        if reg.cantidad is not None:
+            t_cantidad = t_cantidad +  reg.cantidad
+            barcode_value = str(reg.codigo_de_barra)
+            barcode128 = code128.Code128(
+                barcode_value,
+                barHeight=15,
+                barWidth=1,
+                fontSize=10,
+                humanReadable = False
+            )
+            recibos2.append([
+                reg.producto,
+                barcode128,
+                '${:,}'.format(reg.costo),
+                '{:,}'.format(reg.cantidad),
+                '${:,}'.format(reg.total)
+                ])
+    recibos2.append([
+        'TOTAL',
+        '',
+        '',
+        '{:,}'.format(t_cantidad),
+        '${:,}'.format(total_doc)
+        ])
+
+    t0 = Table([headings0] + recibos2, colWidths=[180,180,60,60,60])
+    t0.setStyle(TableStyle(
+        [  
+            ('GRID', (0, 0), (4, -1), 1, colors.gray),  
+            ('LINEBELOW', (0, 0), (-1, 0), 1, colors.gray),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('FONT', (0, 0), (4, -1), "Helvetica", 8,8),
+            ('FONTSIZE', (0, 0), (4, -1), 7),
+            ('BACKGROUND', (0, 0), (4,0), colors.gray)  
+        ]  
+    ))
+    t0.hAlign = "LEFT"
+    ordenes.append(t0)
+
+    ordenes.append(Spacer(1, 5))
+    icon_path = "/static/base/images/favicon.png"
+    icon = os.path.join(settings.BASE_DIR, icon_path)
+    doc = SimpleDocTemplate(buffer,
+                pagesize=portrait(letter),
+                rightMargin=40,
+                leftMargin=50,
+                topMargin=20,  
+                bottomMargin=8,
+                author="INRAI",
+                title=titulo,
+                icon=icon,
+                )
+    
+    doc.build(ordenes)
+    response.write(buffer.getvalue())
+    pdf = buffer.getvalue()
+    buffer.close()
+    
+    
+    return response
 
     
     
