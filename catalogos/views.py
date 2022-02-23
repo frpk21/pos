@@ -877,7 +877,8 @@ def imprimirCatalogo(request):
 
     headings0 = ('NOMBRE', 'DESCRIPCION', 'UND', 'EXISTENCIA', 'PRECIO')
     recibos2=[]
-    total_existencia, total_precio = 0
+    total_existencia=0
+    total_precio = 0
     for lin, reg in enumerate(mov_res):
         if reg.existencia is not None:
             total_existencia = total_existencia +  reg.existencia
