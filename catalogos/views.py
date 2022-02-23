@@ -601,7 +601,7 @@ def imprimirMovimiento(request, pk, tipo, nombre):
                           splitLongWords=True,
                           spaceShrinkage=0.05,
                           ))
-    mov_res = (Movimientos_detalle.objects.filter(id=movimiento.pk))
+    mov_res = (Movimientos_detalle.objects.filter(movimiento__id=movimiento.pk))
     total_doc = 0
     for i,item in enumerate(mov_res):
         movimiento = item
