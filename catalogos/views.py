@@ -951,7 +951,7 @@ def imprimirCatalogoXls(request):
         ws.cell(row=cont,column=4).value = item.unidad_de_medida
         ws.cell(row=cont,column=5).value = item.existencia
         ws.cell(row=cont,column=6).value = item.costo_unidad
-        ws.cell(row=cont,column=7).value = item.tarifa_iva
+        ws.cell(row=cont,column=7).value = str(item.tarifa_iva)
         ws.cell(row=cont,column=8).value = item.precio_de_venta
         ws.cell(row=cont,column=9).value = item.ubicacion.descripcion
         cont = cont + 1
