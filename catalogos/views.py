@@ -611,7 +611,7 @@ def imprimirMovimiento(request, pk, tipo, documento_no):
         cantidad = item.cantidad
         costo = item.costo
         total = item.total 
-        total_doc =+ total       
+        total_doc = total_doc + total       
 
     if tipo == 1:
         filename = "Entreda_{}.pdf".format(documento_no)
