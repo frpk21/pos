@@ -6,5 +6,6 @@ urlpatterns = [
     path('facturas', FacturaList.as_view(), name='factura_list'),
     path('factura/new', FacturaNew.as_view(), name="factura_new"),
     path('factura/edit/<int:pk>', FacturaEdit.as_view(), name="factura_edit"),
-    path('Invoices', views.MenuView, name='menu')
+    path('Invoices', views.MenuView, name='menu'),
+    path('barcode/', views.get_ajaxBarcode, name='valida_bar_code'),
 ]

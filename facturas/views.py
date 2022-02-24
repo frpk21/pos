@@ -36,7 +36,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
 
     def get(self, request, *args, **kwargs):
 
-        ctx = {'fecha_factura': datetime.today()}
+        ctx = {'fecha_factura': datetime.today(), 'total_factura':0}
 
         self.object = None
 
@@ -244,3 +244,16 @@ def MenuView(request, *args, **kwargs):
     #context['netos'] = r['total']-p['sin_url']
 
     return render(request, template_name, context)
+
+
+
+def get_ajaxBarcode(request, *args, **kwargs): 
+    bar_code = request.GET.get('bar_code', None)
+    if not bar_code:
+        return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})
+    else:
+        bar_code = Producto.objects.filter(codigo_de_barra=bar_code, usuario=request.user).last()
+        if bar_code:
+            return JsonResponse(data={"nombre": bar_code.nombre, "valor_unidad": bar_code.precio_de_venta}, safe=False)
+        else: 
+            return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})

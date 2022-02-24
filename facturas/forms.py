@@ -28,11 +28,9 @@ class FacturaPosDetalleForm(forms.ModelForm):
         model= Factp
         fields = [
             'codigo_de_barra',
-            'producto',
             'cantidad',
+            'producto',
             'valor_unidad',
-            'descuento',
-            'valor_total'
             ]
 
     def __init__(self, *args, **kwargs):
@@ -50,7 +48,9 @@ class FacturaPosDetalleForm(forms.ModelForm):
         #self.fields['producto'].widget.attrs['readonly'] = 'readonly'
         #self.fields['producto'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         #self.fields['total'].widget.attrs['readonly'] = 'readonly'
-        #self.fields['total'].widget.attrs.update({'style': 'color: red; background: rgb(255, 255,255);'})
+        self.fields['producto'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
+        self.fields['cantidad'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
+        self.fields['valor_unidad'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         #self.fields['costo'].widget.attrs.update({'onchange': 'validacosto(id)'})
 
     def clean_cantidad(self):
@@ -75,18 +75,6 @@ class FacturaPosDetalleForm(forms.ModelForm):
             raise forms.ValidationError("Codigo de Barra Requerido.")
         return codigo_de_barra
     
-    def clean_descuento(self):
-        descuento = self.cleaned_data["descuento"]
-        if descuento < 0:
-            raise forms.ValidationError("DESCUENTO NO VALIDO")
-        return descuento
-    
-    def clean_valor_total(self):
-        valor_total = self.cleaned_data["valor_total"]
-        if not valor_total:
-            raise forms.ValidationError("Valor total requerido")
-        return valor_total
-
 
 
 DetalleMovimientosFormSet = inlineformset_factory(Facturas,Factp,form=FacturaPosDetalleForm, extra=1,

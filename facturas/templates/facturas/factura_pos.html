@@ -37,16 +37,21 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-warning">
-                            <h5>
-                                <strong>P O S</strong>
-                            </h5>
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <h5><strong>P O S</strong></h5>
+                                </div>
+                                <div class="col-sm-11 text-right">
+                                    <input class="text-right" name="total_factura" readonly="true" style="border:0px; font-size:30px; color: black; background: #eee; width: 22%;" id="id_total_factura">
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div style="display: none">
                                 {{form.tipo}}
                                 {{form.ubicacion}}
                             </div>
-                            <div class="row">
+                            <div class="row justify-content-center">
                                 <div class="col-sm-12">
                                     <div class="card">
                                         <div class="card-body text-center">
@@ -63,16 +68,30 @@
                                                         {{ forloop.counter0 }}
                                                     </div>
                                                     <div class="form-invoice-item-content">
-                                                        <div class="form-row" id="formset-{{ forloop.counter0 }}">
+                                                        <div class="form-row justify-content-center" id="formset-{{ forloop.counter0 }}">
                                                             <div class="col-md-2">
                                                                 <label class="control-label col-form-label"
                                                                         for="{{ field.id_for_label }}">
                                                                     {{ item.codigo_de_barra.label }} {% if item.codigo_de_barra.field.required %}*{% endif %}
                                                                 </label>
                                                                 <div class="form-group bmd-form-group">
-                                                                    {{ item.codigo_de_barra | add_classes:'form-control' }}
+                                                                    {{ item.codigo_de_barra | add_classes:'form-control text-right' }}
                                                                     <div class="text-danger">
                                                                         {% for error in item.codigo_de_barra.errors %}
+                                                                            <li>{{ error|escape }} </li>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="control-label col-form-label"
+                                                                        for="{{ field.id_for_label }}">
+                                                                    {{ item.cantidad.label }} {% if item.cantidad.field.required %}*{% endif %}
+                                                                </label>
+                                                                <div class="form-group bmd-form-group">
+                                                                    {{ item.cantidad | add_classes:'form-control text-right' }}
+                                                                    <div class="text-danger">
+                                                                        {% for error in item.cantidad.errors %}
                                                                             <li>{{ error|escape }} </li>
                                                                         {% endfor %}
                                                                     </div>
@@ -84,30 +103,17 @@
                                                                     Producto
                                                                 </label>
                                                                 <div class="form-group bmd-form-group">
-                                                                    {{ item.producto | add_classes:'form-control' }}
+                                                                    {{ item.producto | add_classes:'form-control text-right' }}
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-2">
-                                                                <label class="control-label col-form-label"
-                                                                        for="{{ field.id_for_label }}">
-                                                                    {{ item.cantidad.label }} {% if item.cantidad.field.required %}*{% endif %}
-                                                                </label>
-                                                                <div class="form-group bmd-form-group">
-                                                                    {{ item.cantidad | add_classes:'form-control' }}
-                                                                    <div class="text-danger">
-                                                                        {% for error in item.cantidad.errors %}
-                                                                            <li>{{ error|escape }} </li>
-                                                                        {% endfor %}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            
                                                             <div class="col-md-2">
                                                                 <label class="control-label col-form-label"
                                                                         for="{{ field.id_for_label }}">
                                                                     {{ item.valor_unidad.label }} {% if item.valor_unidad.field.required %}*{% endif %}
                                                                 </label>
                                                                 <div class="form-group bmd-form-group">
-                                                                    {{ item.valor_unidad | add_classes:'form-control costo_string' }}
+                                                                    {{ item.valor_unidad | add_classes:'form-control valor_unidad_string text-right' }}
                                                                     <div class="text-danger">
                                                                         {% for error in item.valor_unidad.errors %}
                                                                             <li>{{ error|escape }} </li>
@@ -115,29 +121,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-2">
-                                                                <label class="control-label col-form-label"
-                                                                        for="{{ field.id_for_label }}">
-                                                                    {{ item.descuento.label }} {% if item.descuento.field.required %}*{% endif %}
-                                                                </label>
-                                                                <div class="form-group bmd-form-group">
-                                                                    {{ item.descuento | add_classes:'form-control costo_string' }}
-                                                                    <div class="text-danger">
-                                                                        {% for error in item.descuento.errors %}
-                                                                            <li>{{ error|escape }} </li>
-                                                                        {% endfor %}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <label class="control-label col-form-label"
-                                                                        for="{{ field.id_for_label }}">
-                                                                    Total
-                                                                </label>
-                                                                <div class="form-group bmd-form-group">
-                                                                    {{ item.valor_total | add_classes:'form-control' }}
-                                                                </div>
-                                                            </div>
+                                                   
                                                         </div>
                                                     </div>
                                                 {% endfor %}
@@ -149,25 +133,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <br />
-                                                <p style="text-align: right;">Total Dcoumento:   </p>
-                                         
-                                        </div>
-                                        <div class="col-md-2 text-right">
-                                            <div class="form-group bmd-form-group">
-                                                {{ form.valor_documento }}
-                                            </div>
-                                        </div><br />
-                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="panel-footer">
                             <div class="text-center">
-                                <button id="btn_save" type="submit" class="btn btn-social-icon btn-info" name="submit" onclick="return ConfirmaGrabar()"><i class="fa fa-save"></i> T O T A L</button>
-                                <a class="btn btn-social-icon btn-secondary" href="{% url 'generales:home' %}"><i class="fa fa-times"></i> Cancelar</a>
+                                <button id="btn_save" type="submit" class="btn btn-social-icon btn-info" name="submit" onclick="return ConfirmaGrabar()"><i class="fa fa-shopping-cart"></i>  sT O T A L</button>
+                                <a class="btn btn-social-icon btn-dark" href="{% url 'generales:home' %}"><i class="fa fa-times"></i> Cancelar</a>
                             </div>
                         </div>
                     </div>
@@ -180,7 +152,7 @@
     {% with detalle_movimientos.empty_form as item_form %}
         <div id="movimientos_item_empty_form">
             <div class="form-invoice-item-content">
-                <div class="form-row" id="formset-__prefix__">
+                <div class="form-row justify-content-center" id="formset-__prefix__">
                     {% for field in item_form.visible_fields %}
                         <div id="col" class="col-md-2 text-center">
                             <!--<label class="control-label col-form-label"
@@ -188,7 +160,7 @@
                                 {{ field.label }} {% if field.field.required %}*{% endif %}
                             </label>-->
                             <div class="form-group bmd-form-group">
-                                {{ field | add_classes:'form-control' }}
+                                {{ field | add_classes:'form-control text-right' }}
                                 <div class="text-danger">
                                     {% for error in field.errors %}
                                         <li>{{ error|escape }} </li>
@@ -240,7 +212,7 @@
         function validacbarra(itemn) {
             var r = $("#"+itemn).val();
             var datos = {'bar_code':r};
-            $.get( "{% url 'catalogos:valida_bar_code' %}", datos, function( data ) {
+            $.get( "{% url 'facturas:valida_bar_code' %}", datos, function( data ) {
                 console.log(data);
                 if (data.errors){
                     swal({
@@ -250,22 +222,47 @@
                         //cancelButtonClass: 'btn btn-danger',
                         buttonsStyling: false
                     }).catch(swal.noop);
-                    $("#"+id_costo).val(0);
+                    $("#"+id_valor_unidad).val(0);
                 }
                 else {
-                    id_costo=itemn.replace("codigo_de_barra", "costo");
+                    id_valor_unidad=itemn.replace("codigo_de_barra", "valor_unidad");
                     id_nombre=itemn.replace("codigo_de_barra", "producto");
-                    //var entrada = data.costo_unidad.split(',');
-                    //parteEntera = entrada[0].replace(/\./g, '');
-                    //parteDecimal = entrada[1];
-                    //salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-                    //data.costo_unidad = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
-                    $("#"+id_costo).val(data.costo_unidad);
+                    id_cantidad=itemn.replace("codigo_de_barra", "cantidad");
+                    $("#"+id_valor_unidad).val(data.valor_unidad);
                     $("#"+id_nombre).val(data.nombre);
-                
+                    $("#"+id_cantidad).val(1);
+                    // + nuevo renglon:
+                    let total_form = $('#id_factp_set-TOTAL_FORMS');
+                    let form_idx = total_form.val();
+                    let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
+                    let formset_wrapper = document.getElementById('formset_wrapper')
+                    let e = document.createElement('div');
+                    e.innerHTML = new_html;
+                    formset_wrapper.appendChild(e.firstElementChild);
+                    total_form.val(parseInt(form_idx) + 1);
+                    // end + nuevo renglon
+                    // Totaliza factura pos
+                    tot=0;
+                    for (var i = 0; i < (parseInt(form_idx) + 1); i++) {
+                        id_valor_unidad = "id_factp_set-"+i+"-valor_unidad";
+                        valor_unidad = $("#"+id_valor_unidad).val();
+                        tot += parseInt(valor_unidad);
+                    }
+                    // End Totaliza factura pos
+                    // + Separador numerico
+                    tot = String(tot);
+                    var entrada = tot.split(',');
+                    parteEntera = entrada[0].replace(/\./g, '');
+                    parteDecimal = entrada[1];
+                    salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+                    tot = "$ "+salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+                    $("#id_total_factura").val(tot);
+                    // End + Separador numerico
+                   
+                    
                 }
-                var separador = document.getElementById(id_costo);
-                separador.addEventListener('.costo_string', (e) => {
+                var separador = document.getElementById(id_valor_unidad);
+                separador.addEventListener('.valor_unidad_string', (e) => {
                     var entrada = e.target.value.split(','),
                     parteEntera = entrada[0].replace(/\./g, ''),
                     parteDecimal = entrada[1],
