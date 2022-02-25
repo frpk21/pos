@@ -1,4 +1,5 @@
 from datetime import datetime
+from queue import Empty
 from unicodedata import decimal
 from django.shortcuts import render
 
@@ -227,12 +228,13 @@ class MovimientosMercanciaView(generic.CreateView):
         detalle_movimientos.instance = self.object
         detalle_movimientos.save()
         for detalle in detalle_movimientos:
-            if detalle.cleaned_data["cantidad"] is not None:
+            if detalle.cleaned_data["codigo_de_barra"]:
                 producto=Producto.objects.filter(codigo_de_barra=detalle.cleaned_data["codigo_de_barra"], usuario=self.request.user.id).get()
                 if tipor == 1:
-                    producto.existencia = producto.existencia + detalle.cleaned_data["cantidad"]
-                    if producto.costo_unidad != int(detalle.cleaned_data["costo"]):
-                        producto.costo_unidad = (int(detalle.cleaned_data["costo"]) + int(producto.costo_unidad)) / 2
+                    if float(detalle.cleaned_data["costo"]) > 0:
+                        producto.existencia = producto.existencia + detalle.cleaned_data["cantidad"]
+                        if producto.costo_unidad != int(detalle.cleaned_data["costo"]):
+                            producto.costo_unidad = int(detalle.cleaned_data["costo"]) + int(producto.costo_unidad) / 2
                 else:
                     producto.existencia = producto.existencia - detalle.cleaned_data["cantidad"]
                 producto.save()
@@ -387,7 +389,7 @@ def get_ajaxBarcode(request, *args, **kwargs):
     else:
         bar_code = Producto.objects.filter(codigo_de_barra=bar_code, usuario=request.user).last()
         if bar_code:
-            return JsonResponse(data={"nombre": bar_code.nombre, "costo_unidad": bar_code.costo_unidad}, safe=False)
+            return JsonResponse(data={"nombre": bar_code.nombre, "costo_unidad": int(bar_code.costo_unidad)}, safe=False)
         else: 
             return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})
 

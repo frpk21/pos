@@ -31,7 +31,7 @@
 
 <div class="content">
     <div class="container-fluid">
-        <form id="id_form_invoice" name="form1" method="POST" onkeydown="return event.key != 'Enter';" action=".">
+        <form id="id_form_invoice" name="form1" method="POST" onkeydown="return event.key != 'Enter';">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-12">
@@ -332,11 +332,9 @@
                     tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#"+id_total).val(tot);
                     sumar(itemn);
-                   if (f = 1){
-                       document.getElementById(id_costo).select();
-                   }
 
-                   return true;
+
+                    return true;
                 }
             } );
         }
@@ -359,7 +357,7 @@
              
         }
 
-        function onKeyDownHandler_cantidad(event,id) {
+        function onKeyDownHandler_cantidad(event,id,f) {
 
             var codigo = event.which || event.keyCode;
 
@@ -367,7 +365,10 @@
              
             if(codigo === 13){
                 
-                setTimeout(validacantidad(id,1), 500);
+                setTimeout(validacantidad(id,f), 500);
+                let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
+                itemn_next="id_movimientos_detalle_set-"+(parseInt($('#id_movimientos_detalle_set-TOTAL_FORMS').val())-1)+"-costo";
+                document.getElementById(itemn_next).focus();
                 
             }
         
@@ -405,13 +406,9 @@
             id_cantidad=itemn.replace("costo", "cantidad");
             id_total=itemn.replace("costo", "total");
             var cantidad = $("#"+id_cantidad).val();
-            costo = costo.replace (/\./g, '');   // convierte string  (con separadores) a float para hacer calculos matematicos
+            
             tot = String(parseFloat(cantidad) * parseFloat(costo));
-            var entrada = costo.split(',');
-            parteEntera = entrada[0].replace(/\./g, '');
-            parteDecimal = entrada[1];
-            salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-            $("#"+id_costo).val(salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00'));
+            
             var entrada = tot.split(',');
             parteEntera = entrada[0].replace(/\./g, '');
             parteDecimal = entrada[1];
@@ -419,19 +416,17 @@
             tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
             $("#"+id_total).val(tot);
             validacantidad(id_cantidad,2);
-            let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
-            let form_idx = total_form.val();
-            let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
-            let formset_wrapper = document.getElementById('formset_wrapper')
-            let e = document.createElement('div');
-            e.innerHTML = new_html;
-            formset_wrapper.appendChild(e.firstElementChild);
-            total_form.val(parseInt(form_idx) + 1);
+            //let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
+            //let form_idx = total_form.val();
+            //let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
+            //let formset_wrapper = document.getElementById('formset_wrapper')
+            //let e = document.createElement('div');
+            //e.innerHTML = new_html;
+            //formset_wrapper.appendChild(e.firstElementChild);
+            //total_form.val(parseInt(form_idx) + 1);
 
-            itemn_next="id_movimientos_detalle_set-"+(parseInt($('#id_movimientos_detalle_set-TOTAL_FORMS').val())-1)+"-codigo_de_barra";
-            nextFocus(itemn, itemn_next);
-            //document.getElementById(itemn_next).focus();
-            
+            //itemn_next="id_movimientos_detalle_set-"+(parseInt($('#id_movimientos_detalle_set-TOTAL_FORMS').val())-1)+"-codigo_de_barra";
+            //nextFocus(itemn, itemn_next);            
         }
 
 
