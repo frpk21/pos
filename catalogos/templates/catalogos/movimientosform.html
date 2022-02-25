@@ -226,14 +226,7 @@
     {{ detalle_movimientos.media }}
 
     <script>
-        function nextFocus(itemn, itemn_next) {
-            document.getElementById(itemn).addEventListener('keydown', function(event) {
-                if (event.keyCode == 13) {
-                    document.getElementById(itemn_next).focus();
-                }
-            });
-        }
-
+        
         $(document).ready(function () {
             $('#add_more').click(function () {
                 let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
@@ -274,7 +267,14 @@
                     $("#"+id_costo).val(0);
                 }
                 else {
-                    
+                    let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
+                    let form_idx = total_form.val();
+                    let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
+                    let formset_wrapper = document.getElementById('formset_wrapper')
+                    let e = document.createElement('div');
+                    e.innerHTML = new_html;
+                    formset_wrapper.appendChild(e.firstElementChild);
+                    total_form.val(parseInt(form_idx) + 1);
                     id_costo=itemn.replace("codigo_de_barra", "costo");
                     id_nombre=itemn.replace("codigo_de_barra", "producto");
                     id_cantidad=itemn.replace("codigo_de_barra", "cantidad");
@@ -286,7 +286,7 @@
                     $("#"+id_costo).val(data.costo_unidad);
                     $("#"+id_nombre).val(data.nombre);
                     document.getElementById(id_cantidad).focus();
-                    document.getElementById(id_cantidad).select();
+                    document.getElementById(id_cantidad).focus();
                 }
                 var separador = document.getElementById(id_costo);
                 separador.addEventListener('.costo_string', (e) => {
@@ -318,14 +318,6 @@
                     $("#"+itemn).val(0);
                 }
                 else {
-                    let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
-                    let form_idx = total_form.val();
-                    let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
-                    let formset_wrapper = document.getElementById('formset_wrapper')
-                    let e = document.createElement('div');
-                    e.innerHTML = new_html;
-                    formset_wrapper.appendChild(e.firstElementChild);
-                    total_form.val(parseInt(form_idx) + 1);
                     id_costo=itemn.replace("cantidad", "costo");
                     id_total=itemn.replace("cantidad", "total");
                     var costo = $("#"+id_costo).val();
@@ -338,8 +330,6 @@
                     tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#"+id_total).val(tot);
                     sumar(itemn);
-                    document.getElementById(id_costo).focus();
-                    document.getElementById(id_costo).select();
                 }
             } );
         }
@@ -352,30 +342,9 @@
              
             if(codigo === 13){
                 
-                setTimeout(validacantidad(id), 500);
-                let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
-                itemn_next="id_movimientos_detalle_set-"+(parseInt($('#id_movimientos_detalle_set-TOTAL_FORMS').val())-1)+"-costo";
-                document.getElementById(itemn_next).focus();
-            }
-        
-            if(codigo >= 65 && codigo <= 90){
-              console.log(String.fromCharCode(codigo));
-            }
-        
-             
-        }
-
-        function onKeyDownHandler_cantidad(event,id) {
-
-            var codigo = event.which || event.keyCode;
-
-            //console.log("Presionada: " + codigo);
-             
-            if(codigo === 13){
-                
                 setTimeout(validacbarra(id), 500);
                 let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
-                itemn_next="id_movimientos_detalle_set-"+(parseInt($('#id_movimientos_detalle_set-TOTAL_FORMS').val())-1)+"-cantidad";
+                itemn_next="id_movimientos_detalle_set-"+total_form+"-cantidad";
                 document.getElementById(itemn_next).focus();
             }
         
@@ -405,8 +374,7 @@
             tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
             $("#"+id_total).val(tot);
             validacantidad(id_cantidad);
-            itemn_next="id_movimientos_detalle_set-"+(parseInt($('#id_movimientos_detalle_set-TOTAL_FORMS').val())-1)+"-codigo_de_barra";
-            nextFocus(itemn, itemn_next); 
+            
         }
 
 

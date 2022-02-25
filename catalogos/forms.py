@@ -173,7 +173,7 @@ class MovimientosDetForm(forms.ModelForm):
                 'class': 'form-control'
             })
         self.fields['codigo_de_barra'].widget.attrs.update({'onkeydown':"onKeyDownHandler(event, id);"})
-        self.fields['cantidad'].widget.attrs.update({'onkeydown':"onKeyDownHandler_cantidad(event, id);", 'step':1})
+        self.fields['cantidad'].widget.attrs.update({'onblur': 'validacantidad(id)', 'step':1})
         self.fields['producto'].widget.attrs['readonly'] = 'readonly'
         self.fields['producto'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         self.fields['total'].widget.attrs['readonly'] = 'readonly'
