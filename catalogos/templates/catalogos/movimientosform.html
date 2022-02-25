@@ -322,6 +322,8 @@
                     tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#"+id_total).val(tot);
                     sumar(itemn);
+                    document.getElementById(id_costo).focus();
+                    document.getElementById(id_costo).select();
                 }
             } );
         }
@@ -337,6 +339,27 @@
                 setTimeout(validacbarra(id), 500);
                 let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
                 itemn_next="id_movimientos_detalle_set-"+total_form+"-cantidad";
+                document.getElementById(itemn_next).focus();
+            }
+        
+            if(codigo >= 65 && codigo <= 90){
+              console.log(String.fromCharCode(codigo));
+            }
+        
+             
+        }
+
+        function onKeyDownHandler_cantidad(event,id) {
+
+            var codigo = event.which || event.keyCode;
+
+            //console.log("Presionada: " + codigo);
+             
+            if(codigo === 13){
+                
+                setTimeout(validacantidad(id), 500);
+                let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
+                itemn_next="id_movimientos_detalle_set-"+total_form+"-costo";
                 document.getElementById(itemn_next).focus();
             }
         
