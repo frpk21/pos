@@ -332,15 +332,10 @@
                     tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#"+id_total).val(tot);
                     sumar(itemn);
-                   // document.getElementById(id_costo).focus();
                    if (f = 1){
                        document.getElementById(id_costo).select();
                    }
-                   else{
-                    let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
-                    itemn_next="id_movimientos_detalle_set-"+total_form+"-codigo_de_barra";
-                    document.getElementById(itemn_next).focus();
-                   }
+
                    return true;
                 }
             } );
