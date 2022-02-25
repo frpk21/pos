@@ -296,9 +296,8 @@
              
             if(codigo === 13){
                 
-                setTimeout(validacbarra(id), 2000);
+                setTimeout(validacbarra(id), 500);
                 console.log("Tecla ENTER");
-                var r = $("#"+id).val();
                 let total_form = $('#id_factp_set-TOTAL_FORMS');
                 itemn_next="id_factp_set-"+(parseInt($('#id_factp_set-TOTAL_FORMS').val())-1)+"-codigo_de_barra";
                 document.getElementById(itemn_next).focus();

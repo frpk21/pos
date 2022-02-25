@@ -326,6 +326,26 @@
             } );
         }
 
+        function onKeyDownHandler(event,id) {
+
+            var codigo = event.which || event.keyCode;
+
+            //console.log("Presionada: " + codigo);
+             
+            if(codigo === 13){
+                
+                setTimeout(validacbarra(id), 500);
+                let total_form = $('#id_factp_set-TOTAL_FORMS');
+                itemn_next="id_factp_set-"+(parseInt($('#id_factp_set-TOTAL_FORMS').val())-1)+"-cantidad";
+                document.getElementById(itemn_next).focus();
+            }
+        
+            if(codigo >= 65 && codigo <= 90){
+              console.log(String.fromCharCode(codigo));
+            }
+        
+             
+        }
 
         function validacosto(itemn) {
             var costo = $("#"+itemn).val();
