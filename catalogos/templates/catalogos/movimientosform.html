@@ -285,7 +285,8 @@
                     //data.costo_unidad = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#"+id_costo).val(data.costo_unidad);
                     $("#"+id_nombre).val(data.nombre);
-                    document.getElementById(id_cantidad).focus()
+                    document.getElementById(id_cantidad).focus();
+                    document.getElementById(id_cantidad).select();
                 }
                 var separador = document.getElementById(id_costo);
                 separador.addEventListener('.costo_string', (e) => {
