@@ -236,8 +236,7 @@
                 let e = document.createElement('div');
                 e.innerHTML = new_html;
                 formset_wrapper.appendChild(e.firstElementChild);
-                total_form.val(parseInt(form_idx) + 1);
-                
+                total_form.val(parseInt(form_idx) + 1);   
             });
 
             $('#find_producto').click(function () {
@@ -268,6 +267,14 @@
                     $("#"+id_costo).val(0);
                 }
                 else {
+                    let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
+                    let form_idx = total_form.val();
+                    let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
+                    let formset_wrapper = document.getElementById('formset_wrapper')
+                    let e = document.createElement('div');
+                    e.innerHTML = new_html;
+                    formset_wrapper.appendChild(e.firstElementChild);
+                    total_form.val(parseInt(form_idx) + 1);
                     id_costo=itemn.replace("codigo_de_barra", "costo");
                     id_nombre=itemn.replace("codigo_de_barra", "producto");
                     id_cantidad=itemn.replace("codigo_de_barra", "cantidad");
