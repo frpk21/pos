@@ -344,15 +344,12 @@
         function onKeyDownHandler(event,id) {
 
             var codigo = event.which || event.keyCode;
-
-            //console.log("Presionada: " + codigo);
-             
+            
             if(codigo === 13){
                 
                 setTimeout(validacbarra(id), 500);
                 let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
-                //itemn_next="id_movimientos_detalle_set-"+total_form+"-cantidad";
-               // document.getElementById(itemn_next).focus();
+
             }
         
             if(codigo >= 65 && codigo <= 90){
@@ -384,8 +381,6 @@
         function onKeyDownHandler_costo(event,id) {
 
             var codigo = event.which || event.keyCode;
-
-            //console.log("Presionada: " + codigo);
              
             if(codigo === 13){
                 
