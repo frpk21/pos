@@ -684,8 +684,10 @@ def imprimirMovimiento(request, pk, tipo, documento_no):
     t.hAlign = "LEFT"
     ordenes.append(t)
     ordenes.append(Spacer(1, 5))
-
-    headings0 = ('PRODUCTO', 'CODIGO DE BARRA', 'COSTO', 'CANTIDAD', 'TOTAL')
+    if tipo == 1:
+        headings0 = ('PRODUCTO', 'CODIGO DE BARRA', 'COSTO', 'CANTIDAD', 'TOTAL')
+    else:
+        headings0 = ('PRODUCTO', 'CODIGO DE BARRA', 'CANTIDAD')
     recibos2=[]
     t_cantidad = 0
     for lin, reg in enumerate(mov_res):
@@ -699,23 +701,38 @@ def imprimirMovimiento(request, pk, tipo, documento_no):
                 fontSize=10,
                 humanReadable = False
             )
-            recibos2.append([
-                reg.producto,
-                barcode128,
-                '${:,}'.format(reg.costo),
-                '{:,}'.format(reg.cantidad),
-                '${:,}'.format(reg.total)
-                ])
-    recibos2.append([
+            if tipo == 1:
+                recibos2.append([
+                    reg.producto,
+                    barcode128,
+                    '${:,}'.format(reg.costo),
+                    '{:,}'.format(reg.cantidad),
+                    '${:,}'.format(reg.total)
+                    ])
+            else:
+                recibos2.append([
+                    reg.producto,
+                    barcode128,
+                    '{:,}'.format(reg.cantidad)
+                    ])
+    if tipo == 1:
+        recibos2.append([
         'TOTAL',
         '',
         '',
         '{:,}'.format(t_cantidad),
         '${:,}'.format(total_doc)
         ])
+    else:
+        recibos2.append([
+        'TOTAL',
+        '',
+        '{:,}'.format(t_cantidad)
+        ])
 
-    t0 = Table([headings0] + recibos2, colWidths=[180,180,60,60,60])
-    t0.setStyle(TableStyle(
+    if tipo == 1:
+        t0 = Table([headings0] + recibos2, colWidths=[180,180,60,60,60])
+        t0.setStyle(TableStyle(
         [  
             ('GRID', (0, 0), (4, -1), 1, colors.gray),  
             ('LINEBELOW', (0, 0), (-1, 0), 1, colors.gray),
@@ -724,8 +741,21 @@ def imprimirMovimiento(request, pk, tipo, documento_no):
             ('FONTSIZE', (0, 0), (4, -1), 7),
             ('BACKGROUND', (0, 0), (4,0), colors.gray)  
         ]  
-    ))
-    t0.hAlign = "LEFT"
+        ))
+        t0.hAlign = "LEFT"
+    else:
+        t0 = Table([headings0] + recibos2, colWidths=[180,180,60])
+        t0.setStyle(TableStyle(
+        [  
+            ('GRID', (0, 0), (2, -1), 1, colors.gray),  
+            ('LINEBELOW', (0, 0), (-1, 0), 1, colors.gray),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('FONT', (0, 0), (2, -1), "Helvetica", 8,8),
+            ('FONTSIZE', (0, 0), (2, -1), 7),
+            ('BACKGROUND', (0, 0), (2,0), colors.gray)  
+        ]  
+        ))
+        t0.hAlign = "CENTER"
     ordenes.append(t0)
 
     ordenes.append(Spacer(1, 5))

@@ -265,6 +265,7 @@
                         buttonsStyling: false
                     }).catch(swal.noop);
                     $("#"+id_costo).val(0);
+                    return false;
                 }
                 else {
                     id_costo=itemn.replace("codigo_de_barra", "costo");
@@ -278,7 +279,8 @@
                     $("#"+id_costo).val(data.costo_unidad);
                     $("#"+id_nombre).val(data.nombre);
                    // document.getElementById(id_cantidad).focus();
-                   // document.getElementById(id_cantidad).select();
+                    document.getElementById(id_cantidad).select();
+                   return true;
                 }
                 var separador = document.getElementById(id_costo);
                 separador.addEventListener('.costo_string', (e) => {
@@ -292,7 +294,7 @@
         }
 
 
-        function validacantidad(itemn) {
+        function validacantidad(itemn,f) {
             var cantidad = parseFloat($("#"+itemn).val());
             id_bar_code = itemn.replace("cantidad", "codigo_de_barra");
             var bar_code = $("#"+id_bar_code).val();
@@ -308,6 +310,7 @@
                         buttonsStyling: false
                     }).catch(swal.noop);
                     $("#"+itemn).val(0);
+                    return false;
                 }
                 else {
                     id_costo=itemn.replace("cantidad", "costo");
@@ -323,7 +326,15 @@
                     $("#"+id_total).val(tot);
                     sumar(itemn);
                    // document.getElementById(id_costo).focus();
-                   // document.getElementById(id_costo).select();
+                   if (f = 1){
+                       document.getElementById(id_costo).select();
+                   }
+                   else{
+                    let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
+                    itemn_next="id_movimientos_detalle_set-"+total_form+"-codigo_de_barra";
+                    document.getElementById(itemn_next).focus();
+                   }
+                   return true;
                 }
             } );
         }
@@ -338,7 +349,7 @@
                 
                 setTimeout(validacbarra(id), 500);
                 let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
-                itemn_next="id_movimientos_detalle_set-"+total_form+"-cantidad";
+                //itemn_next="id_movimientos_detalle_set-"+total_form+"-cantidad";
                // document.getElementById(itemn_next).focus();
             }
         
@@ -357,10 +368,8 @@
              
             if(codigo === 13){
                 
-                setTimeout(validacantidad(id), 500);
-                let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
-                itemn_next="id_movimientos_detalle_set-"+total_form+"-costo";
-                //document.getElementById(itemn_next).focus();
+                setTimeout(validacantidad(id,1), 500);
+                
             }
         
             if(codigo >= 65 && codigo <= 90){
@@ -369,6 +378,27 @@
         
              
         }
+
+        function onKeyDownHandler_costo(event,id) {
+
+            var codigo = event.which || event.keyCode;
+
+            //console.log("Presionada: " + codigo);
+             
+            if(codigo === 13){
+                
+                setTimeout(validaccosto(id), 500);
+                
+            }
+        
+            if(codigo >= 65 && codigo <= 90){
+              console.log(String.fromCharCode(codigo));
+            }
+        
+             
+        }
+
+
 
         function validacosto(itemn) {
             var costo = $("#"+itemn).val();
@@ -388,7 +418,15 @@
             salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
             tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
             $("#"+id_total).val(tot);
-            validacantidad(id_cantidad);
+            validacantidad(id_cantidad,2);
+            let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
+                let form_idx = total_form.val();
+                let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
+                let formset_wrapper = document.getElementById('formset_wrapper')
+                let e = document.createElement('div');
+                e.innerHTML = new_html;
+                formset_wrapper.appendChild(e.firstElementChild);
+                total_form.val(parseInt(form_idx) + 1);
             
         }
 
@@ -465,7 +503,6 @@
                 costo = $("#"+id_costo).val()
                 costo = costo.replace (/\./g, '');
                 tot_tot += parseFloat(cantidad) * parseFloat(costo);
-                
             };
             tot_tot = String(tot_tot);
             var entrada = tot_tot.split(',');

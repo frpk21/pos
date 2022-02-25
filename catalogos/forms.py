@@ -178,8 +178,8 @@ class MovimientosDetForm(forms.ModelForm):
         self.fields['producto'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         self.fields['total'].widget.attrs['readonly'] = 'readonly'
         self.fields['total'].widget.attrs.update({'style': 'color: red; background: rgb(255, 255,255);'})
-        self.fields['costo'].widget.attrs.update({'onblur': 'validacosto(id)'})
-        #self.fields['cantidad'].widget.attrs.update({'class': 'text-right form-control'})
+        self.fields['costo'].widget.attrs.update({'onkeydown':"onKeyDownHandler_costo(event, id);"})
+        #self.fields['cantidad'].widget.attrs.update({'class': 'text-right form-control'})              'onblur': 'validacosto(id)'
         #self.fields['costo'].widget.attrs.update({'type': 'text', 'class': 'text-right form-control'})
         
     def clean_cantidad(self):
