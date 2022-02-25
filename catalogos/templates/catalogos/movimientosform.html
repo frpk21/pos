@@ -226,7 +226,14 @@
     {{ detalle_movimientos.media }}
 
     <script>
-        
+        function nextFocus(itemn, itemn_next) {
+            document.getElementById(itemn).addEventListener('keydown', function(event) {
+                if (event.keyCode == 13) {
+                    document.getElementById(itemn_next).focus();
+                }
+            });
+        }
+
         $(document).ready(function () {
             $('#add_more').click(function () {
                 let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
@@ -420,13 +427,16 @@
             $("#"+id_total).val(tot);
             validacantidad(id_cantidad,2);
             let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
-                let form_idx = total_form.val();
-                let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
-                let formset_wrapper = document.getElementById('formset_wrapper')
-                let e = document.createElement('div');
-                e.innerHTML = new_html;
-                formset_wrapper.appendChild(e.firstElementChild);
-                total_form.val(parseInt(form_idx) + 1);
+            let form_idx = total_form.val();
+            let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
+            let formset_wrapper = document.getElementById('formset_wrapper')
+            let e = document.createElement('div');
+            e.innerHTML = new_html;
+            formset_wrapper.appendChild(e.firstElementChild);
+            total_form.val(parseInt(form_idx) + 1);
+
+            itemn_next="id_movimientos_detalle_set-"+(parseInt($('#id_movimientos_detalle_set-TOTAL_FORMS').val())-1)+"-codigo_de_barra";
+            nextFocus(itemn, itemn_next);
             
         }
 
