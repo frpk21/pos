@@ -184,14 +184,6 @@
 
     <script>
 
-        // deshabilitar ENTER del form
-        //window.addEventListener("keypress", function(event){
-        //    if (event.keyCode == 13){
-        //        event.preventDefault();
-        //    }
-
-        //}, false);
-
         function nextFocus(itemn, itemn_next) {
             document.getElementById(itemn).addEventListener('keydown', function(event) {
                 if (event.keyCode == 13) {
@@ -199,8 +191,6 @@
                 }
             });
         }
-
-
 
         $(document).ready(function () {
             $('#add_more').click(function () {
@@ -276,16 +266,9 @@
                     tot = "$ "+salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#id_total_factura").val(tot);
                     itemn_next="id_factp_set-"+(parseInt($('#id_factp_set-TOTAL_FORMS').val())-1)+"-codigo_de_barra";
-                    //document.getElementById(itemn_next).focus()
-
                     // End + Separador numerico
-                    
-                   
-                    
                 }
-                
-                nextFocus(itemn, itemn_next)
-                ;
+                nextFocus(itemn, itemn_next);
             } );
         }
         function onKeyDownHandler(event,id) {
