@@ -42,8 +42,8 @@ class FacturaPosDetalleForm(forms.ModelForm):
         self.fields['producto'].widget.attrs['readonly']= True
         self.fields['cantidad'].widget.attrs['readonly']= True
         self.fields['valor_unidad'].widget.attrs['readonly']= True
-        self.fields['codigo_de_barra'].widget.attrs.update({'onchange': 'validacbarra(id)'})
-        #self.fields['codigo_de_barra'].widget.attrs.update({'onchange': 'validacbarra(id)'})
+        self.fields['codigo_de_barra'].widget.attrs.update({'onkeydown':"onKeyDownHandler(event, id);"})
+        #self.fields['codigo_de_barra'].widget.attrs.update({'onchange': 'validacbarra(id)'})          'onchange': 'validacbarra(id)', 
         #self.fields['cantidad'].widget.attrs.update({'onchange': 'validacantidad(id)', 'step':1})
         #self.fields['producto'].widget.attrs['readonly'] = 'readonly'
         #self.fields['producto'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
@@ -77,7 +77,7 @@ class FacturaPosDetalleForm(forms.ModelForm):
     
 
 
-DetalleMovimientosFormSet = inlineformset_factory(Facturas,Factp,form=FacturaPosDetalleForm, extra=1,
+DetalleMovimientosFormSet = inlineformset_factory(Facturas,Factp,form=FacturaPosDetalleForm, extra=2,
     min_num=0,
     validate_min=True, can_delete=False)
 

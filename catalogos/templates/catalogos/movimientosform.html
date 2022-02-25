@@ -31,7 +31,7 @@
 
 <div class="content">
     <div class="container-fluid">
-        <form id="id_form_invoice" name="form1" method="POST" >
+        <form id="id_form_invoice" name="form1" method="POST" onkeydown="return event.key != 'Enter';" action=".">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-12">
@@ -270,6 +270,7 @@
                 else {
                     id_costo=itemn.replace("codigo_de_barra", "costo");
                     id_nombre=itemn.replace("codigo_de_barra", "producto");
+                    id_cantidad=itemn.replace("codigo_de_barra", "cantidad");
                     //var entrada = data.costo_unidad.split(',');
                     //parteEntera = entrada[0].replace(/\./g, '');
                     //parteDecimal = entrada[1];
@@ -277,7 +278,7 @@
                     //data.costo_unidad = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#"+id_costo).val(data.costo_unidad);
                     $("#"+id_nombre).val(data.nombre);
-                
+                    document.getElementById(id_cantidad).focus()
                 }
                 var separador = document.getElementById(id_costo);
                 separador.addEventListener('.costo_string', (e) => {
