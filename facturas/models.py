@@ -19,6 +19,8 @@ class Facturas(ClaseModelo):
     saldo = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     anulado = models.BooleanField(default=False, blank=True, null=True)
     usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.DO_NOTHING)
+    recibido = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    cambio = models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
     def __str__(self):
         return '{}'.format(self.fecha_factura)
@@ -35,9 +37,9 @@ class Factp(ClaseModelo):
     cantidad=models.IntegerField(default=0)
     porc_iva = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     valor_iva = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-    valor_unidad = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    descuento = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    valor_total = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    valor_unidad = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    descuento = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    valor_total = models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
     def __str__(self):
         return '{}-{}'.format(self.factura, self.producto)

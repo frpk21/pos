@@ -3,9 +3,11 @@ from facturas.views import FacturaList, FacturaNew, FacturaEdit
 from facturas import views
 
 urlpatterns = [
-    path('facturas', FacturaList.as_view(), name='factura_list'),
-    path('factura/new', FacturaNew.as_view(), name="factura_new"),
-    path('factura/edit/<int:pk>', FacturaEdit.as_view(), name="factura_edit"),
-    path('Invoices', views.MenuView, name='menu'),
+    path('Facturas/list', FacturaList.as_view(), name='factura_list'),
+    path('Facturas/posnew', FacturaNew.as_view(), name="pos_new"),
+    path('Facturas/posedit/<int:pk>', FacturaEdit.as_view(), name="factura_edit"),
+    path('Facturas/menu', views.MenuView, name='menu'),
     path('barcode/', views.get_ajaxBarcode, name='valida_bar_code'),
+    path('Facturas/posnew/save/<factura>/<total>/<recibido>/<cambio>', views.resul_pos, name='resul_pos'),
+    path('Facturas/pos/print/<factura>', views.imprimirTiquete, name='print_pos'),
 ]

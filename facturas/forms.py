@@ -9,11 +9,11 @@ from catalogos.models import Producto
 from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
 
 class FacturaPosEncForm(forms.ModelForm):
-    valor_documento = forms.CharField()
+    valor_factura = forms.CharField()
     class Meta:
         model=Facturas
 
-        fields = ['fecha_factura',]
+        fields = ['fecha_factura','valor_factura','recibido','cambio']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

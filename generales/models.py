@@ -23,6 +23,7 @@ class Profile(models.Model):
     entrada = models.IntegerField('CONSECUTIVO ENTRADAS DE ALMACEN', default=0, blank=True, null=True)
     salida = models.IntegerField('CONSECUTIVO SALIDAS DE ALMACEN', default=0, blank=True, null=True)
     factura = models.IntegerField('CONSECUTIVO SALIDAS DE ALMACEN', default=0, blank=True, null=True)
+    r_dian = models.CharField('Resolucion DIAN', blank=False, null=False, max_length=200, default="")
     
     #sede = models.ForeignKey(Sedes, on_delete=models.CASCADE, default=0, null=False, blank=False)
  

@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -36,7 +36,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
 
     def get(self, request, *args, **kwargs):
 
-        ctx = {'fecha_factura': datetime.today(), 'total_factura':0}
+        ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'recibido':0, 'cambio':0}
 
         self.object = None
 
@@ -54,7 +54,6 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
     def post(self, request, *args, **kwargs):
         form =FacturaPosEncForm(request.POST)
         detalle_movimientos = DetalleMovimientosFormSet(request.POST)
-        tipor = kwargs["tipoe"]
         #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
         #print(form.errors)
         #print(detalle_movimientos.errors)
@@ -64,37 +63,35 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
             return self.form_invalid(form, detalle_movimientos)
 
     def form_valid(self, form, detalle_movimientos):
+        
         self.object = form.save(commit=False)
         profile = Profile.objects.filter(user=self.request.user.id).get()
         fact = profile.factura + 1
         profile.factura = profile.factura + 1
         profile.save()
-        total, iva = 0
+        total, iva = 0, 0
         for detalle in detalle_movimientos:
-            total += detalle.cleaned_data["valor_total"]
-            iva += detalle.cleaned_data["valor_iva"]
-            producto=Producto.objects.filter(codigo_de_barra=detalle.cleaned_data["producto.codigo_de_barra"], usuario=self.request.user.id).get()
+            if not detalle.cleaned_data:
+                continue
+            tot_unidad = detalle.cleaned_data["valor_unidad"] * detalle.cleaned_data["cantidad"]
+            total += tot_unidad
+            producto=Producto.objects.filter(codigo_de_barra=detalle.cleaned_data["codigo_de_barra"], usuario=self.request.user.id).get()
+            iva += round((producto.tarifa_iva.tarifa_iva * tot_unidad / 100),0)
+            detalle.cleaned_data["valor_iva"] = round((producto.tarifa_iva.tarifa_iva * tot_unidad / 100),0)
+            detalle.cleaned_data["valor_total"] = tot_unidad
             producto.existencia = producto.existencia - detalle.cleaned_data["cantidad"]
             producto.save()
-        self.object.usuario = self.request.user
-        self.object.factura = fact,
-        self.object.observacion = "Factura POS",
-        self.object.valor_factura = total,
-        self.object.valor_iva = iva,
+        self.object.factura = fact
+        self.object.observacion = "Factura POS"
+        self.object.valor_factura = total
+        self.object.valor_iva = iva
         self.object.usuario = self.request.user        
         self.object = form.save()
         detalle_movimientos.instance = self.object
         detalle_movimientos.save()
         
-        return HttpResponseRedirect(reverse_lazy("catalogos:catalogo"))
-        #return JsonResponse(
-        #    {
-        #        'content': {
-        #            'message': 'Generado Documento No. '+str(self.object.id)+' exitosamente.'
-        #        }
-        #    }
-        #)
-
+#        return HttpResponseRedirect(reverse_lazy("facturas:resul_pos"))
+        return HttpResponseRedirect(reverse_lazy('facturas:resul_pos', kwargs={'factura': fact, 'total': self.object.valor_factura, 'recibido': self.object.recibido, 'cambio': self.object.cambio}))
 
     def form_invalid(self, form, detalle_movimientos):
         self.object=form
@@ -104,7 +101,147 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
                 detalle_movimientos=detalle_movimientos
             )
         )
+        
+        
     
+def resul_pos(request, factura, total, recibido, cambio):
+    #imprimirTiquete(request,factura)
+    return render(request, "facturas/resul_pos.html", context={'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio})
+
+
+
+
+def imprimirTiquete(request, factura):
+    import io
+    import os
+    from django.conf import settings
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
+    from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
+    from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+    from reportlab.lib import colors  
+    from reportlab.lib.pagesizes import letter, landscape, portrait
+    from reportlab.platypus import Table
+    from reportlab.lib.units import inch, mm
+    from reportlab.platypus import Image, PageBreak, Paragraph, Spacer
+    from django.core.mail import EmailMessage
+    from io import StringIO
+    from reportlab.pdfgen import canvas
+    from reportlab_qrcode import QRCodeImage
+    from reportlab.graphics.barcode import code128
+
+    response = HttpResponse(content_type='application/pdf')  
+    buffer = io.BytesIO()
+
+     
+    ordenes = []
+    logo_path = request.user.profile.foto.url
+    logo = os.path.join(settings.BASE_DIR, logo_path)
+    #texto_path = "static/base/images/texto-inrai.jpg"
+    #texto = os.path.join(settings.BASE_DIR, texto_path)
+    #image = Image(logo, 3 * inch, .8 * inch)
+    #image.hAlign = "LEFT"
+    image1 = Image(logo, 2.5 * inch, .8 * inch)
+    image1.hAlign = "LEFT"
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name='Normal_CENTER', alignment=TA_CENTER))
+
+    factp = (Factp.objects.filter(factura__factura=factura, factura__usuario=request.user))
+    total_doc = 0
+    for i,item in enumerate(factp):
+        producto = item
+        fecha = item.factura.fecha_factura  
+
+    filename = "invoice_{}.pdf".format(factura)
+    titulo = "FACTURA DE VENTA # {}".format(factura)
+    qr = QRCodeImage(str(factura), size=30 * mm)
+    qr.hAlign = "RIGHT"
+    
+
+
+    t=Table(
+        data=[
+            [image1,''],
+            [request.user.profile.empresa,''],
+            [request.user.profile.nit,''],
+            [request.user.profile.direccion,''],
+            [request.user.profile.telefono,''],
+            ['',''],
+            [request.user.profile.r_dian],
+            ['Fecha: ', fecha.strftime('%d/%m/%Y')],
+            ['DOCUMENTO No. ', factura],
+            ['Condicion de Pago: ', 'CONTADO'],
+        ],
+        colWidths=[100,30],
+        style=[
+                ("FONT", (0,0), (9,1), "Helvetica", 2, 4),
+                ('VALIGN',(1,0), (4,1),'MIDDLE'),
+                ('ALIGN',(1,0),(4,1),'CENTRE'),
+            ]
+        )
+
+    t.hAlign = "LEFT"
+    ordenes.append(t)
+    ordenes.append(Spacer(1, 5))
+    headings0 = ('CANTIDAD', 'DESCRIPCION', 'VALOR')
+    recibos2=[]
+    t_cantidad = 0
+    t_total = 0
+    for lin, reg in enumerate(factp):
+        t_cantidad = t_cantidad +  reg.cantidad
+        t_total = t_total + reg.cantidad * reg.valor_unidad
+
+        recibos2.append([
+            reg.cantidad,
+            reg.producto,
+            '${:,}'.format(reg.valor_unidad)
+            ])
+
+    recibos2.append([
+    'TOTAL',
+    '',
+    '${:,}'.format(t_total)
+    ])
+
+
+    t0 = Table([headings0] + recibos2, colWidths=[35,105,50])
+    t0.setStyle(TableStyle(
+    [  
+        ('GRID', (0, 0), (2, -1), 1, colors.gray),  
+        ('LINEBELOW', (0, 0), (-1, 0), 1, colors.gray),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('FONT', (0, 0), (2, -1), "Helvetica", 6,6),
+        ('FONTSIZE', (0, 0), (2, -1), 6),
+        ('BACKGROUND', (0, 0), (2,0), colors.gray)  
+    ]  
+    ))
+    t0.hAlign = "LEFT"
+
+    ordenes.append(t0)
+
+    ordenes.append(Spacer(1, 5))
+    icon_path = "/static/base/images/favicon.png"
+    icon = os.path.join(settings.BASE_DIR, icon_path)
+    doc = SimpleDocTemplate(buffer,
+                ###pagesize=portrait(3),
+                rightMargin=0,
+                leftMargin=0,
+                topMargin=2,  
+                bottomMargin=8,
+                author="POS",
+                title=titulo,
+                icon=icon,
+                )
+    
+    doc.build(ordenes)
+    response.write(buffer.getvalue())
+    pdf = buffer.getvalue()
+    buffer.close()
+    
+    return pdf
+    
+
+
+
 
 #SinPrivilegios, 
 class FacturaEdit(generic.UpdateView):

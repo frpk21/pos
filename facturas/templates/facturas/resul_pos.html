@@ -1,0 +1,35 @@
+{% extends 'base/base.html' %}
+
+{% block contenido %}
+
+{% load humanize %}
+
+<br>
+<br>
+<br>
+<div >
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+        <div class="card ">
+            <div class="card-body ">
+                <div class="row justify-content-center">
+                  <p style="font-size: 14px;">TOTAL      $ {{total|intcomma}}</p>
+                </div>
+                <div class="row justify-content-center">
+                  <p style="font-size: 14px;">RECIBIDO   $ {{recibido|intcomma}}</p></div>
+                </div>
+                <div class="row justify-content-center">
+                  <p style="font-size: 22px; color:blue;">CAMBIO     $ {{cambio|intcomma}}</p></div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <a href="{% url 'facturas:pos_new' %}" class="btn btn-success"><span class="fa fa-undo"></span> Aceptar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock contenido %}

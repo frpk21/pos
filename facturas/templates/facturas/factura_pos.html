@@ -27,11 +27,9 @@
         </div>
     {% endif %}
 {% endif %}
-
-
 <div class="content">
     <div class="container-fluid">
-        <form id="id_form_invoice" name="form1" method="POST" onkeydown="return event.key != 'Enter';" action=".">
+        <form id="id_form_invoice" name="form1" method="POST" onkeydown="return event.key != 'Enter';" action="{% url 'facturas:pos_new' %}">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-12">
@@ -42,14 +40,16 @@
                                     <h5><strong>P O S</strong></h5>
                                 </div>
                                 <div class="col-sm-11 text-right">
-                                    <input class="text-right" name="total_factura" readonly="true" style="border:0px; font-size:30px; color: black; background: #eee; width: 22%;" id="id_total_factura">
+                                    <input class="text-right" name="total_factura1" readonly="true" style="border:0px; font-size:30px; color: black; background: #eee; width: 22%;"  id="id_total_factura1">
                                 </div>
                             </div>
                         </div>
                         <div class="card-body">
                             <div style="display: none">
-                                {{form.tipo}}
-                                {{form.ubicacion}}
+                                {{form.fecha_factura}}
+                                {{form.valor_factura}}
+                                {{form.recibido}}
+                                {{form.cambio}}
                             </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
@@ -136,10 +136,11 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="panel-footer">
                             <div class="text-center">
-                                <button id="btn_save" type="submit" class="btn btn-social-icon btn-info" name="submit" onclick="return ConfirmaGrabar()"><i class="fa fa-shopping-cart"></i>  sT O T A L</button>
-                                <a class="btn btn-social-icon btn-dark" href="{% url 'generales:home' %}"><i class="fa fa-times"></i> Cancelar</a>
+                                <!--<button id="btn_save" type="submit" class="btn btn-social-icon btn-info" name="submit" ><i class="fa fa-shopping-cart"></i>  T O T A L</button>
+                                <a class="btn btn-social-icon btn-dark" href="{% url 'generales:home' %}"><i class="fa fa-times"></i> Cancelar</a>-->
                             </div>
                         </div>
                     </div>
@@ -183,7 +184,7 @@
     {{ detalle_movimientos.media }}
 
     <script>
-
+        
         function nextFocus(itemn, itemn_next) {
             document.getElementById(itemn).addEventListener('keydown', function(event) {
                 if (event.keyCode == 13) {
@@ -221,7 +222,7 @@
             var r = $("#"+itemn).val();
             var datos = {'bar_code':r};
             $.get( "{% url 'facturas:valida_bar_code' %}", datos, function( data ) {
-                console.log(data);
+                //console.log(data);
                 if (data.errors){
                     swal({
                         title: data.errors,
@@ -264,6 +265,7 @@
                     parteDecimal = entrada[1];
                     salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
                     tot = "$ "+salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+                    $("#id_total_factura1").val(tot);
                     $("#id_total_factura").val(tot);
                     itemn_next="id_factp_set-"+(parseInt($('#id_factp_set-TOTAL_FORMS').val())-1)+"-codigo_de_barra";
                     // End + Separador numerico
@@ -271,6 +273,7 @@
                 nextFocus(itemn, itemn_next);
             } );
         }
+
         function onKeyDownHandler(event,id) {
 
             var codigo = event.which || event.keyCode;
@@ -285,39 +288,53 @@
                 itemn_next="id_factp_set-"+(parseInt($('#id_factp_set-TOTAL_FORMS').val())-1)+"-codigo_de_barra";
                 document.getElementById(itemn_next).focus();
             }
+            if(codigo === 27){
+
+                ConfirmaGrabar();
+            }
         
             if(codigo >= 65 && codigo <= 90){
               console.log(String.fromCharCode(codigo));
             }
-        
-             
         }
+
+
+
         function ConfirmaGrabar(){
-            var respuesta = confirm("Grabar documento ?");
-            if (respuesta == true)
-                {
-                    let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS').val();
-                    tot_tot=0
-                    for (i = 0; i < total_form; i++) {
-                        id_cantidad = "id_movimientos_detalle_set-"+i+"-cantidad";
-                        var cantidad = $("#"+id_cantidad).val();
-                        var id_costo = "id_movimientos_detalle_set-"+i+"-costo";
-                        var id_total = "id_movimientos_detalle_set-"+i+"-total";
-                        costo = $("#"+id_costo).val()
-                        costo = costo.replace (/\./g, '');
-                        tot_tot += parseFloat(cantidad) * parseFloat(costo);
-                        $("#"+id_costo).val(parseFloat(costo));
-                        $("#"+id_total).val(parseFloat(cantidad) * parseFloat(costo));
-                    };
-                    valor_documento = $("#id_valor_documento").val()
-                    valor_documento = valor_documento.replace (/\./g, '');
-                    $("#id_valor_documento").val(parseFloat(valor_documento));
-                    return true;
-                }
-            else
-                {
-                    return false;
-                }
+            let total_form = $('#id_factp_set-TOTAL_FORMS');
+            let form_idx = total_form.val();
+            tot1=0;
+            for (var i = 0; i < (parseInt(form_idx) ); i++) {
+                id_valor_unidad = "id_factp_set-"+i+"-valor_unidad";
+                valor_unidad = $("#"+id_valor_unidad).val();
+                tot1 += parseInt(valor_unidad);
+            }
+            tot = $("#id_total_factura1").val();
+            
+            swal({
+                title: 'T O T A L',
+                html: '<center><div class="col-md-10 text-center"> <h1>' + tot + '</h1></div><div class="col-md-10"><input class="form-control text-center" style="align: center; color:red; font-size:22px;" placeholder="RECIBIDO" id="cambio" type="number" name="cambio" value="0"></div></center>',
+                showCancelButton: false,
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false
+            }).then(function() {
+                recibido =  String(parseInt($('#cambio').val()));
+                var entrada = recibido.split(',');
+                parteEntera = entrada[0].replace(/\./g, '');
+                parteDecimal = entrada[1];
+                salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+                recibido = "$ "+salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+                cambio =  String(parseInt($('#cambio').val())-parseInt(tot1));
+                var entrada = cambio.split(',');
+                parteEntera = entrada[0].replace(/\./g, '');
+                parteDecimal = entrada[1];
+                salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+                cambio = "$ "+salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+                $("#id_recibido").val(parseInt($('#cambio').val()));
+                $("#id_cambio").val(parseInt($('#cambio').val())-parseInt(tot1));
+                $('#id_form_invoice').submit();
+            }).catch(swal.noop);
         }
 
     </script>
