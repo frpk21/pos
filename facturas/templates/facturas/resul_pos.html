@@ -4,7 +4,7 @@
 
 {% load humanize %}
 <link rel="stylesheet" href="/static/base/assets/css/impresion.css"> <script src="script.js"></script>
-<link type="text/css" rel="stylesheet" href="/static/base/assets/css/PrintArea.css" /> 
+<link type="text/css" rel="stylesheet" href="/static/base/printarea/css/PrintArea.css" /> 
 <br>
 <br>
 <br>
@@ -24,10 +24,8 @@
                 </div>
 
                 <div class="row justify-content-center">
-                  <div style="padding: 0 10px 10px;" class="buttonBar">
-                    
-                    <button id="#imprime" class="btn btn-social-icon btn-info"  ><i class="fa fa-shopping-cart"></i> imprime</button>
-                  </div>
+
+                  <a href="javascript:void(0)" id="imprime" class="btn btn-warning"><span class="fa fa-undo"></span> Imprimir</a>
                   <a href="{% url 'facturas:pos_new' %}" class="btn btn-success"><span class="fa fa-undo"></span> Aceptar</a>
                 </div>
             </div>
@@ -39,7 +37,7 @@
 
             <div  id="myPrintArea">
 
-              <img class="centrado" src={{ctx.logo.url}} alt="Logotipo" width="70%;">
+              <img class="cenfftrado" src={{ctx.logo.url}}  width="20%;">
               <p class="centrado">{{ctx.empresa}}              
                   <br>DOCUMENTO EQUIVALENTE No. {{ctx.factura.factura}}
                   <br>{{ctx.nit}}
@@ -97,12 +95,12 @@
 
 {% block extra_js %}
 
-  <script src="/static/base/assets/js/PrintArea.jquery.js" type="text/JavaScript" language="javascript"></script>
+  <script src="/static/base/printarea/js/jquery.PrintArea.js" type="text/JavaScript" language="javascript"></script>
 
 
   <script type="text/javascript">
     $("#imprime").click(function (){
-      $("div#myPrintArea").printArea();alert("ok");
+      $("div#myPrintArea").printArea();
     })
   </script>
 

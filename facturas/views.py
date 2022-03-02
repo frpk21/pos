@@ -112,8 +112,31 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         
     
 def resul_pos(request, factura, total, recibido, cambio):
-    
-    return render(request, "facturas/resul_pos.html", context={'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio})
+    factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
+    tarifas_iva = Iva.objects.all()
+    iva={}
+    for j,item in enumerate(tarifas_iva):
+        iva['tarifa'+str(j)]=item.tarifa_iva
+        base, valor = 0,0
+        for i, line in enumerate(factp):
+            if not line.porc_iva:
+                continue
+            if line.porc_iva == item.tarifa_iva:
+                base += line.valor_unidad
+                valor += line.valor_iva
+        iva['base'+str(j)] = int(base)
+        iva['valor'+str(j)] = int(valor)     
+    ctx={
+        'empresa':request.user.profile.empresa,
+        'nit': request.user.profile.nit,
+        'direccion': request.user.profile.direccion,
+        'telefono': request.user.profile.telefono,
+        'dian': request.user.profile.r_dian,
+        'logo': request.user.profile.logo,
+        'detalle': factp,
+        'factura': Facturas.objects.filter(factura=factura, usuario=request.user).last()
+    }
+    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva})
 
 def imprimir(request, factura, total, recibido, cambio):
     factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
