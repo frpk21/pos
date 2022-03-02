@@ -44,7 +44,7 @@ th.precio {
 
 img {
     max-width: inherit;
-    width: inherit;
+    width: 60%; /*inherit;*/
 }
 
 @media print {
