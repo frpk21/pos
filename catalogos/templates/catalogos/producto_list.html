@@ -29,6 +29,7 @@
                                     <th style="font-size:12px; background: gray; color: white;" data-orderable="false">ID</th>
                                     <th style="font-size:12px; background: gray; color: white;">SUB-CATEGORIA</th>
                                     <th style="font-size:12px; background: gray; color: white;">DESCRIPCION</th>
+                                    <th style="font-size:12px; background: gray; color: white;">TARIDA IVA</th>
                                     <th style="font-size:12px; background: gray; color: white;" class="text-center">ESTADO</th>
                                     <th style="font-size:12px; background: gray; color: white;" class="text-center">CREADO</th>
                                     <th style="font-size:12px; background: gray; color: yellow;" data-orderable="false" class="text-center">Acciones</th>
@@ -37,6 +38,7 @@
                                     <th>Id</th>
                                     <th>Sub-Categor&iacute;a</th>
                                     <th>Descripción</th>
+                                    <th>Tarifa Iva</th>
                                     <th class="text-center">Estado</th>
                                     <th class="text-center">Creado</th>
                                     <th class="text-center">Acciones</th>
@@ -47,6 +49,7 @@
                                             <td>{{item.id}}</td>
                                             <td>{{item.subcategoria}}</td>
                                             <td><strong>{{item.nombre}}</strong></td>
+                                            <td><strong>{{item.tarifa_iva.tarifa_iva}}</strong></td>
                                             <td class="text-center">{{item.activo|yesno:"Activo,Inactivo"}}</td>
                                             <td class="text-center">{{item.creado|date:'d/m/Y'}}</td>
                                             <td class="td-actions text-center">

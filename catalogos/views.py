@@ -33,8 +33,6 @@ from datetime import datetime, timedelta
 
 from django.db.models import Sum
 
-from facturas.conectorplugin import Conector, AccionBarcodeJan13, AlineacionCentro
-
 from barcode.ean import EuropeanArticleNumber13
 import barcode
 

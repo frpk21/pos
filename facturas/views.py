@@ -6,7 +6,7 @@ from django.views import generic
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import Facturas, Factp
 from generales.models import Terceros, Profile
-from catalogos.models import Producto
+from catalogos.models import Producto, Iva
 from .forms import FacturaEncForm, FacturaDetForm, DetalleFacFormSet, FacturaPosEncForm, FacturaPosDetalleForm, DetalleMovimientosFormSet
 from generales.views import SinPrivilegios
 from fact_digital.utilidades import facturaDian, consultaRangos, fechaDian, HoraDian, AnulaFactura
@@ -17,6 +17,11 @@ from pos.utilidades import enviar_mail, numero_to_letras
 from datetime import date
 from datetime import datetime, timedelta
 from django.db.models import Sum
+from PDFNetPython3 import *
+import sys
+from django.db.models import Sum, F
+
+from static.base.LicenseKey import *
 
 
 class FacturaList(LoginRequiredMixin, generic.ListView):
@@ -47,6 +52,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         return self.render_to_response( 
             self.get_context_data(
                 form=form,
+                bar_code_read= '',
                 detalle_movimientos=detalle_movimientos_formset            
             )
         )
@@ -54,9 +60,9 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
     def post(self, request, *args, **kwargs):
         form =FacturaPosEncForm(request.POST)
         detalle_movimientos = DetalleMovimientosFormSet(request.POST)
-        #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
-        #print(form.errors)
-        #print(detalle_movimientos.errors)
+        print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+        print(form.errors)
+        print(detalle_movimientos.errors)
         if form.is_valid() and detalle_movimientos.is_valid():
             return self.form_valid(form, detalle_movimientos)
         else:
@@ -69,28 +75,29 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         fact = profile.factura + 1
         profile.factura = profile.factura + 1
         profile.save()
+        self.object.factura = fact
+        self.object.observacion = "Factura POS"
+        self.object.usuario = self.request.user        
         total, iva = 0, 0
         for detalle in detalle_movimientos:
             if not detalle.cleaned_data:
+                continue
+            if not detalle.cleaned_data["cantidad"]:
                 continue
             tot_unidad = detalle.cleaned_data["valor_unidad"] * detalle.cleaned_data["cantidad"]
             total += tot_unidad
             producto=Producto.objects.filter(codigo_de_barra=detalle.cleaned_data["codigo_de_barra"], usuario=self.request.user.id).get()
             iva += round((producto.tarifa_iva.tarifa_iva * tot_unidad / 100),0)
-            detalle.cleaned_data["valor_iva"] = round((producto.tarifa_iva.tarifa_iva * tot_unidad / 100),0)
-            detalle.cleaned_data["valor_total"] = tot_unidad
             producto.existencia = producto.existencia - detalle.cleaned_data["cantidad"]
             producto.save()
-        self.object.factura = fact
-        self.object.observacion = "Factura POS"
         self.object.valor_factura = total
         self.object.valor_iva = iva
-        self.object.usuario = self.request.user        
         self.object = form.save()
         detalle_movimientos.instance = self.object
         detalle_movimientos.save()
         
 #        return HttpResponseRedirect(reverse_lazy("facturas:resul_pos"))
+        
         return HttpResponseRedirect(reverse_lazy('facturas:resul_pos', kwargs={'factura': fact, 'total': self.object.valor_factura, 'recibido': self.object.recibido, 'cambio': self.object.cambio}))
 
     def form_invalid(self, form, detalle_movimientos):
@@ -105,17 +112,41 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         
     
 def resul_pos(request, factura, total, recibido, cambio):
-    #imprimirTiquete(request,factura)
+    
     return render(request, "facturas/resul_pos.html", context={'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio})
 
-
+def imprimir(request, factura, total, recibido, cambio):
+    factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
+    tarifas_iva = Iva.objects.all()
+    iva={}
+    for j,item in enumerate(tarifas_iva):
+        iva['tarifa'+str(j)]=item.tarifa_iva
+        base, valor = 0,0
+        for i, line in enumerate(factp):
+            if not line.porc_iva:
+                continue
+            if line.porc_iva == item.tarifa_iva:
+                base += line.valor_unidad
+                valor += line.valor_iva
+        iva['base'+str(j)] = int(base)
+        iva['valor'+str(j)] = int(valor)     
+    ctx={
+        'empresa':request.user.profile.empresa,
+        'nit': request.user.profile.nit,
+        'direccion': request.user.profile.direccion,
+        'telefono': request.user.profile.telefono,
+        'dian': request.user.profile.r_dian,
+        'logo': request.user.profile.logo,
+        'factura': Facturas.objects.filter(factura=factura, usuario=request.user).last()
+    }
+    return render(request, "facturas/imprimir.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva})
 
 
 def imprimirTiquete(request, factura):
     import io
     import os
     from django.conf import settings
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle, BaseDocTemplate
     from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
     from reportlab.lib import colors  
@@ -232,12 +263,52 @@ def imprimirTiquete(request, factura):
                 icon=icon,
                 )
     
-    doc.build(ordenes)
-    response.write(buffer.getvalue())
-    pdf = buffer.getvalue()
-    buffer.close()
     
-    return pdf
+    
+    doc.build(ordenes)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    response.write(buffer.getvalue())
+    buffer.close()
+
+    
+    
+    imprimir_xxx("facturas/invoice_58.pdf")
+    return response
+
+
+    
+def imprimir_xxx(filename):
+
+    PDFNet.Initialize(LicenseKey)
+    
+    # Relative path to the folder containing the test files.
+    input_path = "../../TestFiles/"
+    
+    doc = PDFDoc(filename)
+    doc.InitSecurityHandler()
+    
+    # Set our PrinterMode options
+    printerMode = PrinterMode()
+    printerMode.SetCollation(True)
+    printerMode.SetCopyCount(1)
+    printerMode.SetDPI(100); # regardless of ordering, an explicit DPI setting overrides the OutputQuality setting
+    printerMode.SetDuplexing(PrinterMode.e_Duplex_Auto)
+    
+    # If the XPS print path is being used, then the printer spooler file will
+    # ignore the grayscale option and be in full color
+    printerMode.SetOutputColor(PrinterMode.e_OutputColor_Grayscale)
+    printerMode.SetOutputQuality(PrinterMode.e_OutputQuality_Medium)
+    # printerMode.SetNUp(2,1)
+    # printerMode.SetScaleType(PrinterMode.e_ScaleType_FitToOutPage)
+    
+    # Print the PDF document to the default printer, using "tiger.pdf" as the document
+    # name, send the file to the printer not to an output file, print all pages, set the printerMode
+    # and don't provide a cancel flag.
+    Print.StartPrintJob(doc, "", doc.GetFileName(), "", None, printerMode, None)
+    PDFNet.Terminate()
+
+    return
     
 
 
@@ -391,6 +462,6 @@ def get_ajaxBarcode(request, *args, **kwargs):
     else:
         bar_code = Producto.objects.filter(codigo_de_barra=bar_code, usuario=request.user).last()
         if bar_code:
-            return JsonResponse(data={"nombre": bar_code.nombre, "valor_unidad": bar_code.precio_de_venta}, safe=False)
+            return JsonResponse(data={"nombre": bar_code.nombre, "valor_unidad": bar_code.precio_de_venta, "porc_iva": bar_code.tarifa_iva.tarifa_iva, "codigo_de_barra": bar_code.codigo_de_barra}, safe=False)
         else: 
             return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})

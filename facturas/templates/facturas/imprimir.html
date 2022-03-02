@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/base/assets/css/impresion.css"> <script src="script.js"></script>
+    </head>
+    <body>
+        <div class="ticket">
+            <img class="centrado" src={{ctx.logo.url}} alt="Logotipo" width="70%;">
+            <p class="centrado">{{ctx.empresa}}              
+                <br>DOCUMENTO EQUIVALENTE No. {{ctx.factura.factura}}
+                <br>{{ctx.nit}}
+                <br>{{ctx.fecha}}
+                <br>{{ctx.direccion}}   Tel. {{ctx.telefono}}
+                <br><small>{% if dian %}{{ctx.dian}}{% else %}Resoloci&oacute;n DIAN ##{% endif %}</small>
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="cantidad">CANT</th>
+                        <th class="producto">PRODUCTO</th>
+                        <th class="precio">$$</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in ctx.detalle %}
+                        <tr>
+                            <td class="cantidad">{{item.cantidad}}</td>
+                            <td class="producto">{{item.producto}}</td>
+                            <td class="precio">{{item.valor_unidad}}</td>
+                        </tr>
+                    {% endfor %}
+                   
+                    <tr>
+                        <td class="cantidad"></td>
+                        <td class="producto">TOTAL</td>
+                        <td class="precio">{{total}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="centrado">           
+                <br>RECIBIDO {{recibido}}
+                <br>CAMBIO   {{cambio}}
+                <br><br>
+            </p>
+            <p class="centrado">¡GRACIAS POR SU COMPRA!</p>
+        </div><br/><br/>
+        <p class="centrado">
+            INFORMACION TRIBUTARIA<br>
+            {% if iva.base0 > 0 %}TARIFA: {{iva.tarifa0}} %%   BASE:{{iva.base0}}  VALOR: {{iva.valor0}}<br>{% endif %}
+            {% if iva.base1 > 0 %}TARIFA: {{iva.tarifa1}} %%   BASE:{{iva.base1}}  VALOR: {{iva.valor1}}<br>{% endif %}
+            {% if iva.base2 > 0 %}TARIFA: {{iva.tarifa2}} %%   BASE:{{iva.base2}}  VALOR: {{iva.valor2}}{% endif %}
+
+            <br> 
+        </p><br/><br/>
+        
+<!--<button class="oculto-impresion" onclick="imprimir()">Imprimir</button>-->
+    </body>
+
+    <script>
+        window.onload =  window.print();
+        window.document.close();
+    </script>
+</html>

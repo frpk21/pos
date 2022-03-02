@@ -27,10 +27,14 @@ class FacturaPosDetalleForm(forms.ModelForm):
     class Meta:
         model= Factp
         fields = [
+            'factura',
             'codigo_de_barra',
             'cantidad',
             'producto',
             'valor_unidad',
+            'porc_iva',
+            'valor_iva',
+            'valor_total',
             ]
 
     def __init__(self, *args, **kwargs):
@@ -39,6 +43,7 @@ class FacturaPosDetalleForm(forms.ModelForm):
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
             })
+        self.fields['codigo_de_barra'].widget.attrs['readonly']= True
         self.fields['producto'].widget.attrs['readonly']= True
         self.fields['cantidad'].widget.attrs['readonly']= True
         self.fields['valor_unidad'].widget.attrs['readonly']= True
@@ -48,36 +53,49 @@ class FacturaPosDetalleForm(forms.ModelForm):
         #self.fields['producto'].widget.attrs['readonly'] = 'readonly'
         #self.fields['producto'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         #self.fields['total'].widget.attrs['readonly'] = 'readonly'
+        self.fields['codigo_de_barra'].widget.attrs.update({'style': 'color: gray; background: rgb(255, 255,255);'})
         self.fields['producto'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         self.fields['cantidad'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         self.fields['valor_unidad'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
+        self.fields['porc_iva'].widget = forms.HiddenInput()
+        self.fields['valor_iva'].widget = forms.HiddenInput()
+        self.fields['valor_total'].widget = forms.HiddenInput()
         #self.fields['costo'].widget.attrs.update({'onchange': 'validacosto(id)'})
 
     def clean_cantidad(self):
         cantidad = self.cleaned_data["cantidad"]
-        if not cantidad:
-            raise forms.ValidationError("Cantidad Requerida")
-        elif cantidad<=0:
-            raise forms.ValidationError("Cantidad Incorrecta")
+        #if not cantidad:
+        #    raise forms.ValidationError("Cantidad Requerida")
+        #elif cantidad<=0:
+        #    raise forms.ValidationError("Cantidad Incorrecta")
         return cantidad
     
     def clean_valor_unidad(self):
         valor_unidad = self.cleaned_data["valor_unidad"]
-        if not valor_unidad:
-            raise forms.ValidationError("Precio Requerido")
-        if valor_unidad <= 0:
-            raise forms.ValidationError("Precio Incorrecto")
+        #if not valor_unidad:
+        #    raise forms.ValidationError("Precio Requerido")
+        #if valor_unidad <= 0:
+        #    raise forms.ValidationError("Precio Incorrecto")
         return valor_unidad
     
     def clean_codigo_de_barra(self):
         codigo_de_barra = self.cleaned_data["codigo_de_barra"]
-        if not codigo_de_barra:
-            raise forms.ValidationError("Codigo de Barra Requerido.")
         return codigo_de_barra
+
+    def clean_porc_iva(self):
+        porc_iva = self.cleaned_data["porc_iva"]
+        return porc_iva
     
+    def clean_valor_iva(self):
+        valor_iva = self.cleaned_data["valor_iva"]
+        return valor_iva
+    
+    def clean_valor_total(self):
+        valor_total = self.cleaned_data["valor_total"]
+        return valor_total
 
 
-DetalleMovimientosFormSet = inlineformset_factory(Facturas,Factp,form=FacturaPosDetalleForm, extra=2,
+DetalleMovimientosFormSet = inlineformset_factory(Facturas,Factp,form=FacturaPosDetalleForm, extra=0,
     min_num=0,
     validate_min=True, can_delete=False)
 
