@@ -80,14 +80,16 @@
                       </table>
                     </div>
                     <div class="row justify-content-center">
-                 <p class="text-center">
-                          <br>RECIBIDO ${{recibido|intcomma}}
-                          <br><strong>CAMBIO   ${{cambio|intcomma}}</strong>
-                          <br><br>
-                 </p>
+                      <p class="text-center">
+                                <br>RECIBIDO ${{recibido|intcomma}}
+                                <br><strong>CAMBIO   ${{cambio|intcomma}}</strong>
+                                <br><br>
+                      </p>
                     </div>
                     <div class="row justify-content-center">
                       <p class="text-center">¡GRACIAS POR SU COMPRA!</p>
+                    </div>
+                    <div class="row justify-content-center">
                       <p class="text-center">
                         INFORMACION TRIBUTARIA<br>
                         {% if iva.base0 > 0 %}TARIFA: {{iva.tarifa0}}%   BASE:{{iva.base0}}  VALOR: ${{iva.valor0|intcomma}}<br>{% endif %}
