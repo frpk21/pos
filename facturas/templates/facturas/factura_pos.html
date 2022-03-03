@@ -366,7 +366,7 @@
                 if (tcredito === undefined){tcredito=0;} else {if (tcredito.length == 0){tcredito=0;} else {tcredito=tcredito.replace(/\./g, '')}}
                 if (transferencia === undefined){transferencia=0;} else {if (transferencia.length == 0){transferencia=0;} else {transferencia=transferencia.replace(/\./g, '')}}
                 if (bonos === undefined){bonos=0;} else {if (bonos.length == 0){bonos=0;} else {bonos=bonos.replace(/\./g, '')}}
-                t_t = parseFloat(efectivo) + parseFloat(tdebito) + parseFloat(tcredito) + parseFloat(transferencia) + parseFloat(bonos);alert(t_t);
+                t_t = parseFloat(efectivo) + parseFloat(tdebito) + parseFloat(tcredito) + parseFloat(transferencia) + parseFloat(bonos);
                 $("#cambio").val(t_t);
                 recibido =  String(parseInt($('#cambio').val()));
                 var entrada = recibido.split(',');
