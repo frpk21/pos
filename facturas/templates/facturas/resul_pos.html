@@ -41,18 +41,17 @@
                       <h2 class="text-center">{{ctx.empresa}}</h2>
                     </div>
                     <div class="row justify-content-center">
-                      <div class="row justify-content-center">
-                        <h5>DOCUMENTO EQUIVALENTE No. {{ctx.factura.factura}}</h5>
-                      </div>
-                      <div class="row justify-content-center">
-                        <p class="text-center">
-                          <span>{{ctx.factura.fecha_factura}}</span>
-                          <br>{{ctx.nit}}
-                          <br>{{ctx.direccion}}   Tel. {{ctx.telefono}}
-                          <br><small>{% if dian %}{{ctx.dian}}{% else %}Resoloci&oacute;n DIAN ##{% endif %}</small>
-                        </p>
-                      </div>
-                    </div><br>
+                      <h5>DOCUMENTO EQUIVALENTE No. {{ctx.factura.factura}}</h5>
+                    </div>
+                    <div class="row justify-content-center">
+                      <p class="text-center">
+                        <span>{{ctx.factura.fecha_factura}}</span>
+                        <br>{{ctx.nit}}
+                        <br>{{ctx.direccion}}   Tel. {{ctx.telefono}}
+                        <br><small>{% if dian %}{{ctx.dian}}{% else %}Resoloci&oacute;n DIAN ##{% endif %}</small>
+                      </p>
+                    </div>
+                    <br>
                     <div class="row justify-content-center">
                       <table class="default" style="border-top: 1px solid black;
                       border-bottom: 1px solid black;
