@@ -21,6 +21,11 @@ class Facturas(ClaseModelo):
     usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.DO_NOTHING)
     recibido = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     cambio = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    efectivo = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    tdebito = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    tcredito = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    transferencia = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    bonos = models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
     def __str__(self):
         return '{}'.format(self.fecha_factura)

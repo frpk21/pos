@@ -10,10 +10,15 @@ from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
 
 class FacturaPosEncForm(forms.ModelForm):
     valor_factura = forms.CharField()
+    efectivo = forms.CharField()
+    tdebito = forms.CharField()
+    tcredito = forms.CharField()
+    transferencia = forms.CharField()
+    bonos = forms.CharField()
+
     class Meta:
         model=Facturas
-
-        fields = ['fecha_factura','valor_factura','recibido','cambio']
+        fields = ['fecha_factura','valor_factura','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos',]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,6 +26,16 @@ class FacturaPosEncForm(forms.ModelForm):
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
             })
+        self.fields['efectivo'].widget.attrs.update({'onkeyup': 'format(this)'})
+        self.fields['tdebito'].widget.attrs.update({'onkeyup': 'format(this)'})
+        self.fields['tcredito'].widget.attrs.update({'onkeyup': 'format(this)'})
+        self.fields['transferencia'].widget.attrs.update({'onkeyup': 'format(this)'})
+        self.fields['bonos'].widget.attrs.update({'onkeyup': 'format(this)'})
+        self.fields['efectivo'].required = False
+        self.fields['tdebito'].required = False
+        self.fields['tcredito'].required = False
+        self.fields['transferencia'].required = False
+        self.fields['bonos'].required = False
 
 
 class FacturaPosDetalleForm(forms.ModelForm):

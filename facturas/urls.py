@@ -8,7 +8,7 @@ urlpatterns = [
     path('Facturas/posedit/<int:pk>', FacturaEdit.as_view(), name="factura_edit"),
     path('Facturas/menu', views.MenuView, name='menu'),
     path('barcode/', views.get_ajaxBarcode, name='valida_bar_code'),
-    path('Facturas/posnew/prn/<factura>/<total>/<recibido>/<cambio>', views.resul_pos, name='resul_pos'),
+    path('Facturas/posnew/prn/<factura>/<total>/<recibido>/<cambio>/<efectivo>/<tdebito>/<tcredito>/<transferencia>/<bonos>', views.resul_pos, name='resul_pos'),
     path('Facturas/pos/print/<factura>', views.imprimirTiquete, name='print_pos'),
     path('Print/<factura>/<total>/<recibido>/<cambio>', views.imprimir, name='imprimir'),
 ]

@@ -41,7 +41,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
 
     def get(self, request, *args, **kwargs):
 
-        ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'recibido':0, 'cambio':0}
+        ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': ''}
 
         self.object = None
 
@@ -99,7 +99,15 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         
 #        return HttpResponseRedirect(reverse_lazy("facturas:resul_pos"))
         
-        return HttpResponseRedirect(reverse_lazy('facturas:resul_pos', kwargs={'factura': fact, 'total': self.object.valor_factura, 'recibido': self.object.recibido, 'cambio': self.object.cambio}))
+        return HttpResponseRedirect(reverse_lazy('facturas:resul_pos', kwargs={'factura': fact, \
+                                    'total': self.object.valor_factura, \
+                                    'recibido': self.object.recibido, \
+                                    'cambio': self.object.cambio, \
+                                    'efectivo': self.object.efectivo, \
+                                    'tdebito': self.object.tdebito, \
+                                    'tcredito': self.object.tcredito, \
+                                    'transferencia': self.object.transferencia, \
+                                    'bonos': self.object.bonos }))
 
     def form_invalid(self, form, detalle_movimientos):
         self.object=form
@@ -112,7 +120,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         
         
     
-def resul_pos(request, factura, total, recibido, cambio):
+def resul_pos(request, factura, total, recibido, cambio, efectivo, tdebito, tcredito, transferencia, bonos):
     factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
     tarifas_iva = Iva.objects.all()
     iva={}
@@ -137,7 +145,8 @@ def resul_pos(request, factura, total, recibido, cambio):
         'detalle': factp,
         'factura': Facturas.objects.filter(factura=factura, usuario=request.user).last()
     }
-    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva})
+
+    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos})
 
 def imprimir(request, factura, total, recibido, cambio):
     factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
