@@ -26,11 +26,11 @@ class FacturaPosEncForm(forms.ModelForm):
             self.fields[field].widget.attrs.update({
                 'class': 'form-control'
             })
-        self.fields['efectivo'].widget.attrs.update({'onkeyup': 'format(this)'})
-        self.fields['tdebito'].widget.attrs.update({'onkeyup': 'format(this)'})
-        self.fields['tcredito'].widget.attrs.update({'onkeyup': 'format(this)'})
-        self.fields['transferencia'].widget.attrs.update({'onkeyup': 'format(this)'})
-        self.fields['bonos'].widget.attrs.update({'onkeyup': 'format(this)'})
+        self.fields['efectivo'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
+        self.fields['tdebito'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
+        self.fields['tcredito'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
+        self.fields['transferencia'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
+        self.fields['bonos'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['efectivo'].required = False
         self.fields['tdebito'].required = False
         self.fields['tcredito'].required = False
