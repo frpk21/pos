@@ -247,7 +247,6 @@
                         //cancelButtonClass: 'btn btn-danger',
                         buttonsStyling: false
                     }).catch(swal.noop);
-                    $("#"+id_valor_unidad).val(0);
                     $("#id_bar_code_read").val('');
                     document.getElementById("id_bar_code_read").focus();
                 }
@@ -346,12 +345,22 @@
             
             swal({
                 title: 'T O T A L',
-                html: '<center><div class="col-md-10 text-center"> <h1>' + tot + '</h1></div><div class="col-md-10"><input class="form-control text-center" style="align: center; color:red; font-size:22px;" placeholder="RECIBIDO" id="cambio" type="number" name="cambio" value="0"></div></center>',
+                html: '<center><div class="col-md-10 text-center"> <h1>' + tot + '</h1></div><div class="col-md-10"><input type="hidden" class="form-control text-center" style="align: center; color:red; font-size:22px;" placeholder="RECIBIDO" id="cambio" type="number" name="cambio" value="0"></div><div><table width="50%" class="table table-striped table-bordered table-hover"><thead><tr><th>TIPO</th><th>VALOR PAGO</th></tr></thead><tbody>{% for lin in frm_pagos %}<tr><td><input type="text" class="form-control" style="align: center; color:red; font-size:14px;" value="{{lin.nombre}}" id="id_nombre_{{lin.slug}}" readonly="true"></td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" id="id_valor_{{lin.slug}}" onkeyup="format(this)"></td></tr>{% endfor %}</tbody></table></div></center>',
                 showCancelButton: false,
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
                 buttonsStyling: false
             }).then(function() {
+                efectivo = $("#id_valor_efectivo").val();
+                tdebito = $("#id_valor_tarjetas-debito").val();
+                tcredito = $("#id_valor_tarjetas-credito").val();
+                transferencia = $("#id_valor_transferencia-bancaria").val();
+                if (efectivo === undefined){efectivo=0; alert("efec000000");} else {if (efectivo.length == 0){efectivo=0;} else {efectivo=efectivo.replace(/\./g, '')}}
+                if (tdebito === undefined){tdebito=0; alert("tddd000000");} else {if (tdebito.length == 0){tdebito=0;} else {tdebito=tdebito.replace(/\./g, '')}}
+                if (tcredito === undefined){tcredito=0; alert("tcccc000000");} else {if (tcredito.length == 0){tcredito=0;} else {tcredito=tcredito.replace(/\./g, '')}}
+                if (transferencia === undefined){transferencia=0; alert("ttttt000000");} {if (transferencia.length == 0){transferencia=0;} else {transferencia=transferencia.replace(/\./g, '')}}
+                t_t = parseFloat(efectivo) + parseFloat(tdebito) + parseFloat(tcredito) + parseFloat(transferencia);
+                $("#cambio").val(t_t);
                 recibido =  String(parseInt($('#cambio').val()));
                 var entrada = recibido.split(',');
                 parteEntera = entrada[0].replace(/\./g, '');
@@ -370,6 +379,20 @@
             }).catch(swal.noop);
         }
 
+        function format(input){
+            var num = input.value.replace(/\./g,'');
+
+            if(!isNaN(num)){
+                num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                num = num.split('').reverse().join('').replace(/^[\.]/,'');
+                input.value = num;
+
+            }
+            
+            else{ alert('Solo se permiten numeros');
+                input.value = input.value.replace(/[^\d\.]*/g,'');
+            }
+        }
     </script>
 
 {% endblock extra_js %}

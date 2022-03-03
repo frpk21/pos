@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Facturas, Factp
+from .models import Facturas, Factp, FormasPagos, frm_de_pagos
 from generales.models import Terceros, Profile
 from catalogos.models import Producto, Iva
 from .forms import FacturaEncForm, FacturaDetForm, DetalleFacFormSet, FacturaPosEncForm, FacturaPosDetalleForm, DetalleMovimientosFormSet
@@ -53,6 +53,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
             self.get_context_data(
                 form=form,
                 bar_code_read= '',
+                frm_pagos = FormasPagos.objects.all().order_by('nombre'),
                 detalle_movimientos=detalle_movimientos_formset            
             )
         )

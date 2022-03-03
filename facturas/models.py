@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.template.defaultfilters import slugify
 from decimal import Decimal
 from django.contrib.auth.models import User
 from generales.models import ClaseModelo
@@ -50,6 +50,39 @@ class Factp(ClaseModelo):
     class Meta:
         verbose_name_plural="Detalles de Facturas"
         verbose_name="Detalle de Factura"
+        
+        
+class FormasPagos(ClaseModelo):
+    nombre = models.CharField(max_length=100, help_text='Nombre Forma de Pago')
+    slug = models.SlugField(blank=True,null=True, max_length=250)
+    
+
+    def __str__(self):
+        return '{}'.format(self.nombre)
+
+    def save(self):
+        self.nombre = self.nombre.upper()
+        self.slug = slugify(self.nombre)
+        super(FormasPagos,self).save()
+
+    class Meta:
+        verbose_name_plural="Nombre Forma de Pago"
+        verbose_name="Nombres Formas de Pago"
+             
+class frm_de_pagos(ClaseModelo):
+    factura = models.ForeignKey(Facturas, on_delete=models.CASCADE)
+    frm_de_pago =  models.ForeignKey(FormasPagos, on_delete=models.CASCADE)
+    valor_pago = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+    def __str__(self):
+        return '{}-{}'.format(self.factura, self.frm_de_pago.nombre)
+
+    def save(self):
+        super(frm_de_pagos,self).save()
+
+    class Meta:
+        verbose_name_plural="Forma de pago"
+        verbose_name="Formas de Pago"
 
 
 class HookDian(ClaseModelo):
