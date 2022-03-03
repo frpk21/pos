@@ -33,21 +33,31 @@
             <div class="card justify-content-center">
               <div class="ticketxxxxx">
                 <div  id="myPrintArea">
-                  <img class="text-align:center;" src={{ctx.logo.url}}  width="40%;">
+                  <div class="row justify-content-center">
+                    <img class="text-align:center;" src={{ctx.logo.url}}  width="40%;">
+                  </div>
                   <strong>
-                    <p class="text-align:center;" style = "font-family:courier,arial,helvética;"><h2>{{ctx.empresa}}</h2></p>      
-                    <p><h4>DOCUMENTO EQUIVALENTE No. {{ctx.factura.factura}}</h4>
-                    <p>{{ctx.nit}}</p>
-                    <p>{{ctx.fecha}}</p>
-                    <p>{{ctx.direccion}}   Tel. {{ctx.telefono}}</p>
-                    <p><small>{% if dian %}{{ctx.dian}}{% else %}Resoloci&oacute;n DIAN ##{% endif %}</small></p>
-                    <div style="text-align:center;">
-                      <table class="default">
+                    <div class="row justify-content-center">
+                      <h2>{{ctx.empresa}}</h2>
+                      <div class="row justify-content-center">
+                        <p>
+                          <h4>DOCUMENTO EQUIVALENTE No. {{ctx.factura.factura}}</h4>
+                          <br>{{ctx.nit}}
+                          <br>{{ctx.factura.fecha_factura}}
+                          <br>{{ctx.direccion}}   Tel. {{ctx.telefono}}
+                          <br><small>{% if dian %}{{ctx.dian}}{% else %}Resoloci&oacute;n DIAN ##{% endif %}</small>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row justify-content-center">
+                      <table class="default" style="border-top: 1px solid black;
+                      border-bottom: 1px solid black;
+                      border-collapse: collapse;">
                           <thead>
                               <tr>
-                                  <th class="cantidad">CANT</th>
-                                  <th class="producto">PRODUCTO</th>
-                                  <th class="precio">$$</th>
+                                  <th class="cantidad" style="width: 40px;">CANT</th>
+                                  <th class="producto" style="width: 200px;">PRODUCTO</th>
+                                  <th class="precio" style="width: 100px;">PRECIO</th>
                               </tr>
                           </thead>
                           <tbody width="100%">
@@ -58,7 +68,6 @@
                                       <td class="precio">${{item.valor_unidad|intcomma}}</td>
                                   </tr>
                               {% endfor %}
-                            
                               <tr>
                                   <td class="cantidad"></td>
                                   <td class="producto">TOTAL</td>
@@ -67,19 +76,23 @@
                           </tbody>
                       </table>
                     </div>
-                    <p class="centrado">           
-                        <br>RECIBIDO ${{recibido|intcomma}}
-                        <br><strong>CAMBIO   ${{cambio|intcomma}}</strong>
-                        <br><br>
-                    </p>
-                    <p class="centrado">¡GRACIAS POR SU COMPRA!</p>
-                    <p class="centrado">
-                      INFORMACION TRIBUTARIA<br>
-                      {% if iva.base0 > 0 %}TARIFA: {{iva.tarifa0}}%   BASE:{{iva.base0}}  VALOR: ${{iva.valor0|intcomma}}<br>{% endif %}
-                      {% if iva.base1 > 0 %}TARIFA: {{iva.tarifa1}}%   BASE:{{iva.base1}}  VALOR: ${{iva.valor1|intcomma}}<br>{% endif %}
-                      {% if iva.base2 > 0 %}TARIFA: {{iva.tarifa2}}%   BASE:{{iva.base2}}  VALOR: ${{iva.valor2|intcomma}}{% endif %}
-                      <br> 
-                    </p><br/><br/>
+                    <div class="row justify-content-center">
+                 <p class="text-center">
+                          <br>RECIBIDO ${{recibido|intcomma}}
+                          <br><strong>CAMBIO   ${{cambio|intcomma}}</strong>
+                          <br><br>
+                 </p>
+                    </div>
+                    <div class="row justify-content-center">
+                      <p class="text-center">¡GRACIAS POR SU COMPRA!</p>
+                      <p class="text-center">
+                        INFORMACION TRIBUTARIA<br>
+                        {% if iva.base0 > 0 %}TARIFA: {{iva.tarifa0}}%   BASE:{{iva.base0}}  VALOR: ${{iva.valor0|intcomma}}<br>{% endif %}
+                        {% if iva.base1 > 0 %}TARIFA: {{iva.tarifa1}}%   BASE:{{iva.base1}}  VALOR: ${{iva.valor1|intcomma}}<br>{% endif %}
+                        {% if iva.base2 > 0 %}TARIFA: {{iva.tarifa2}}%   BASE:{{iva.base2}}  VALOR: ${{iva.valor2|intcomma}}{% endif %}
+                        <br> 
+                      </p>
+                    </div><br/><br/>
                   </strong>
                 </div><br/><br/>
               </div>
