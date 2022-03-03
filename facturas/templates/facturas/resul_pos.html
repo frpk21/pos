@@ -41,14 +41,15 @@
                       <h2>{{ctx.empresa}}</h2>
                       <div class="row justify-content-center">
                         <p>
-                          <h4>DOCUMENTO EQUIVALENTE No. {{ctx.factura.factura}}</h4>
+                          <h4>DOCUMENTO EQUIVALENTE No. {{ctx.factura.factura}}</h4></p>
+                        <p class="text-center">
+                          <span>{{ctx.factura.fecha_factura}}</span>
                           <br>{{ctx.nit}}
-                          <br>{{ctx.factura.fecha_factura}}
                           <br>{{ctx.direccion}}   Tel. {{ctx.telefono}}
                           <br><small>{% if dian %}{{ctx.dian}}{% else %}Resoloci&oacute;n DIAN ##{% endif %}</small>
                         </p>
                       </div>
-                    </div>
+                    </div><br>
                     <div class="row justify-content-center">
                       <table class="default" style="border-top: 1px solid black;
                       border-bottom: 1px solid black;
