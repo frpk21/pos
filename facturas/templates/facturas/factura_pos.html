@@ -355,10 +355,10 @@
                 tdebito = $("#id_valor_tarjetas-debito").val();
                 tcredito = $("#id_valor_tarjetas-credito").val();
                 transferencia = $("#id_valor_transferencia-bancaria").val();
-                if (efectivo === undefined){efectivo=0; alert("efec000000");} else {if (efectivo.length == 0){efectivo=0;} else {efectivo=efectivo.replace(/\./g, '')}}
-                if (tdebito === undefined){tdebito=0; alert("tddd000000");} else {if (tdebito.length == 0){tdebito=0;} else {tdebito=tdebito.replace(/\./g, '')}}
-                if (tcredito === undefined){tcredito=0; alert("tcccc000000");} else {if (tcredito.length == 0){tcredito=0;} else {tcredito=tcredito.replace(/\./g, '')}}
-                if (transferencia === undefined){transferencia=0; alert("ttttt000000");} {if (transferencia.length == 0){transferencia=0;} else {transferencia=transferencia.replace(/\./g, '')}}
+                if (efectivo === undefined){efectivo=0;} else {if (efectivo.length == 0){efectivo=0;} else {efectivo=efectivo.replace(/\./g, '')}}
+                if (tdebito === undefined){tdebito=0;} else {if (tdebito.length == 0){tdebito=0;} else {tdebito=tdebito.replace(/\./g, '')}}
+                if (tcredito === undefined){tcredito=0;} else {if (tcredito.length == 0){tcredito=0;} else {tcredito=tcredito.replace(/\./g, '')}}
+                if (transferencia === undefined){transferencia=0;} else {if (transferencia.length == 0){transferencia=0;} else {transferencia=transferencia.replace(/\./g, '')}}
                 t_t = parseFloat(efectivo) + parseFloat(tdebito) + parseFloat(tcredito) + parseFloat(transferencia);
                 $("#cambio").val(t_t);
                 recibido =  String(parseInt($('#cambio').val()));
