@@ -61,9 +61,9 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
     def post(self, request, *args, **kwargs):
         form =FacturaPosEncForm(request.POST)
         detalle_movimientos = DetalleMovimientosFormSet(request.POST)
-        print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
-        print(form.errors)
-        print(detalle_movimientos.errors)
+        #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+        #print(form.errors)
+        #print(detalle_movimientos.errors)
         if form.is_valid() and detalle_movimientos.is_valid():
             return self.form_valid(form, detalle_movimientos)
         else:
@@ -78,7 +78,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         profile.save()
         self.object.factura = fact
         self.object.observacion = "Factura POS"
-        self.object.usuario = self.request.user        
+        self.object.usuario = self.request.user
         total, iva = 0, 0
         for detalle in detalle_movimientos:
             if not detalle.cleaned_data:
