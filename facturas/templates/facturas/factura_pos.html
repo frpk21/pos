@@ -325,8 +325,8 @@
                     swal({
                         title: data.errors,
                         showCancelButton: false,
-                        confirmButtonClass: 'btn btn-success',
-                        //cancelButtonClass: 'btn btn-danger',
+                        //confirmButtonClass: 'btn btn-success',
+                        cancelButtonClass: 'btn btn-danger',
                         buttonsStyling: false
                     }).catch(swal.noop);
                     $("#id_bar_code_read").val('');
@@ -439,7 +439,7 @@
             }).then(function(dismiss) {
                 if (dismiss.dismiss === 'cancel') {
                     swal({
-                        title: 'Cancelled',
+                        title: 'Cancelado',
                         text: 'Tiquete no emitido..',
                         type: 'error',
                         confirmButtonClass: "btn btn-info",
