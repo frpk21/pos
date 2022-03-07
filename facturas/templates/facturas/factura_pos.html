@@ -2,6 +2,74 @@
 {% load static %}
 {% load i18n %}
 {% load custom_tags %}
+
+{% block menu1 %}
+
+<div class="sidebar" data-color="orange" data-background-color="black" data-image="/static/base/assets/img/sidebar-1.jpg">
+    <div class="logo">
+        <a href="{% url 'generales:home' %}" class="simple-text logo-mini">
+            <img src="/static/base/images/logo_komtroll.png" width="30px" alt="IMG">
+        </a>
+        <a href="{% url 'generales:home' %}" class="simple-text logo-normal">
+          KOMTROLL.com
+        </a>
+    </div>
+
+    <div class="sidebar-wrapper">
+        <div class="user">
+            <div class="photo">
+                {% if request.user.is_staff %}
+                    <img src="{{ user.profile.foto.url }}"/>
+                {% endif %}
+            </div>
+            <div class="user-info">
+                <a data-toggle="collapse" href="#collapseExample" class="username">
+                    <span>
+                        {{ user.first_name }} {{ user.last_name }}
+                        <b class="caret"></b>
+                    </span>
+                </a>
+                <div class="collapse" id="collapseExample">
+                    <!--<ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span class="sidebar-mini"> ME </span>
+                                <span class="sidebar-normal"> Mensage a Direccion de Medios </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span class="sidebar-mini"> CO </span>
+                                <span class="sidebar-normal"> Mensage a Gerencia Comercial </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span class="sidebar-mini"> PE </span>
+                                <span class="sidebar-normal"> Mi Perfil </span>
+                            </a>
+                        </li>
+                    </ul>-->
+                </div>
+            </div>
+        </div><br><br><br><br><br>
+        <div class="row justify-content-center">
+            <p style="color:rgba(201, 198, 198, 0.719); font-size:70px;"><strong>P</strong></p>
+            <br><br><br><br><br>
+        </div>
+        <div class="row justify-content-center">
+            <p style="color:rgba(201, 198, 198, 0.719); font-size:70px;"><strong>O</strong></p>
+            <br><br><br><br><br>
+        </div>
+        <div class="row justify-content-center">
+            <p style="color:rgba(201, 198, 198, 0.719); font-size:70px;"><strong>S</strong></p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock menu1 %}
+
 {% block contenido%}
 
 {% load humanize %}
@@ -19,14 +87,17 @@
     {% endfor %}
     {% if form.non_field_errors%}
         <div class="alert alert-danger">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {% for error in form.non_field_errors %}
-            
-                <strong>{{ error|escape }}</strong>
+            <strong>{{ error|escape }}</strong>
         {% endfor %}
         </div>
     {% endif %}
 {% endif %}
+
+<div class="row justify-content-center">
+    
+</div>
 <div class="content">
     <div class="container-fluid">
         <form id="id_form_invoice" name="form1" method="POST" onkeydown="return event.key != 'Enter';" action="{% url 'facturas:pos_new' %}">
@@ -36,10 +107,14 @@
                     <div class="card">
                         <div class="card-header card-header-warning">
                             <div class="row">
-                                <div class="col-sm-1">
-                                    <h5><strong>P O S</strong></h5>
+                                <div class="col-sm-2">
+                                    <a href="{% url 'facturas:menu' %}" class="btn btn-danger btn-circle"><span class="fa fa-search"></span></a>
+                                    <a href="{% url 'facturas:menu' %}" class="btn btn-danger btn-circle"><span class="fa fa-cog fa-spin fa-3x fa-fw"></span></a>
+                                    <a href="{% url 'facturas:menu' %}" class="btn btn-danger btn-circle"><span class="fa fa-undo"></span></a>
+
                                 </div>
-                                <div class="col-sm-11 text-right">
+                                
+                                <div class="col-sm-10 text-right">
                                     <input class="text-right" name="total_factura1" readonly="true" style="border:0px; font-size:30px; color: black; background: #eee; width: 22%;"  id="id_total_factura1">
                                 </div>
                             </div>

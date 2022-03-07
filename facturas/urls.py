@@ -11,4 +11,5 @@ urlpatterns = [
     path('Facturas/posnew/prn/<factura>/<total>/<recibido>/<cambio>/<efectivo>/<tdebito>/<tcredito>/<transferencia>/<bonos>', views.resul_pos, name='resul_pos'),
     path('Facturas/pos/print/<factura>', views.imprimirTiquete, name='print_pos'),
     path('Print/<factura>/<total>/<recibido>/<cambio>', views.imprimir, name='imprimir'),
+    path('Facturas/posclose', views.CierreCajaView.as_view(), name="pos_cierre"),
 ]

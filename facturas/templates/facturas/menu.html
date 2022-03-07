@@ -1,6 +1,73 @@
 {% extends 'base/base.html' %}
 
 {% load static %}
+{% block menu1 %}
+
+<div class="sidebar" data-color="orange" data-background-color="black" data-image="/static/base/assets/img/sidebar-1.jpg">
+    <div class="logo">
+        <a href="{% url 'generales:home' %}" class="simple-text logo-mini">
+            <img src="/static/base/images/logo_komtroll.png" width="30px" alt="IMG">
+        </a>
+        <a href="{% url 'generales:home' %}" class="simple-text logo-normal">
+          KOMTROLL.com
+        </a>
+    </div>
+
+    <div class="sidebar-wrapper">
+        <div class="user">
+            <div class="photo">
+                {% if request.user.is_staff %}
+                    <img src="{{ user.profile.foto.url }}"/>
+                {% endif %}
+            </div>
+            <div class="user-info">
+                <a data-toggle="collapse" href="#collapseExample" class="username">
+                    <span>
+                        {{ user.first_name }} {{ user.last_name }}
+                        <b class="caret"></b>
+                    </span>
+                </a>
+                <div class="collapse" id="collapseExample">
+                    <!--<ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span class="sidebar-mini"> ME </span>
+                                <span class="sidebar-normal"> Mensage a Direccion de Medios </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span class="sidebar-mini"> CO </span>
+                                <span class="sidebar-normal"> Mensage a Gerencia Comercial </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span class="sidebar-mini"> PE </span>
+                                <span class="sidebar-normal"> Mi Perfil </span>
+                            </a>
+                        </li>
+                    </ul>-->
+                </div>
+            </div>
+        </div><br><br><br><br><br>
+        <div class="row justify-content-center">
+            <p style="color:rgba(201, 198, 198, 0.719); font-size:70px;"><strong>P</strong></p>
+            <br><br><br><br><br>
+        </div>
+        <div class="row justify-content-center">
+            <p style="color:rgba(201, 198, 198, 0.719); font-size:70px;"><strong>O</strong></p>
+            <br><br><br><br><br>
+        </div>
+        <div class="row justify-content-center">
+            <p style="color:rgba(201, 198, 198, 0.719); font-size:70px;"><strong>S</strong></p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock menu1 %}
+
 
 {% block contenido %}
 
@@ -108,7 +175,7 @@
           </div>
           <div class="col-sm-1">
             <div class="card card-stats text-center">
-              <a href="">
+              <a href="{% url 'facturas:pos_cierre' %}">
                 <i class="material-icons">flaky</i>
                 <br /><br />
                 <h6 class="card-title">CIERRE</h6>

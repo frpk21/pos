@@ -26,6 +26,7 @@ class Facturas(ClaseModelo):
     tcredito = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     transferencia = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     bonos = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    cerrado = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.fecha_factura)

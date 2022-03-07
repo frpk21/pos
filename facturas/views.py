@@ -70,7 +70,6 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
             return self.form_invalid(form, detalle_movimientos)
 
     def form_valid(self, form, detalle_movimientos):
-        
         self.object = form.save(commit=False)
         profile = Profile.objects.filter(user=self.request.user.id).get()
         fact = profile.factura + 1
@@ -147,6 +146,34 @@ def resul_pos(request, factura, total, recibido, cambio, efectivo, tdebito, tcre
     }
 
     return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos})
+
+
+
+class CierreCajaView(LoginRequiredMixin, generic.ListView):
+    
+    model = Facturas
+    template_name = "facturas/info_cierrecaja.html"
+    context_object_name = "obj"
+    login_url='generales:login'
+
+    def get(self, request, *args, **kwargs):
+        ano = int(request.GET.get('periodo')[0:4])
+        mes = int(request.GET.get('periodo')[5:7])
+        movimientos = Factp.objects.filter(facturas__fecha_factura__month=mes, facturas__fecha_factura__year=ano, facturas__usuario=request.user)
+        context = {}
+        context['mes'] = mes
+        context['ano'] = ano
+        context['empresa'] = request.user.profile.empresa
+        context['movimientos'] = movimientos
+        self.object_list = context
+
+        return self.render_to_response(
+            self.get_context_data(
+                context = context
+            )
+        )
+
+
 
 def imprimir(request, factura, total, recibido, cambio):
     factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
