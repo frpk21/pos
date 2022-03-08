@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %}
+{% extends 'base/base1.html' %}
 
 {% load static %}
 
@@ -18,8 +18,9 @@
                                 <div class="card-icon">
                                     <i class="material-icons">assignment</i>
                                 </div>
-                                <h4 class="card-title "><strong> CONSULTA DE MOVIMIENTOS DE ALMACEN DEL MES: {{mes}} DEL A&Nacute;O: {{ano}}</strong></h4>
-                                <hr class="sidebar-divider">>
+                                <h4 class="card-title "><strong> CIERRE DE CAJA AL {{hoy}}</strong></h4>
+                                <hr class="sidebar-divider">
+                                <a href="{% url 'catalogos:producto_new' 1 %}" class="btn btn-info"><span class="fa fa-plus-circle"></span>  Generar Cierre</a>
                             </div>
                         </div>
                     </div>
@@ -28,42 +29,35 @@
                             <table id="lista_table" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%; font-size:12px;">
                                 <thead>
                                     <th style="font-size:12px; background: gray; color: white;">DOC-No.</th>
-                                    <th style="font-size:12px; background: gray; color: white;">TIPO</th>
                                     <th style="font-size:12px; background: gray; color: white;">FECHA</th>
                                     <th style="font-size:12px; background: gray; color: white;">PRODUCTO</th>
                                     <th style="font-size:12px; background: gray; color: white;">CANTIDAD</th>
                                     <th style="font-size:12px; background: gray; color: white;">VALOR</th>
+                                    <th style="font-size:12px; background: gray; color: white;">IVA</th>
+                                    <th style="font-size:12px; background: gray; color: white;">VALOR IVA</th>
                                     <th style="font-size:12px; background: gray; color: white;">TOTAL</th>
-
-                                    <th style="font-size:12px; background: gray; color: yellow;" data-orderable="false" class="text-center">Acciones</th>
                                 </thead>
                                 <tfoot>
                                     <th>Doc-No.</th>
-                                    <th>Tipo</th>
                                     <th>Fecha</th>
                                     <th>Producto</th>
                                     <th>Cantidad</th>
                                     <th>Valor</th>
+                                    <th>IVA</th>
+                                    <th>Valor IVA</th>
                                     <th>Total</th>
-                                    <th class="text-center">Acciones</th>
                                 </tfoot>
                                 <tbody>
-                                    {% for item in obj.movimientos %}
+                                    {% for item in obj.ventas %}
                                         <tr>
-                                            <td>{{item.movimiento.documento_no}}</td>
-                                            <td>{{item.movimiento.tipo_movimiento.nombre}}</td>
-                                            <td>{{item.movimiento.fecha|date:'d/m/Y'}}</td>
-                                            <td>{{item.movimiento.producto.nombre}}</td>
+                                            <td>{{item.factura.factura}}</td>
+                                            <td>{{item.factura.fecha_factura|date:'d/m/Y'}}</td>
+                                            <td>{{item.producto}}</td>
                                             <td>{{item.cantidad}}</td>
-                                            <td>{{item.valor_documento|intcomma}}</td>
-                                            <td>{{item.total|intcomma}}</td>
-                                            <td class="td-actions text-center">
-                                                <a href="{% url 'catalogos:imp_movimiento' item.movimiento.id  item.movimiento.tipo_movimiento.tipo item.movimiento.documento_no %}">
-                                                    <button type="button" rel="tooltip" class="btn btn-info btn-round">
-                                                    <i class="material-icons">print</i>
-                                                    </button>
-                                                </a>
-                                            </td>
+                                            <td>{{item.valor_unidad|intcomma}}</td>
+                                            <td>{{item.porc_iva|intcomma}} %</td>
+                                            <td>{{item.valor_iva|intcomma}}</td>
+                                            <td>{{item.valor_total|intcomma}}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>

@@ -148,21 +148,27 @@
                       </table>
                     </div>
                     <div class="row justify-content-center">
-                      <p class="text-center">
-                                <br>RECIBIDO ${{recibido|intcomma}}
-                                <br><strong>CAMBIO   ${{cambio|intcomma}}</strong>
-                                <br><br>
+                      <p class="text-left" style="font-size: 10px;">
+                        <br>RECIBIDO   ${{recibido|intcomma}}
+                        <br><strong>CAMBIO   ${{cambio|intcomma}}</strong>
+                        <br>
+                        {% if efectivo %}<br>EFECTIVO   <strong>${{efectivo|intcomma}}</strong>{% endif %}
+                        {% if tdebito %}<br>T DEBITO   <strong>${{tdebito|intcomma}}</strong>{% endif %}
+                        {% if tcredito %}<br>T CREDITO   <strong>${{tcredito|intcomma}}</strong>{% endif %}
+                        {% if transferencia %}<br>TRANSFER   <strong>${{transferencia|intcomma}}</strong>{% endif %}
+                        {% if bonos %}<br>BONOS   <strong>${{bonos|intcomma}}</strong>{% endif %}
+                        <br>
                       </p>
                     </div>
                     <div class="row justify-content-center">
                       <p class="text-center">¡GRACIAS POR SU COMPRA!</p>
                     </div>
                     <div class="row justify-content-center">
-                      <p class="text-center">
+                      <p class="text-center" style="font-size: 10px;">
                         INFORMACION TRIBUTARIA<br>
-                        {% if iva.base0 > 0 %}TARIFA: {{iva.tarifa0}}%   BASE:{{iva.base0}}  VALOR: ${{iva.valor0|intcomma}}<br>{% endif %}
-                        {% if iva.base1 > 0 %}TARIFA: {{iva.tarifa1}}%   BASE:{{iva.base1}}  VALOR: ${{iva.valor1|intcomma}}<br>{% endif %}
-                        {% if iva.base2 > 0 %}TARIFA: {{iva.tarifa2}}%   BASE:{{iva.base2}}  VALOR: ${{iva.valor2|intcomma}}{% endif %}
+                        {% if iva.base0 > 0 %}TARIFA: <strong>{{iva.tarifa0}}%</strong>   BASE:<strong>{{iva.base0|intcomma}}</strong>  VALOR: <strong>${{iva.valor0|intcomma}}</strong><br>{% endif %}
+                        {% if iva.base1 > 0 %}TARIFA: <strong>{{iva.tarifa1}}%</strong>   BASE:<strong>{{iva.base1|intcomma}}</strong>  VALOR: <strong>${{iva.valor1|intcomma}}</strong><br>{% endif %}
+                        {% if iva.base2 > 0 %}TARIFA: <strong>{{iva.tarifa2}}%</strong>   BASE:<strong>{{iva.base2|intcomma}}</strong>  VALOR: <strong>${{iva.valor2|intcomma}}</strong>{% endif %}
                         <br> 
                       </p>
                     </div><br/><br/>

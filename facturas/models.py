@@ -75,20 +75,73 @@ class FormasPagos(ClaseModelo):
         verbose_name_plural="Nombre Forma de Pago"
         verbose_name="Nombres Formas de Pago"
              
-class frm_de_pagos(ClaseModelo):
-    factura = models.ForeignKey(Facturas, on_delete=models.CASCADE)
-    frm_de_pago =  models.ForeignKey(FormasPagos, on_delete=models.CASCADE)
-    valor_pago = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+class Cierres(ClaseModelo):
+    fecha = models.DateTimeField()
+    valor_total_registrado = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.DO_NOTHING)
+    pos_no = models.IntegerField(default=1)
+    factura_desde = models.CharField(max_length=15)
+    factura_hasta = models.CharField(max_length=15)
 
     def __str__(self):
-        return '{}-{}'.format(self.factura, self.frm_de_pago.nombre)
+        return '{}-{}'.format(self.id, self.valor_total_registrado)
 
     def save(self):
-        super(frm_de_pagos,self).save()
+        super(Cierres,self).save()
 
     class Meta:
-        verbose_name_plural="Forma de pago"
-        verbose_name="Formas de Pago"
+        verbose_name_plural="Cierre de Caja"
+        verbose_name="Cierres de Cajas"
+
+class Cierres1(ClaseModelo):
+    cierre = models.ForeignKey(Cierres, blank=False, null=False, on_delete=models.CASCADE)
+    ventas_descuentos = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    ventas_cubcat = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    ventas_cubcat_excentas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    ventas_cubcat_excluidas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    ventas_cubcat_excentas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    ventas_cubcat_grabadas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+    def __str__(self):
+        return '{}'.format(self.ventas_subcat)
+
+    def save(self):
+        super(Cierres1,self).save()
+
+    class Meta:
+        verbose_name_plural="Detalle cierre de caja."
+        verbose_name="DEtalles cierres de caja."
+
+class GrabadosCierres1(ClaseModelo):
+    cierre = models.ForeignKey(Cierres, blank=False, null=False, on_delete=models.CASCADE)
+    tarifa_iva =  models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    base_iva =  models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    valor_iva =  models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+    def __str__(self):
+        return '{}-{}'.format(self.tarifa_iva, self.valor_iva)
+
+    def save(self):
+        super(GrabadosCierres1,self).save()
+
+    class Meta:
+        verbose_name_plural="IVA grabado"
+        verbose_name="IVA grabados"
+
+class FormasPagosCierres1(ClaseModelo):
+    cierre = models.ForeignKey(Cierres, blank=False, null=False, on_delete=models.CASCADE)
+    forma_pago = models.ForeignKey(FormasPagos, blank=False, null=False, on_delete=models.CASCADE)
+    valor_pago =  models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+    def __str__(self):
+        return '{}-{}'.format(self.forma_pago, self.valor_pago)
+
+    def save(self):
+        super(FormasPagosCierres1,self).save()
+
+    class Meta:
+        verbose_name_plural="Froma de Pago"
+        verbose_name="Formas de Pagos"
 
 
 class HookDian(ClaseModelo):

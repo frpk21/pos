@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Facturas, Factp, FormasPagos, frm_de_pagos
+from .models import Facturas, Factp, FormasPagos
 from generales.models import Terceros, Profile
 from catalogos.models import Producto, Iva
 from .forms import FacturaEncForm, FacturaDetForm, DetalleFacFormSet, FacturaPosEncForm, FacturaPosDetalleForm, DetalleMovimientosFormSet
@@ -150,26 +150,22 @@ def resul_pos(request, factura, total, recibido, cambio, efectivo, tdebito, tcre
 
 
 class CierreCajaView(LoginRequiredMixin, generic.ListView):
-    
     model = Facturas
     template_name = "facturas/info_cierrecaja.html"
     context_object_name = "obj"
     login_url='generales:login'
 
     def get(self, request, *args, **kwargs):
-        ano = int(request.GET.get('periodo')[0:4])
-        mes = int(request.GET.get('periodo')[5:7])
-        movimientos = Factp.objects.filter(facturas__fecha_factura__month=mes, facturas__fecha_factura__year=ano, facturas__usuario=request.user)
+        ventas = Factp.objects.filter(factura__cerrado=False, factura__usuario=request.user)
         context = {}
-        context['mes'] = mes
-        context['ano'] = ano
         context['empresa'] = request.user.profile.empresa
-        context['movimientos'] = movimientos
+        context['ventas'] = ventas
         self.object_list = context
 
         return self.render_to_response(
             self.get_context_data(
-                context = context
+                context = context,
+                hoy = datetime.today()
             )
         )
 
