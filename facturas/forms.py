@@ -18,7 +18,7 @@ class FacturaPosEncForm(forms.ModelForm):
 
     class Meta:
         model=Facturas
-        fields = ['fecha_factura','valor_factura','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos',]
+        fields = ['fecha_factura','valor_factura','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos','vales',]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,6 +36,7 @@ class FacturaPosEncForm(forms.ModelForm):
         self.fields['tcredito'].required = False
         self.fields['transferencia'].required = False
         self.fields['bonos'].required = False
+        self.fields['vales'].required = False
 
 
 class FacturaPosDetalleForm(forms.ModelForm):
@@ -50,6 +51,7 @@ class FacturaPosDetalleForm(forms.ModelForm):
             'porc_iva',
             'valor_iva',
             'valor_total',
+            'prod'
             ]
 
     def __init__(self, *args, **kwargs):
@@ -75,6 +77,7 @@ class FacturaPosDetalleForm(forms.ModelForm):
         self.fields['porc_iva'].widget = forms.HiddenInput()
         self.fields['valor_iva'].widget = forms.HiddenInput()
         self.fields['valor_total'].widget = forms.HiddenInput()
+        self.fields['prod'].widget = forms.HiddenInput()
         #self.fields['costo'].widget.attrs.update({'onchange': 'validacosto(id)'})
 
     def clean_cantidad(self):
@@ -108,6 +111,10 @@ class FacturaPosDetalleForm(forms.ModelForm):
     def clean_valor_total(self):
         valor_total = self.cleaned_data["valor_total"]
         return valor_total
+    
+    def clean_prod(self):
+        prod = self.cleaned_data["prod"]
+        return prod
 
 
 DetalleMovimientosFormSet = inlineformset_factory(Facturas,Factp,form=FacturaPosDetalleForm, extra=0,

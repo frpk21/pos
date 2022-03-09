@@ -606,7 +606,7 @@ def imprimirMovimiento(request, pk, tipo, documento_no):
     for i,item in enumerate(mov_res):
         movimiento = item
         no_doc = item.movimiento.documento_no
-        producto =  item.producto
+        producto = item.producto
         codigo_de_barra = item.codigo_de_barra
         cantidad = item.cantidad
         costo = item.costo

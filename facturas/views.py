@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Facturas, Factp, FormasPagos
+from .models import Facturas, Factp, FormasPagos, Cierres, Cierres1, GrabadosCierres1, FormasPagosCierres1
 from generales.models import Terceros, Profile
 from catalogos.models import Producto, Iva
 from .forms import FacturaEncForm, FacturaDetForm, DetalleFacFormSet, FacturaPosEncForm, FacturaPosDetalleForm, DetalleMovimientosFormSet
@@ -22,6 +22,7 @@ import sys
 from django.db.models import Sum, F
 
 from static.base.LicenseKey import *
+from django.db.models import Max, Min
 
 
 class FacturaList(LoginRequiredMixin, generic.ListView):
@@ -41,7 +42,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
 
     def get(self, request, *args, **kwargs):
 
-        ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': ''}
+        ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'vales': ''}
 
         self.object = None
 
@@ -106,7 +107,8 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
                                     'tdebito': self.object.tdebito, \
                                     'tcredito': self.object.tcredito, \
                                     'transferencia': self.object.transferencia, \
-                                    'bonos': self.object.bonos }))
+                                    'bonos': self.object.bonos, \
+                                    'vales': self.object.vales}))
 
     def form_invalid(self, form, detalle_movimientos):
         self.object=form
@@ -119,7 +121,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         
         
     
-def resul_pos(request, factura, total, recibido, cambio, efectivo, tdebito, tcredito, transferencia, bonos):
+def resul_pos(request, factura, total, recibido, cambio, efectivo, tdebito, tcredito, transferencia, bonos, vales):
     factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
     tarifas_iva = Iva.objects.all()
     iva={}
@@ -145,7 +147,7 @@ def resul_pos(request, factura, total, recibido, cambio, efectivo, tdebito, tcre
         'factura': Facturas.objects.filter(factura=factura, usuario=request.user).last()
     }
 
-    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos})
+    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos, 'vales': vales })
 
 
 
@@ -169,6 +171,26 @@ class CierreCajaView(LoginRequiredMixin, generic.ListView):
             )
         )
 
+def CierreDoing(request):
+    ventas = Factp.objects.filter(factura__cerrado=False, factura__usuario=request.user)
+    minimo = ventas.aggregate(Min('factura__factura'))
+    maximo = ventas.aggregate(Max('factura__factura'))
+
+    print("MMMMMMMMMMMMMMMMMMMMMAXXXXXXXXXXXXXXXXXXXXXXXXXXX", minimo,maximo)
+    total=0
+    for i,item in enumerate(ventas):
+        total+= (item.valor_unidad * item.cantidad) + item.valor_iva
+
+    Cierres.objects.get_or_create(
+            fecha = datetime.now(),
+            valor_total_registrado = total,
+            usuario = request.user,
+            pos_no = 1,
+            factura_desde = minimo["factura__factura__min"],
+            factura_hasta = maximo["factura__factura__max"]
+        )
+
+    
 
 
 def imprimir(request, factura, total, recibido, cambio):
@@ -518,6 +540,6 @@ def get_ajaxBarcode(request, *args, **kwargs):
     else:
         bar_code = Producto.objects.filter(codigo_de_barra=bar_code, usuario=request.user).last()
         if bar_code:
-            return JsonResponse(data={"nombre": bar_code.nombre, "valor_unidad": bar_code.precio_de_venta, "porc_iva": bar_code.tarifa_iva.tarifa_iva, "codigo_de_barra": bar_code.codigo_de_barra}, safe=False)
+            return JsonResponse(data={"nombre": bar_code.nombre, "valor_unidad": bar_code.precio_de_venta, "porc_iva": bar_code.tarifa_iva.tarifa_iva, "codigo_de_barra": bar_code.codigo_de_barra,'prod': bar_code.id}, safe=False)
         else: 
             return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})

@@ -4,6 +4,9 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from generales.models import ClaseModelo
 from catalogos.models import Producto
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete, pre_delete
+from django.db.models import Sum
 
 
 class Facturas(ClaseModelo):
@@ -26,7 +29,9 @@ class Facturas(ClaseModelo):
     tcredito = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     transferencia = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     bonos = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    vales = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     cerrado = models.BooleanField(default=False, blank=True, null=True)
+    con_electronica = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.fecha_factura)
@@ -38,7 +43,8 @@ class Facturas(ClaseModelo):
 
 class Factp(ClaseModelo):
     factura=models.ForeignKey(Facturas, on_delete=models.CASCADE)
-    producto =  models.CharField(max_length=100, help_text='Nombre del producto', blank=True, null=True, default='')
+    prod=models.ForeignKey(Producto, on_delete=models.CASCADE)
+    producto = models.CharField(max_length=100, help_text='Nombre del producto', blank=True, null=True, default='')
     codigo_de_barra = models.CharField(max_length=100, help_text='Código de Barra', blank=True, null=True, default='')
     cantidad=models.IntegerField(default=0)
     porc_iva = models.DecimalField(max_digits=5, decimal_places=2, default=0)
@@ -86,8 +92,8 @@ class Cierres(ClaseModelo):
     def __str__(self):
         return '{}-{}'.format(self.id, self.valor_total_registrado)
 
-    def save(self):
-        super(Cierres,self).save()
+    def save(self, *args, **kwargs):
+        super(Cierres, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural="Cierre de Caja"
@@ -99,7 +105,6 @@ class Cierres1(ClaseModelo):
     ventas_cubcat = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     ventas_cubcat_excentas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     ventas_cubcat_excluidas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-    ventas_cubcat_excentas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     ventas_cubcat_grabadas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
     def __str__(self):
@@ -142,6 +147,34 @@ class FormasPagosCierres1(ClaseModelo):
     class Meta:
         verbose_name_plural="Froma de Pago"
         verbose_name="Formas de Pagos"
+
+
+@receiver(post_save, sender=Cierres)
+def crear_cierres1(sender, instance, created, **kwargs):
+    cierre_creado = instance
+    ventas = Factp.objects.filter(factura__cerrado=False, factura__usuario=cierre_creado.usuario)
+    result0 = Factp.objects.values('valor_iva').order_by('porc_iva').annotate(tot_iva=Sum('valor_iva'))
+    descuentos,excentos,excluidos,grabados = 0,0,0,0
+    for i, item in enumerate(ventas):
+        if item.descuento > 0:
+            descuentos += item.descuento
+        if item.valor_iva < 1:
+            excentos += item.valor_unidad
+            excluidos += item.valor_unidad
+    res = Factp.objects.values('prod__subcategoria__nombre').order_by('prod__subcategoria').annotate(total1=Sum('valor_unidad'))
+    print("CCCCCCCCCCCCCCCCAAAAAAAAAAATTTTTTTTTTTTTTxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxTTT", res)
+    """
+    for 
+    Cierres1.objects.get_or_create(
+        cierre=cierre_creado,
+        ventas_descuentos=descuentos,
+        ventas_cubcat_excentas=excentos,
+        ventas_cubcat_excluidas=excluidos
+        )
+    """
+
+
+
 
 
 class HookDian(ClaseModelo):

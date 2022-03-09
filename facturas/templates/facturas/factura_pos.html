@@ -129,6 +129,7 @@
                                 {{form.tcredito}}
                                 {{form.transferencia}}
                                 {{form.bonos}}
+                                {{form.vales}}
                             </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
@@ -157,6 +158,7 @@
                                                                 <input name="factp_set-{{forloop.counter0}}-porc_iva" readonly="true" id="id_factp_set-{{forloop.counter0}}-porc_iva">
                                                                 <input name="factp_set-{{forloop.counter0}}-valor_iva" readonly="true" id="id_factp_set-{{forloop.counter0}}-valor_iva">
                                                                 <input name="factp_set-{{forloop.counter0}}-valor_total" readonly="true" id="id_factp_set-{{forloop.counter0}}-valor_total">
+                                                                <input name="factp_set-{{forloop.counter0}}-prod" readonly="true" id="id_factp_set-{{forloop.counter0}}-prod">
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <label class="control-label col-form-label"
@@ -247,6 +249,7 @@
                         <input name="factp_set-__prefix__-porc_iva" readonly="true" id="id_factp_set-__prefix__-porc_iva">
                         <input name="factp_set-__prefix__-valor_iva" readonly="true" id="id_factp_set-__prefix__-valor_iva">
                         <input name="factp_set-__prefix__-valor_total" readonly="true" id="id_factp_set-__prefix__-valor_total">
+                        <input name="factp_set-__prefix__-prod" readonly="true" id="id_factp_set-__prefix__-prod">
                     </div>
                     {% for field in item_form.visible_fields %}
                         <div id="col" class="col-md-2 text-center">
@@ -346,12 +349,14 @@
 
                     itemn="id_factp_set-"+(parseInt(form_idx))+"-codigo_de_barra";
                     $("#"+itemn).val(data.codigo_de_barra);
+                    id_prod=itemn.replace("codigo_de_barra", "prod");
                     id_valor_unidad=itemn.replace("codigo_de_barra", "valor_unidad");
                     id_nombre=itemn.replace("codigo_de_barra", "producto");
                     id_cantidad=itemn.replace("codigo_de_barra", "cantidad");
                     id_porc_iva_producto=itemn.replace("codigo_de_barra", "porc_iva");
                     id_valor_iva_producto=itemn.replace("codigo_de_barra", "valor_iva");
                     id_valor_total_producto=itemn.replace("codigo_de_barra", "valor_total");
+                    $("#"+id_prod).val(data.prod);
                     $("#"+id_valor_unidad).val(data.valor_unidad);
                     $("#"+id_nombre).val(data.nombre);
                     $("#"+id_cantidad).val(1);
@@ -429,7 +434,7 @@
                 title: 'T O T A L',
                 //<input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="efectivo1" id="id_efectivo1" onkeyup="format(this)">        
                 showCancelButton: false,
-                html: '<center><div class="col-md-10 text-center"> <h1>' + tot + '</h1></div><div class="col-md-10"><input type="hidden" id="cambio" type="number" name="cambio" value="0"></div></center><div class="row"><table width="30%" class="table table-striped table-bordered table-active" style="font-size: 12px;"><tbody><tr><td style="width: 200px;">EFECTIVO</td><td style="width: 150px;"><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="efectivo1" id="id_efectivo1" onkeyup="format(this)"> </td></tr><tr><td>TARJETA DEBITO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="tdebito1" id="id_tdebito1" onkeyup="format(this)"> </td></tr><tr><td>TARJETA CREDITO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="tcredito1" id="id_tcredito1" onkeyup="format(this)"> </td></tr><tr><td>TRANSFERENCIA BANCARIA</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="transferencia1" id="id_transferencia1" onkeyup="format(this)"> </td></tr><tr><td>BONO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="bonos1" id="id_bonos1" onkeyup="format(this)"> </td></tr></tbody></table></div>',
+                html: '<center><div class="col-md-10 text-center"> <h1>' + tot + '</h1></div><div class="col-md-10"><input type="hidden" id="cambio" type="number" name="cambio" value="0"></div></center><div class="row"><table width="30%" class="table table-striped table-bordered table-active" style="font-size: 12px;"><tbody><tr><td style="width: 200px;">EFECTIVO</td><td style="width: 150px;"><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="efectivo1" id="id_efectivo1" onkeyup="format(this)"> </td></tr><tr><td>TARJETA DEBITO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="tdebito1" id="id_tdebito1" onkeyup="format(this)"> </td></tr><tr><td>TARJETA CREDITO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="tcredito1" id="id_tcredito1" onkeyup="format(this)"> </td></tr><tr><td>TRANSFERENCIA BANCARIA</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="transferencia1" id="id_transferencia1" onkeyup="format(this)"> </td></tr><tr><td>BONO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="bonos1" id="id_bonos1" onkeyup="format(this)"> </td></tr><tr><td>VALES</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="vales1" id="id_vales1" onkeyup="format(this)"> </td></tr></tbody></table></div>',
                 showCancelButton: true,
                 confirmButtonText: 'Generar Tiket',
                 cancelButtonText: 'Cancelar',
@@ -452,12 +457,14 @@
                     tcredito = $("#id_tcredito1").val();
                     transferencia = $("#id_transferencia1").val();
                     bonos = $("#id_bonos1").val();
+                    vales = $("#id_vales1").val();
                     if (efectivo === undefined){efectivo=0;} else {if (efectivo.length == 0){efectivo=0;} else {efectivo=efectivo.replace(/\./g, '')}}
                     if (tdebito === undefined){tdebito=0;} else {if (tdebito.length == 0){tdebito=0;} else {tdebito=tdebito.replace(/\./g, '')}}
                     if (tcredito === undefined){tcredito=0;} else {if (tcredito.length == 0){tcredito=0;} else {tcredito=tcredito.replace(/\./g, '')}}
                     if (transferencia === undefined){transferencia=0;} else {if (transferencia.length == 0){transferencia=0;} else {transferencia=transferencia.replace(/\./g, '')}}
                     if (bonos === undefined){bonos=0;} else {if (bonos.length == 0){bonos=0;} else {bonos=bonos.replace(/\./g, '')}}
-                    t_t = parseFloat(efectivo) + parseFloat(tdebito) + parseFloat(tcredito) + parseFloat(transferencia) + parseFloat(bonos);
+                    if (vales === undefined){vales=0;} else {if (vales.length == 0){vales=0;} else {vales=vales.replace(/\./g, '')}}
+                    t_t = parseFloat(efectivo) + parseFloat(tdebito) + parseFloat(tcredito) + parseFloat(transferencia) + parseFloat(bonos) + parseFloat(vales);
                     $("#cambio").val(t_t);
                     recibido =  String(parseInt($('#cambio').val()));
                     var entrada = recibido.split(',');
@@ -478,6 +485,7 @@
                     $("#id_tcredito").val(parseInt(tcredito));
                     $("#id_transferencia").val(parseInt(transferencia));
                     $("#id_bonos").val(parseInt(bonos));
+                    $("#id_vales").val(parseInt(vales));
                     $('#id_form_invoice').submit();
                 }
             }).catch(swal.noop)
