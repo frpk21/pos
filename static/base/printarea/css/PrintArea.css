@@ -19,6 +19,7 @@
     border: 1px solid blue;
     color: #EEEEEE;
     text-align: center;
+    font: 'Times New';
 }
 
 div.settingName { display: inline-block; vertical-align: top; }

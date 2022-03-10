@@ -71,13 +71,13 @@
 {% block contenido %}
 
 {% load humanize %}
-<!--<link rel="stylesheet" href="/static/base/assets/css/impresion.css"> <script src="script.js"></script>
-<link type="text/css" rel="stylesheet" href="/static/base/printarea/css/PrintArea.css" /> -->
+<link rel="stylesheet" href="/static/base/assets/css/impresion.css"> <script src="script.js"></script>
+<link type="text/css" rel="stylesheet" href="/static/base/printarea/css/PrintArea.css" />
 <br>
 <br>
 <br>
 <div >
-  <div class="row justify-content-center">
+  <div class="row justify-content-center" style="font: TimesNewRoman">
     <div class="col-md-4">
         <div class="card ">
             <div class="card-body ">
@@ -98,8 +98,8 @@
         </div>
         <div class="row justify-content-center">
           <div class="col-md-4">
-            <div class="card justify-content-center">
-              <div class="ticketxxxxx">
+            <div class="ca55rd *">
+              <div class="tickeooot">
                 <div  id="myPrintArea">
                   <div class="row justify-content-center">
                     <img class="text-align:center;" src={{ctx.logo.url}}  width="40%;">
@@ -126,7 +126,7 @@
                       border-collapse: collapse;">
                           <thead>
                               <tr>
-                                  <th class="cantidad" style="width: 40px;">CANT</th>
+                                  <th class="cantidad" style="font-size: 12px; width: 40px;">CANT</th>
                                   <th class="producto" style="width: 200px;">PRODUCTO</th>
                                   <th class="precio" style="width: 100px;">PRECIO</th>
                               </tr>
@@ -174,7 +174,7 @@
                       </p>
                     </div><br/><br/>
                   </strong>
-                </div><br/><br/>
+                </div><br/><br/><br/><p class="text-center" style="font-size: 8px;">SOFTWARE POS - komtroll.com    por BUSYCOL SAS COL</p><br/><br/><br/><br/><br/><br/><p>..</p>
               </div>
             </div>
           </div>
@@ -194,8 +194,26 @@
 
   <script type="text/javascript">
     $("#imprime").click(function (){
-      $("div#myPrintArea").printArea();
+      var printContents = document.getElementById('myPrintArea').innerHTML;
+      w = window.open();
+      w.document.write(printContents);
+      w.document.close(); // necessary for IE >= 10
+      w.focus(); // necessary for IE >= 10
+      w.print();
+      w.close();
+      return true;
     })
+
+
+    function imprim1(imp1){
+    var printContents = document.getElementById('myPrintArea').innerHTML;
+            w = window.open();
+            w.document.write(printContents);
+            w.document.close(); // necessary for IE >= 10
+            w.focus(); // necessary for IE >= 10
+        w.print();
+        w.close();
+            return true;}
   </script>
 
 {% endblock extra_js %}
