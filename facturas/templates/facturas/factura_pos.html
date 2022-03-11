@@ -484,7 +484,16 @@
                     if (vales === undefined){vales=0;} else {if (vales.length == 0){vales=0;} else {vales=vales.replace(/\./g, '')}}
                     if (descuento === undefined){descuento=0;} else {if (descuento.length == 0){descuento=0;} else {descuento=descuento.replace(/\./g, '')}}
                     t_t = parseFloat(efectivo) + parseFloat(tdebito) + parseFloat(tcredito) + parseFloat(transferencia) + parseFloat(bonos) + parseFloat(vales);
-                    $("#cambio").val(t_t);
+                    if (t_t == 0 ) {
+                        $("#cambio").val(tot1+iva1);
+                        $("#id_cambio").val(0);
+                        $("#id_efectivo").val(tot1+iva1);
+                    }
+                    else {
+                        $("#cambio").val(t_t);
+                        $("#id_cambio").val(t_t-tot1-iva1+parseFloat(descuento));
+                        $("#id_efectivo").val(parseInt(efectivo));
+                    }
                     recibido =  String(parseInt($('#cambio').val()));
                     var entrada = recibido.split(',');
                     parteEntera = entrada[0].replace(/\./g, '');
@@ -498,10 +507,6 @@
                     salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
                     cambio = "$ "+salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#id_recibido").val(parseInt($('#cambio').val()));
-
-                    $("#id_cambio").val(t_t-tot1-iva1+parseFloat(descuento));
-
-                    $("#id_efectivo").val(parseInt(efectivo));
                     $("#id_tdebito").val(parseInt(tdebito));
                     $("#id_tcredito").val(parseInt(tcredito));
                     $("#id_transferencia").val(parseInt(transferencia));
