@@ -151,7 +151,7 @@ def resul_pos(request, factura, total, iva_pagado, neto, recibido, cambio, efect
         'factura': Facturas.objects.filter(factura=factura, usuario=request.user).last()
     }
 
-    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'iva_total': iva_pagado, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos, 'vales': vales, 'descuento': descuento, 'neto': neto })
+    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': (int(total)+int(iva_pagado)), 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'iva_total': iva_pagado, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos, 'vales': vales, 'descuento': descuento, 'neto': neto })
 
 
 
