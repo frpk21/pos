@@ -107,21 +107,23 @@
                     <div class="card">
                         <div class="card-header card-header-warning">
                             <div class="row">
-                                <div class="col-sm-2">
-                                    <a href="{% url 'facturas:menu' %}" class="btn btn-white btn-circle"><span class="fa fa-search"></span></a>
-                                    <!--<a href="{% url 'facturas:menu' %}" class="btn btn-info btn-circle"><span class="fa fa-cog fa-spin fa-3x fa-fw"></span></a>-->
-                                    <a href="{% url 'facturas:menu' %}" class="btn btn-white btn-circle"><span class="fa fa-undo"></span></a>
-                                </div>
+                                
                                
-                                <div class="col-sm-10 text-right">
+                                <div class="col-sm-11 text-right">
                                     <input class="text-right" name="total_factura1" readonly="true" style="border:0px; font-size:30px; color: black; background: #eee; width: 22%;"  id="id_total_factura1">
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <a href="{% url 'facturas:menu' %}" class="btn btn-white btn-circle"><span class="fa fa-search"></span></a>
+                            <!--<a href="{% url 'facturas:menu' %}" class="btn btn-info btn-circle"><span class="fa fa-cog fa-spin fa-3x fa-fw"></span></a>-->
+                            <a href="{% url 'facturas:menu' %}" class="btn btn-white btn-circle"><span class="fa fa-undo"></span></a>
                         </div>
                         <div class="card-body">
                             <div style="display: none">
                                 {{form.fecha_factura}}
                                 {{form.valor_factura}}
+                                {{form.valor_iva}}
                                 {{form.recibido}}
                                 {{form.cambio}}
                                 {{form.efectivo}}
@@ -130,6 +132,7 @@
                                 {{form.transferencia}}
                                 {{form.bonos}}
                                 {{form.vales}}
+                                {{form.descuento}}
                             </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
@@ -156,7 +159,7 @@
                                                         <div class="form-row justify-content-center" id="formset-{{ forloop.counter0 }}">
                                                             <div style="display: none">
                                                                 <input name="factp_set-{{forloop.counter0}}-porc_iva" readonly="true" id="id_factp_set-{{forloop.counter0}}-porc_iva">
-                                                                <input name="factp_set-{{forloop.counter0}}-valor_iva" readonly="true" id="id_factp_set-{{forloop.counter0}}-valor_iva">
+                                                                <!--<input name="factp_set-{{forloop.counter0}}-valor_iva" readonly="true" id="id_factp_set-{{forloop.counter0}}-valor_iva">-->
                                                                 <input name="factp_set-{{forloop.counter0}}-valor_total" readonly="true" id="id_factp_set-{{forloop.counter0}}-valor_total">
                                                                 <input name="factp_set-{{forloop.counter0}}-prod" readonly="true" id="id_factp_set-{{forloop.counter0}}-prod">
                                                             </div>
@@ -212,6 +215,12 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+
+                                                            <div class="col-md-2">
+                                                                <div class="form-group bmd-form-group">
+                                                                    {{ item.valor_iva | add_classes:'form-control text-right' }}
+                                                                </div>
+                                                            </div>
                                                    
                                                         </div>
                                                     </div>
@@ -247,7 +256,7 @@
                 <div class="form-row justify-content-center" id="formset-__prefix__">
                     <div style="display: none">
                         <input name="factp_set-__prefix__-porc_iva" readonly="true" id="id_factp_set-__prefix__-porc_iva">
-                        <input name="factp_set-__prefix__-valor_iva" readonly="true" id="id_factp_set-__prefix__-valor_iva">
+                        <!--<input name="factp_set-__prefix__-valor_iva" readonly="true" id="id_factp_set-__prefix__-valor_iva">-->
                         <input name="factp_set-__prefix__-valor_total" readonly="true" id="id_factp_set-__prefix__-valor_total">
                         <input name="factp_set-__prefix__-prod" readonly="true" id="id_factp_set-__prefix__-prod">
                     </div>
@@ -362,21 +371,25 @@
                     $("#"+id_cantidad).val(1);
                     $("#"+id_porc_iva_producto).val(parseFloat(data.porc_iva));
                     $("#"+id_valor_iva_producto).val(parseInt(data.porc_iva)*parseInt(data.valor_unidad)/100);
-                    $("#"+id_valor_total_producto).val(data.valor_unidad);
+                    $("#"+id_valor_total_producto).val(data.valor_total);
                     //console.log(id_valor_total_producto);
 
                     
                     // Totaliza factura pos
                     tot=0;
+                    tiva=0;
                     for (var i = 0; i < (parseInt(form_idx) + 1); i++) {
                         id_valor_unidad = "id_factp_set-"+i+"-valor_unidad";
+                        id_valor_iva = "id_factp_set-"+i+"-valor_iva";
                         valor_unidad = $("#"+id_valor_unidad).val();
+                        valor_iva = $("#"+id_valor_iva).val();
                         tot += parseInt(valor_unidad);
+                        tiva += parseInt(valor_iva);
                     }
                     // End Totaliza factura pos
                     // + Separador numerico
                     $("#id_valor_factura").val(tot);
-                    tot = String(tot);
+                    tot = String(tot+tiva);
                     var entrada = tot.split(',');
                     parteEntera = entrada[0].replace(/\./g, '');
                     parteDecimal = entrada[1];
@@ -424,17 +437,21 @@
             let total_form = $('#id_factp_set-TOTAL_FORMS');
             let form_idx = total_form.val();
             tot1=0;
+            iva1=0;
             for (var i = 0; i < (parseInt(form_idx) ); i++) {
                 id_valor_unidad = "id_factp_set-"+i+"-valor_unidad";
+                id_valor_iva = "id_factp_set-"+i+"-valor_iva";
                 valor_unidad = $("#"+id_valor_unidad).val();
+                valor_iva = $("#"+id_valor_iva).val();
                 tot1 += parseInt(valor_unidad);
+                iva1 += parseInt(valor_iva);
             }
             tot = $("#id_total_factura1").val();
             swal({
                 title: 'T O T A L',
                 //<input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="efectivo1" id="id_efectivo1" onkeyup="format(this)">        
                 showCancelButton: false,
-                html: '<center><div class="col-md-10 text-center"> <h1>' + tot + '</h1></div><div class="col-md-10"><input type="hidden" id="cambio" type="number" name="cambio" value="0"></div></center><div class="row"><table width="30%" class="table table-striped table-bordered table-active" style="font-size: 12px;"><tbody><tr><td style="width: 200px;">EFECTIVO</td><td style="width: 150px;"><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="efectivo1" id="id_efectivo1" onkeyup="format(this)"> </td></tr><tr><td>TARJETA DEBITO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="tdebito1" id="id_tdebito1" onkeyup="format(this)"> </td></tr><tr><td>TARJETA CREDITO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="tcredito1" id="id_tcredito1" onkeyup="format(this)"> </td></tr><tr><td>TRANSFERENCIA BANCARIA</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="transferencia1" id="id_transferencia1" onkeyup="format(this)"> </td></tr><tr><td>BONO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="bonos1" id="id_bonos1" onkeyup="format(this)"> </td></tr><tr><td>VALES</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="vales1" id="id_vales1" onkeyup="format(this)"> </td></tr></tbody></table></div>',
+                html: '<center><div class="col-md-10 text-center"> <h1>' + tot + '</h1></div><div class="col-md-10"><input type="hidden" id="cambio" type="number" name="cambio" value="0"></div></center><div class="row"><table width="30%" class="table table-striped table-bordered table-active" style="font-size: 12px;"><tbody><tr><td style="width: 200px;">EFECTIVO</td><td style="width: 150px;"><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="efectivo1" id="id_efectivo1" onkeyup="format(this)"> </td></tr><tr><td>TARJETA DEBITO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="tdebito1" id="id_tdebito1" onkeyup="format(this)"> </td></tr><tr><td>TARJETA CREDITO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="tcredito1" id="id_tcredito1" onkeyup="format(this)"> </td></tr><tr><td>TRANSFERENCIA BANCARIA</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="transferencia1" id="id_transferencia1" onkeyup="format(this)"> </td></tr><tr><td>BONO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="bonos1" id="id_bonos1" onkeyup="format(this)"> </td></tr><tr><td>VALES</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="vales1" id="id_vales1" onkeyup="format(this)"> </td></tr><tr><td style="color: red;">DESCUENTO</td><td><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="descuento1" id="id_descuento1" onkeyup="format(this)"> </td></tr></tbody></table></div>',
                 showCancelButton: true,
                 confirmButtonText: 'Generar Tiket',
                 cancelButtonText: 'Cancelar',
@@ -458,12 +475,14 @@
                     transferencia = $("#id_transferencia1").val();
                     bonos = $("#id_bonos1").val();
                     vales = $("#id_vales1").val();
+                    descuento = $("#id_descuento1").val();
                     if (efectivo === undefined){efectivo=0;} else {if (efectivo.length == 0){efectivo=0;} else {efectivo=efectivo.replace(/\./g, '')}}
                     if (tdebito === undefined){tdebito=0;} else {if (tdebito.length == 0){tdebito=0;} else {tdebito=tdebito.replace(/\./g, '')}}
                     if (tcredito === undefined){tcredito=0;} else {if (tcredito.length == 0){tcredito=0;} else {tcredito=tcredito.replace(/\./g, '')}}
                     if (transferencia === undefined){transferencia=0;} else {if (transferencia.length == 0){transferencia=0;} else {transferencia=transferencia.replace(/\./g, '')}}
                     if (bonos === undefined){bonos=0;} else {if (bonos.length == 0){bonos=0;} else {bonos=bonos.replace(/\./g, '')}}
                     if (vales === undefined){vales=0;} else {if (vales.length == 0){vales=0;} else {vales=vales.replace(/\./g, '')}}
+                    if (descuento === undefined){descuento=0;} else {if (descuento.length == 0){descuento=0;} else {descuento=descuento.replace(/\./g, '')}}
                     t_t = parseFloat(efectivo) + parseFloat(tdebito) + parseFloat(tcredito) + parseFloat(transferencia) + parseFloat(bonos) + parseFloat(vales);
                     $("#cambio").val(t_t);
                     recibido =  String(parseInt($('#cambio').val()));
@@ -479,13 +498,16 @@
                     salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
                     cambio = "$ "+salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
                     $("#id_recibido").val(parseInt($('#cambio').val()));
-                    $("#id_cambio").val(parseInt($('#cambio').val())-parseInt(tot1));
+
+                    $("#id_cambio").val(t_t-tot1-iva1+parseFloat(descuento));
+
                     $("#id_efectivo").val(parseInt(efectivo));
                     $("#id_tdebito").val(parseInt(tdebito));
                     $("#id_tcredito").val(parseInt(tcredito));
                     $("#id_transferencia").val(parseInt(transferencia));
                     $("#id_bonos").val(parseInt(bonos));
                     $("#id_vales").val(parseInt(vales));
+                    $("#id_descuento").val(parseInt(descuento));
                     $('#id_form_invoice').submit();
                 }
             }).catch(swal.noop)

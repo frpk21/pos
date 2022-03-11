@@ -126,7 +126,7 @@
                       border-collapse: collapse;">
                           <thead>
                               <tr>
-                                  <th class="cantidad" style="font-size: 12px; width: 40px;">CANT</th>
+                                  <th class="cantidad" style="width: 40px;">CANT</th>
                                   <th class="producto" style="width: 200px;">PRODUCTO</th>
                                   <th class="precio" style="width: 100px;">PRECIO</th>
                               </tr>
@@ -140,9 +140,24 @@
                                   </tr>
                               {% endfor %}
                               <tr>
-                                  <td class="cantidad"></td>
-                                  <td class="producto">TOTAL</td>
-                                  <td class="precio">${{total|intcomma}}</td>
+                                <td class="cantidad"></td>
+                                <td class="producto">SUBTOTAL</td>
+                                <td class="precio">${{total|intcomma}}</td>
+                              </tr>
+                              <tr>
+                                <td class="cantidad"></td>
+                                <td class="producto">IVA</td>
+                                <td class="precio">${{iva_total|intcomma}}</td>
+                              </tr>
+                              <tr>
+                                <td class="cantidad"></td>
+                                <td class="producto">DESCUENTOS</td>
+                                <td class="precio">${{descuento|intcomma}}</td>
+                              </tr>
+                              <tr>
+                                <td class="cantidad"></td>
+                                <td class="producto">T O T A L</td>
+                                <td class="precio">${{neto|intcomma}}</td>
                               </tr>
                           </tbody>
                       </table>
@@ -152,12 +167,12 @@
                         <br>RECIBIDO   ${{recibido|intcomma}}
                         <br><strong>CAMBIO   ${{cambio|intcomma}}</strong>
                         <br>
-                        {% if efectivo %}<br>EFECTIVO   <strong>${{efectivo|intcomma}}</strong>{% endif %}
-                        {% if tdebito %}<br>T DEBITO   <strong>${{tdebito|intcomma}}</strong>{% endif %}
-                        {% if tcredito %}<br>T CREDITO   <strong>${{tcredito|intcomma}}</strong>{% endif %}
-                        {% if transferencia %}<br>TRANSFER   <strong>${{transferencia|intcomma}}</strong>{% endif %}
-                        {% if bonos %}<br>BONOS   <strong>${{bonos|intcomma}}</strong>{% endif %}
-                        {% if vales %}<br>VALES   <strong>${{vales|intcomma}}</strong>{% endif %}
+                        {% if efectivo|length > 1 %}<br>EFECTIVO   <strong>${{efectivo|intcomma}}</strong>{% endif %}
+                        {% if tdebito|length > 1 %}<br>T DEBITO   <strong>${{tdebito|intcomma}}</strong>{% endif %}
+                        {% if tcredito|length > 1 %}<br>T CREDITO   <strong>${{tcredito|intcomma}}</strong>{% endif %}
+                        {% if transferencia|length > 1 %}<br>TRANSFER   <strong>${{transferencia|intcomma}}</strong>{% endif %}
+                        {% if bonos|length > 1 %}<br>BONOS   <strong>${{bonos|intcomma}}</strong>{% endif %}
+                        {% if vales|length > 1 %}<br>VALES   <strong>${{vales|intcomma}}</strong>{% endif %}
                         <br>
                       </p>
                     </div>

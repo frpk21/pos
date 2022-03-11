@@ -42,7 +42,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
 
     def get(self, request, *args, **kwargs):
 
-        ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'vales': ''}
+        ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'vales': '', 'descuento': ''}
 
         self.object = None
 
@@ -77,6 +77,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         profile.factura = profile.factura + 1
         profile.save()
         self.object.factura = fact
+        descto = self.object.descuento
         self.object.observacion = "Factura POS"
         self.object.usuario = self.request.user
         total, iva = 0, 0
@@ -101,6 +102,8 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         
         return HttpResponseRedirect(reverse_lazy('facturas:resul_pos', kwargs={'factura': fact, \
                                     'total': self.object.valor_factura, \
+                                    'iva_pagado': iva, \
+                                    'neto': self.object.valor_factura - descto + iva, \
                                     'recibido': self.object.recibido, \
                                     'cambio': self.object.cambio, \
                                     'efectivo': self.object.efectivo, \
@@ -108,7 +111,8 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
                                     'tcredito': self.object.tcredito, \
                                     'transferencia': self.object.transferencia, \
                                     'bonos': self.object.bonos, \
-                                    'vales': self.object.vales}))
+                                    'vales': self.object.vales, \
+                                    'descuento': self.object.descuento}))
 
     def form_invalid(self, form, detalle_movimientos):
         self.object=form
@@ -121,7 +125,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         
         
     
-def resul_pos(request, factura, total, recibido, cambio, efectivo, tdebito, tcredito, transferencia, bonos, vales):
+def resul_pos(request, factura, total, iva_pagado, neto, recibido, cambio, efectivo, tdebito, tcredito, transferencia, bonos, vales, descuento):
     factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
     tarifas_iva = Iva.objects.all()
     iva={}
@@ -147,7 +151,7 @@ def resul_pos(request, factura, total, recibido, cambio, efectivo, tdebito, tcre
         'factura': Facturas.objects.filter(factura=factura, usuario=request.user).last()
     }
 
-    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos, 'vales': vales })
+    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'iva_total': iva_pagado, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos, 'vales': vales, 'descuento': descuento, 'neto': neto })
 
 
 
@@ -540,6 +544,13 @@ def get_ajaxBarcode(request, *args, **kwargs):
     else:
         bar_code = Producto.objects.filter(codigo_de_barra=bar_code, usuario=request.user).last()
         if bar_code:
-            return JsonResponse(data={"nombre": bar_code.nombre, "valor_unidad": bar_code.precio_de_venta, "porc_iva": bar_code.tarifa_iva.tarifa_iva, "codigo_de_barra": bar_code.codigo_de_barra,'prod': bar_code.id}, safe=False)
+            return JsonResponse(data={
+                "nombre": bar_code.nombre, 
+                "valor_unidad": bar_code.precio_de_venta, 
+                "porc_iva": bar_code.tarifa_iva.tarifa_iva,
+                "valor_total": round(bar_code.precio_de_venta * bar_code.tarifa_iva.tarifa_iva / 100,0),  
+                "codigo_de_barra": bar_code.codigo_de_barra,
+                "prod": bar_code.id
+                }, safe=False)
         else: 
             return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})

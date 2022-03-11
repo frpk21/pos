@@ -32,6 +32,7 @@ class Facturas(ClaseModelo):
     vales = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     cerrado = models.BooleanField(default=False, blank=True, null=True)
     con_electronica = models.BooleanField(default=False, blank=True, null=True)
+    descuento = models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
     def __str__(self):
         return '{}'.format(self.fecha_factura)

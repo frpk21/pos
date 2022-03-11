@@ -18,7 +18,7 @@ class FacturaPosEncForm(forms.ModelForm):
 
     class Meta:
         model=Facturas
-        fields = ['fecha_factura','valor_factura','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos','vales',]
+        fields = ['fecha_factura','valor_factura','valor_iva','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos','vales','descuento',]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -31,12 +31,16 @@ class FacturaPosEncForm(forms.ModelForm):
         self.fields['tcredito'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['transferencia'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['bonos'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
+        self.fields['vales'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
+        self.fields['descuento'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['efectivo'].required = False
         self.fields['tdebito'].required = False
         self.fields['tcredito'].required = False
         self.fields['transferencia'].required = False
         self.fields['bonos'].required = False
         self.fields['vales'].required = False
+        self.fields['descuento'].required = False
+        self.fields['valor_iva'].required = False
 
 
 class FacturaPosDetalleForm(forms.ModelForm):
@@ -64,6 +68,7 @@ class FacturaPosDetalleForm(forms.ModelForm):
         self.fields['producto'].widget.attrs['readonly']= True
         self.fields['cantidad'].widget.attrs['readonly']= True
         self.fields['valor_unidad'].widget.attrs['readonly']= True
+        self.fields['valor_iva'].widget.attrs['readonly']= True
         self.fields['codigo_de_barra'].widget.attrs.update({'onkeydown':"onKeyDownHandler(event, id);"})
         #self.fields['codigo_de_barra'].widget.attrs.update({'onchange': 'validacbarra(id)'})          'onchange': 'validacbarra(id)', 
         #self.fields['cantidad'].widget.attrs.update({'onchange': 'validacantidad(id)', 'step':1})
@@ -74,8 +79,9 @@ class FacturaPosDetalleForm(forms.ModelForm):
         self.fields['producto'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         self.fields['cantidad'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         self.fields['valor_unidad'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
+        self.fields['valor_iva'].widget.attrs.update({'style': 'color: blue; background: rgb(255, 255,255);'})
         self.fields['porc_iva'].widget = forms.HiddenInput()
-        self.fields['valor_iva'].widget = forms.HiddenInput()
+        #self.fields['valor_iva'].widget = forms.HiddenInput()
         self.fields['valor_total'].widget = forms.HiddenInput()
         self.fields['prod'].widget = forms.HiddenInput()
         #self.fields['costo'].widget.attrs.update({'onchange': 'validacosto(id)'})
