@@ -181,7 +181,7 @@
 
 {% block extra_js %}
 
-  <script src="/static/base/printarea/js/jquery.PrintArea.js" type="text/JavaScript" language="javascript"></script>
+  <!--<script src="/static/base/printarea/js/jquery.PrintArea.js" type="text/JavaScript" language="javascript"></script>-->
 
 
   <script type="text/javascript">
@@ -197,15 +197,15 @@
     })
 
 
-    function imprim1(imp1){
-    var printContents = document.getElementById('myPrintArea').innerHTML;
-            w = window.open();
-            w.document.write(printContents);
-            w.document.close(); // necessary for IE >= 10
-            w.focus(); // necessary for IE >= 10
-        w.print();
-        w.close();
-            return true;}
+    //function imprim1(imp1){
+    //var printContents = document.getElementById('myPrintArea').innerHTML;
+    //        w = window.open();
+    //        w.document.write(printContents);
+    //        w.document.close(); // necessary for IE >= 10
+    //        w.focus(); // necessary for IE >= 10
+    //    w.print();
+    //    w.close();
+    //        return true;}
   </script>
 
 {% endblock extra_js %}

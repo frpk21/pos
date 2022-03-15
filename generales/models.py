@@ -24,6 +24,7 @@ class Profile(models.Model):
     salida = models.IntegerField('CONSECUTIVO SALIDAS DE ALMACEN', default=0, blank=True, null=True)
     factura = models.IntegerField('CONSECUTIVO SALIDAS DE ALMACEN', default=0, blank=True, null=True)
     r_dian = models.CharField('Resolucion DIAN', blank=False, null=False, max_length=200, default="")
+    cierre = models.IntegerField('CONSECUTIVO CIERRES DIARIOS', default=0, blank=True, null=True)
     
     #sede = models.ForeignKey(Sedes, on_delete=models.CASCADE, default=0, null=False, blank=False)
  

@@ -84,6 +84,7 @@ class FormasPagos(ClaseModelo):
              
 class Cierres(ClaseModelo):
     fecha = models.DateTimeField()
+    cierre_no = models.IntegerField(default=0, blank=True, null=True)
     valor_total_registrado = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.DO_NOTHING)
     pos_no = models.IntegerField(default=1)
@@ -102,6 +103,8 @@ class Cierres(ClaseModelo):
 
 class Cierres1(ClaseModelo):
     cierre = models.ForeignKey(Cierres, blank=False, null=False, on_delete=models.CASCADE)
+    total_venta = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    base_caja = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     ventas_descuentos = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     ventas_cubcat = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     ventas_cubcat_excentas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
@@ -111,8 +114,8 @@ class Cierres1(ClaseModelo):
     def __str__(self):
         return '{}'.format(self.ventas_subcat)
 
-    def save(self):
-        super(Cierres1,self).save()
+    def save(self, *args, **kwargs):
+        super(Cierres1,self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural="Detalle cierre de caja."
@@ -127,8 +130,8 @@ class GrabadosCierres1(ClaseModelo):
     def __str__(self):
         return '{}-{}'.format(self.tarifa_iva, self.valor_iva)
 
-    def save(self):
-        super(GrabadosCierres1,self).save()
+    def save(self, *args, **kwargs):
+        super(GrabadosCierres1,self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural="IVA grabado"
@@ -136,14 +139,14 @@ class GrabadosCierres1(ClaseModelo):
 
 class FormasPagosCierres1(ClaseModelo):
     cierre = models.ForeignKey(Cierres, blank=False, null=False, on_delete=models.CASCADE)
-    forma_pago = models.ForeignKey(FormasPagos, blank=False, null=False, on_delete=models.CASCADE)
+    forma_pago = models.CharField(max_length=100, help_text='Forma de Pago')
     valor_pago =  models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
     def __str__(self):
         return '{}-{}'.format(self.forma_pago, self.valor_pago)
 
-    def save(self):
-        super(FormasPagosCierres1,self).save()
+    def save(self, *args, **kwargs):
+        super(FormasPagosCierres1,self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural="Froma de Pago"
@@ -154,27 +157,71 @@ class FormasPagosCierres1(ClaseModelo):
 def crear_cierres1(sender, instance, created, **kwargs):
     cierre_creado = instance
     ventas = Factp.objects.filter(factura__cerrado=False, factura__usuario=cierre_creado.usuario)
-    result0 = Factp.objects.values('valor_iva').order_by('porc_iva').annotate(tot_iva=Sum('valor_iva'))
-    descuentos,excentos,excluidos,grabados = 0,0,0,0
-    for i, item in enumerate(ventas):
-        if item.descuento > 0:
-            descuentos += item.descuento
-        if item.valor_iva < 1:
-            excentos += item.valor_unidad
-            excluidos += item.valor_unidad
-    res = Factp.objects.values('prod__subcategoria__nombre').order_by('prod__subcategoria').annotate(total1=Sum('valor_unidad'))
-    print("CCCCCCCCCCCCCCCCAAAAAAAAAAATTTTTTTTTTTTTTxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxTTT", res)
-    """
-    for 
-    Cierres1.objects.get_or_create(
-        cierre=cierre_creado,
-        ventas_descuentos=descuentos,
-        ventas_cubcat_excentas=excentos,
-        ventas_cubcat_excluidas=excluidos
+    result0 = Factp.objects.values('porc_iva').order_by('porc_iva').filter(factura__cerrado=False, factura__usuario=cierre_creado.usuario).annotate(tot_iva=Sum('valor_iva'),base=Sum('valor_unidad'))
+    if created:
+        efectivo = Facturas.objects.values('efectivo').order_by('efectivo').filter(cerrado=False, usuario=cierre_creado.usuario, efectivo__gte = 1).aggregate(total=Sum('efectivo'))
+        tdebito = Facturas.objects.values('tdebito').order_by('tdebito').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('tdebito'))
+        tcredito = Facturas.objects.values('tcredito').order_by('tcredito').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('tcredito'))
+        transferencias = Facturas.objects.values('transferencia').order_by('transferencia').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('transferencia'))
+        bonos = Facturas.objects.values('bonos').order_by('bonos').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('bonos'))
+        vales = Facturas.objects.values('vales').order_by('vales').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('vales'))
+        descuentos,excentos,excluidos,grabados,tventas = 0,0,0,0,0
+        for i, item in enumerate(ventas):
+            tventas += (item.valor_unidad * item.cantidad)
+            if item.descuento > 0:
+                descuentos += item.descuento
+            if item.valor_iva < 1:
+                excentos += (item.valor_unidad * item.cantidad)
+                excluidos += (item.valor_unidad * item.cantidad)
+            else:
+                grabados += (item.valor_unidad * item.cantidad)
+       # res = Factp.objects.values('prod__subcategoria__nombre').order_by('prod__subcategoria').filter(factura__cerrado=False, factura__usuario=cierre_creado.usuario).annotate(total1=Sum('valor_unidad'))
+        FormasPagosCierres1.objects.get_or_create(
+            cierre=cierre_creado,
+            forma_pago="EFECTIVO",
+            valor_pago=efectivo["total"]
         )
-    """
-
-
+        FormasPagosCierres1.objects.get_or_create(
+            cierre=cierre_creado,
+            forma_pago="TARJETAS DEBITO",
+            valor_pago=tdebito["total"]
+            )
+        FormasPagosCierres1.objects.get_or_create(
+            cierre=cierre_creado,
+            forma_pago="TARJETAS CREDITO",
+            valor_pago=tcredito["total"]
+            )
+        FormasPagosCierres1.objects.get_or_create(
+            cierre=cierre_creado,
+            forma_pago="TRANSFERENCIAS BANCARIAS",
+            valor_pago=transferencias["total"]
+            )
+        FormasPagosCierres1.objects.get_or_create(
+            cierre=cierre_creado,
+            forma_pago="BONOS",
+            valor_pago=bonos["total"]
+            )  
+        FormasPagosCierres1.objects.get_or_create(
+            cierre=cierre_creado,
+            forma_pago="VALES",
+            valor_pago=vales["total"]
+            ) 
+        Cierres1.objects.get_or_create(
+            cierre=cierre_creado,
+            total_venta=tventas,
+            ventas_descuentos=descuentos,
+            ventas_cubcat_excentas=excentos,
+            ventas_cubcat_excluidas=excluidos,
+            ventas_cubcat_grabadas=grabados
+            )
+        for i, item in enumerate(result0):
+            if item["porc_iva"] > 0:
+                GrabadosCierres1.objects.get_or_create(
+                    cierre = cierre_creado,
+                    tarifa_iva =  item["porc_iva"],
+                    base_iva =  item["base"],
+                    valor_iva =  item["tot_iva"]
+            )
 
 
 

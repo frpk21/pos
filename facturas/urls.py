@@ -9,8 +9,7 @@ urlpatterns = [
     path('Facturas/menu', views.MenuView, name='menu'),
     path('barcode/', views.get_ajaxBarcode, name='valida_bar_code'),
     path('Facturas/posnew/prn/<factura>/<total>/<iva_pagado>/<neto>/<recibido>/<cambio>/<efectivo>/<tdebito>/<tcredito>/<transferencia>/<bonos>/<vales>/<descuento>', views.resul_pos, name='resul_pos'),
-    path('Facturas/pos/print/<factura>', views.imprimirTiquete, name='print_pos'),
-    path('Print/<factura>/<total>/<recibido>/<cambio>', views.imprimir, name='imprimir'),
     path('Facturas/posclose', views.CierreCajaView.as_view(), name="pos_cierre"),
     path('Facturas/posclose/doing', views.CierreDoing, name="closed"),
+    path('Facturas/posclose/print/<int:cierre>', views.imprimirCierre, name="imprimirCierre"),
 ]

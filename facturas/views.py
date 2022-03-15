@@ -16,6 +16,7 @@ from django.core.validators import validate_email
 from pos.utilidades import enviar_mail, numero_to_letras
 from datetime import date
 from datetime import datetime, timedelta
+from django.utils import timezone
 from django.db.models import Sum
 from PDFNetPython3 import *
 import sys
@@ -156,13 +157,13 @@ def resul_pos(request, factura, total, iva_pagado, neto, recibido, cambio, efect
 
 
 class CierreCajaView(LoginRequiredMixin, generic.ListView):
-    model = Facturas
+    model = Cierres
     template_name = "facturas/info_cierrecaja.html"
     context_object_name = "obj"
     login_url='generales:login'
 
     def get(self, request, *args, **kwargs):
-        ventas = Factp.objects.filter(factura__cerrado=False, factura__usuario=request.user)
+        ventas = Cierres.objects.filter(usuario=request.user).order_by('-cierre_no')[:30]
         context = {}
         context['empresa'] = request.user.profile.empresa
         context['ventas'] = ventas
@@ -171,60 +172,39 @@ class CierreCajaView(LoginRequiredMixin, generic.ListView):
         return self.render_to_response(
             self.get_context_data(
                 context = context,
-                hoy = datetime.today()
+                hoy = datetime.now(tz=timezone.utc)
             )
         )
-
+    
 def CierreDoing(request):
     ventas = Factp.objects.filter(factura__cerrado=False, factura__usuario=request.user)
     minimo = ventas.aggregate(Min('factura__factura'))
     maximo = ventas.aggregate(Max('factura__factura'))
-
-    print("MMMMMMMMMMMMMMMMMMMMMAXXXXXXXXXXXXXXXXXXXXXXXXXXX", minimo,maximo)
     total=0
+    profile = Profile.objects.filter(user=request.user.id).get()
+    cierre = profile.cierre + 1
+    profile.cierre = profile.cierre + 1
+    profile.save()
     for i,item in enumerate(ventas):
         total+= (item.valor_unidad * item.cantidad) + item.valor_iva
-
-    Cierres.objects.get_or_create(
-            fecha = datetime.now(),
-            valor_total_registrado = total,
-            usuario = request.user,
-            pos_no = 1,
-            factura_desde = minimo["factura__factura__min"],
-            factura_hasta = maximo["factura__factura__max"]
-        )
-
     
+    Cierres.objects.get_or_create(
+        fecha = datetime.now(tz=timezone.utc),
+        cierre_no = cierre,
+        valor_total_registrado = total,
+        usuario = request.user,
+        pos_no = 1,
+        factura_desde = minimo["factura__factura__min"],
+        factura_hasta = maximo["factura__factura__max"]
+    )
+    
+    return JsonResponse(data={'cierre': cierre, 'errors': ''})
 
 
-def imprimir(request, factura, total, recibido, cambio):
-    factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
-    tarifas_iva = Iva.objects.all()
-    iva={}
-    for j,item in enumerate(tarifas_iva):
-        iva['tarifa'+str(j)]=item.tarifa_iva
-        base, valor = 0,0
-        for i, line in enumerate(factp):
-            if not line.porc_iva:
-                continue
-            if line.porc_iva == item.tarifa_iva:
-                base += line.valor_unidad
-                valor += line.valor_iva
-        iva['base'+str(j)] = int(base)
-        iva['valor'+str(j)] = int(valor)     
-    ctx={
-        'empresa':request.user.profile.empresa,
-        'nit': request.user.profile.nit,
-        'direccion': request.user.profile.direccion,
-        'telefono': request.user.profile.telefono,
-        'dian': request.user.profile.r_dian,
-        'logo': request.user.profile.logo,
-        'factura': Facturas.objects.filter(factura=factura, usuario=request.user).last()
-    }
-    return render(request, "facturas/imprimir.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': total, 'recibido': recibido, 'cambio': cambio, 'iva': iva})
 
 
-def imprimirTiquete(request, factura):
+def imprimirCierre(request, cierre):
+    cierre = int(cierre)
     import io
     import os
     from django.conf import settings
@@ -244,8 +224,7 @@ def imprimirTiquete(request, factura):
 
     response = HttpResponse(content_type='application/pdf')  
     buffer = io.BytesIO()
-
-     
+    
     ordenes = []
     logo_path = request.user.profile.foto.url
     logo = os.path.join(settings.BASE_DIR, logo_path)
@@ -258,15 +237,12 @@ def imprimirTiquete(request, factura):
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Normal_CENTER', alignment=TA_CENTER))
 
-    factp = (Factp.objects.filter(factura__factura=factura, factura__usuario=request.user))
+    cierre = (Cierres.objects.get(cierre_no=cierre, usuario=request.user))
     total_doc = 0
-    for i,item in enumerate(factp):
-        producto = item
-        fecha = item.factura.fecha_factura  
 
-    filename = "invoice_{}.pdf".format(factura)
-    titulo = "FACTURA DE VENTA # {}".format(factura)
-    qr = QRCodeImage(str(factura), size=30 * mm)
+    filename = "invoice_{}.pdf".format(cierre)
+    titulo = "CIERRE # {}".format(cierre)
+    qr = QRCodeImage(str(cierre), size=30 * mm)
     qr.hAlign = "RIGHT"
     
 
@@ -280,8 +256,8 @@ def imprimirTiquete(request, factura):
             [request.user.profile.telefono,''],
             ['',''],
             [request.user.profile.r_dian],
-            ['Fecha: ', fecha.strftime('%d/%m/%Y')],
-            ['DOCUMENTO No. ', factura],
+            ['Fecha: ', cierre.fecha.strftime('%d/%m/%Y')],
+            ['DOCUMENTO No. ', cierre],
             ['Condicion de Pago: ', 'CONTADO'],
         ],
         colWidths=[100,30],
@@ -295,25 +271,16 @@ def imprimirTiquete(request, factura):
     t.hAlign = "LEFT"
     ordenes.append(t)
     ordenes.append(Spacer(1, 5))
-    headings0 = ('CANTIDAD', 'DESCRIPCION', 'VALOR')
+    headings0 = ('TOTAL VENTA', 'DESDE FACTURA #', 'HASTA FACTURA #')
     recibos2=[]
-    t_cantidad = 0
-    t_total = 0
-    for lin, reg in enumerate(factp):
-        t_cantidad = t_cantidad +  reg.cantidad
-        t_total = t_total + reg.cantidad * reg.valor_unidad
-
-        recibos2.append([
-            reg.cantidad,
-            reg.producto,
-            '${:,}'.format(reg.valor_unidad)
-            ])
-
     recibos2.append([
-    'TOTAL',
-    '',
-    '${:,}'.format(t_total)
-    ])
+        cierre.valor_total_registrado,
+        cierre.factura_desde,
+        cierre.factura_hasta
+        #'${:,}'.format(reg.valor_unidad)
+        ])
+
+
 
 
     t0 = Table([headings0] + recibos2, colWidths=[35,105,50])
@@ -348,52 +315,14 @@ def imprimirTiquete(request, factura):
     
     
     doc.build(ordenes)
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=%s' % filename
     response.write(buffer.getvalue())
+    pdf = buffer.getvalue()
     buffer.close()
 
-    
-    
-    imprimir_xxx("facturas/invoice_58.pdf")
     return response
 
 
     
-def imprimir_xxx(filename):
-
-    PDFNet.Initialize(LicenseKey)
-    
-    # Relative path to the folder containing the test files.
-    input_path = "../../TestFiles/"
-    
-    doc = PDFDoc(filename)
-    doc.InitSecurityHandler()
-    
-    # Set our PrinterMode options
-    printerMode = PrinterMode()
-    printerMode.SetCollation(True)
-    printerMode.SetCopyCount(1)
-    printerMode.SetDPI(100); # regardless of ordering, an explicit DPI setting overrides the OutputQuality setting
-    printerMode.SetDuplexing(PrinterMode.e_Duplex_Auto)
-    
-    # If the XPS print path is being used, then the printer spooler file will
-    # ignore the grayscale option and be in full color
-    printerMode.SetOutputColor(PrinterMode.e_OutputColor_Grayscale)
-    printerMode.SetOutputQuality(PrinterMode.e_OutputQuality_Medium)
-    # printerMode.SetNUp(2,1)
-    # printerMode.SetScaleType(PrinterMode.e_ScaleType_FitToOutPage)
-    
-    # Print the PDF document to the default printer, using "tiger.pdf" as the document
-    # name, send the file to the printer not to an output file, print all pages, set the printerMode
-    # and don't provide a cancel flag.
-    Print.StartPrintJob(doc, "", doc.GetFileName(), "", None, printerMode, None)
-    PDFNet.Terminate()
-
-    return
-    
-
-
 
 
 #SinPrivilegios, 
