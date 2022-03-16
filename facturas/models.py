@@ -86,6 +86,7 @@ class Cierres(ClaseModelo):
     fecha = models.DateTimeField()
     cierre_no = models.IntegerField(default=0, blank=True, null=True)
     valor_total_registrado = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    base_caja = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.DO_NOTHING)
     pos_no = models.IntegerField(default=1)
     factura_desde = models.CharField(max_length=15)
@@ -103,8 +104,6 @@ class Cierres(ClaseModelo):
 
 class Cierres1(ClaseModelo):
     cierre = models.ForeignKey(Cierres, blank=False, null=False, on_delete=models.CASCADE)
-    total_venta = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-    base_caja = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     ventas_descuentos = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     ventas_cubcat = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     ventas_cubcat_excentas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
@@ -167,7 +166,6 @@ def crear_cierres1(sender, instance, created, **kwargs):
         vales = Facturas.objects.values('vales').order_by('vales').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('vales'))
         descuentos,excentos,excluidos,grabados,tventas = 0,0,0,0,0
         for i, item in enumerate(ventas):
-            tventas += (item.valor_unidad * item.cantidad)
             if item.descuento > 0:
                 descuentos += item.descuento
             if item.valor_iva < 1:
@@ -208,7 +206,6 @@ def crear_cierres1(sender, instance, created, **kwargs):
             ) 
         Cierres1.objects.get_or_create(
             cierre=cierre_creado,
-            total_venta=tventas,
             ventas_descuentos=descuentos,
             ventas_cubcat_excentas=excentos,
             ventas_cubcat_excluidas=excluidos,

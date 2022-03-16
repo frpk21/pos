@@ -163,7 +163,7 @@ class CierreCajaView(LoginRequiredMixin, generic.ListView):
     login_url='generales:login'
 
     def get(self, request, *args, **kwargs):
-        ventas = Cierres.objects.filter(usuario=request.user).order_by('-cierre_no')[:30]
+        ventas = Cierres.objects.filter(usuario=request.user).order_by('-id')[:30]
         context = {}
         context['empresa'] = request.user.profile.empresa
         context['ventas'] = ventas
@@ -177,6 +177,7 @@ class CierreCajaView(LoginRequiredMixin, generic.ListView):
         )
     
 def CierreDoing(request):
+    base_caja = request.GET.get('base_caja', None)
     ventas = Factp.objects.filter(factura__cerrado=False, factura__usuario=request.user)
     minimo = ventas.aggregate(Min('factura__factura'))
     maximo = ventas.aggregate(Max('factura__factura'))
@@ -192,6 +193,7 @@ def CierreDoing(request):
         fecha = datetime.now(tz=timezone.utc),
         cierre_no = cierre,
         valor_total_registrado = total,
+        base_caja = base_caja,
         usuario = request.user,
         pos_no = 1,
         factura_desde = minimo["factura__factura__min"],
@@ -238,8 +240,9 @@ def imprimirCierre(request, cierre):
     styles.add(ParagraphStyle(name='Normal_CENTER', alignment=TA_CENTER))
 
     cierre = (Cierres.objects.get(cierre_no=cierre, usuario=request.user))
-    total_doc = 0
-
+    cierre1 = (Cierres1.objects.get(cierre = cierre.id))
+    grabados = (GrabadosCierres1.objects.filter(cierre = cierre.id))
+    frm_pagos = (FormasPagosCierres1.objects.filter(cierre = cierre.id))
     filename = "invoice_{}.pdf".format(cierre)
     titulo = "CIERRE # {}".format(cierre)
     qr = QRCodeImage(str(cierre), size=30 * mm)
@@ -255,10 +258,10 @@ def imprimirCierre(request, cierre):
             [request.user.profile.direccion,''],
             [request.user.profile.telefono,''],
             ['',''],
-            [request.user.profile.r_dian],
-            ['Fecha: ', cierre.fecha.strftime('%d/%m/%Y')],
-            ['DOCUMENTO No. ', cierre],
-            ['Condicion de Pago: ', 'CONTADO'],
+            ['Fecha: ', cierre.fecha.strftime('%d/%m/%Y, %H:%M:%S')],
+            ['Cierre No. ', cierre.cierre_no],
+            ['Base Caja: ', '${:,}'.format(cierre.base_caja)],
+            ['Total Caja','${:,}'.format(cierre.base_caja+cierre.valor_total_registrado)],
         ],
         colWidths=[100,30],
         style=[
@@ -271,19 +274,15 @@ def imprimirCierre(request, cierre):
     t.hAlign = "LEFT"
     ordenes.append(t)
     ordenes.append(Spacer(1, 5))
-    headings0 = ('TOTAL VENTA', 'DESDE FACTURA #', 'HASTA FACTURA #')
+    headings0 = ('TOTAL VENTA', 'FACT-DESDE', 'FACT-HASTA')
     recibos2=[]
     recibos2.append([
-        cierre.valor_total_registrado,
+        '${:,}'.format(cierre.valor_total_registrado),
         cierre.factura_desde,
         cierre.factura_hasta
         #'${:,}'.format(reg.valor_unidad)
         ])
-
-
-
-
-    t0 = Table([headings0] + recibos2, colWidths=[35,105,50])
+    t0 = Table([headings0] + recibos2, colWidths=[70,50,50])
     t0.setStyle(TableStyle(
     [  
         ('GRID', (0, 0), (2, -1), 1, colors.gray),  
@@ -298,6 +297,86 @@ def imprimirCierre(request, cierre):
 
     ordenes.append(t0)
 
+# CIERRE1
+    ordenes.append(Spacer(1, 5))
+    t=Table(
+        data=[
+            ['',''],
+            ['',''],
+            ['DESCUENTOS', '${:,}'.format(cierre1.ventas_descuentos)],
+            ['VENTAS EXCENTAS', '${:,}'.format(cierre1.ventas_cubcat_excentas)],
+            ['VENTAS EXCLUIDAS', '${:,}'.format(cierre1.ventas_cubcat_excluidas)],
+            ['VENTAS GRABADAS','${:,}'.format(cierre1.ventas_cubcat_grabadas)],
+            [''],
+            ['', ''],
+            ['', ''],
+            ['', ''],
+        ],
+        colWidths=[100,30],
+        style=[
+                ("FONT", (0,0), (9,1), "Helvetica", 2, 4),
+                ('VALIGN',(1,0), (4,1),'MIDDLE'),
+                ('ALIGN',(1,0),(4,1),'CENTRE'),
+            ]
+        )
+
+    t.hAlign = "LEFT"
+    ordenes.append(t)
+# END CIERRE1
+# GRABADOS CIERRES1
+    tot = Paragraph('INFORMACION TRIBUTARIA')
+    tot.hAlign = "TA_RIGHT"
+    ordenes.append(tot)
+    headings0 = ('TARIFA', 'BASE IVA', 'VALOR IVA')
+    recibos2=[]
+    for i, item in enumerate(grabados):
+        recibos2.append([
+            '{:,}'.format(item.tarifa_iva),
+            '${:,}'.format(item.base_iva),
+            '${:,}'.format(item.valor_iva)
+            ])
+    t0 = Table([headings0] + recibos2, colWidths=[35,60,60])
+    t0.setStyle(TableStyle(
+    [  
+        ('GRID', (0, 0), (2, -1), 1, colors.gray),  
+        ('LINEBELOW', (0, 0), (-1, 0), 1, colors.gray),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('FONT', (0, 0), (2, -1), "Helvetica", 6,6),
+        ('FONTSIZE', (0, 0), (2, -1), 6),
+        ('BACKGROUND', (0, 0), (2,0), colors.gray)  
+    ]  
+    ))
+    t0.hAlign = "LEFT"
+
+    ordenes.append(t0)
+# END GRABADOS CIERRES1
+# FORMAS DE PAGO
+    ordenes.append(Spacer(1, 5))
+    tot = Paragraph('FORMAS DE PAGO')
+    tot.hAlign = "TA_RIGHT"
+    ordenes.append(tot)
+    headings0 = ('FORMA DE PAGO', 'VALOR')
+    recibos2=[]
+    for i, item in enumerate(frm_pagos):
+        recibos2.append([
+            item.forma_pago,
+            '${:,}'.format(item.valor_pago)
+            ])
+    t0 = Table([headings0] + recibos2, colWidths=[100,60])
+    t0.setStyle(TableStyle(
+    [  
+        ('GRID', (0, 0), (1, -1), 1, colors.gray),  
+        ('LINEBELOW', (0, 0), (-1, 0), 1, colors.gray),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('FONT', (0, 0), (1, -1), "Helvetica", 6,6),
+        ('FONTSIZE', (0, 0), (1, -1), 6),
+        ('BACKGROUND', (0, 0), (1,0), colors.gray)  
+    ]  
+    ))
+    t0.hAlign = "LEFT"
+
+    ordenes.append(t0)
+# END FORMAS DE PAGO
     ordenes.append(Spacer(1, 5))
     icon_path = "/static/base/images/favicon.png"
     icon = os.path.join(settings.BASE_DIR, icon_path)

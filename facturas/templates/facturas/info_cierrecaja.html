@@ -28,18 +28,20 @@
                         <div class="material-datatables">
                             <table id="lista_table" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%; font-size:12px;">
                                 <thead>
-                                    <th style="font-size:12px; background: gray; color: white;">CIERRE-No.</th>
+                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">CIERRE-No.</th>
                                     <th style="font-size:12px; background: gray; color: white;">FECHA</th>
                                     <th style="font-size:12px; background: gray; color: white;">VALOR VENTA</th>
-                                    <th style="font-size:12px; background: gray; color: white;">POS No.</th>
-                                    <th style="font-size:12px; background: gray; color: white;">FECATURA DESDE</th>
-                                    <th style="font-size:12px; background: gray; color: white;">FACTURA HASTA</th>
-                                    <th style="font-size:12px; background: gray; color: white;">Acciones</th>
+                                    <th style="font-size:12px; background: gray; color: white;">BASE CAJA</th>
+                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">POS No.</th>
+                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">FECATURA DESDE</th>
+                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">FACTURA HASTA</th>
+                                    <th class="text-center" style="font-size:12px; background: gray; color: rgb(250, 212, 0);">Acciones</th>
                                 </thead>
                                 <tfoot>
                                     <th>Cierre-No.</th>
                                     <th>Fecha</th>
                                     <th>Valor Venta</th>
+                                    <th>Base Caja</th>
                                     <th>Pos No.</th>
                                     <th>Factura desde</th>
                                     <th>Factura hasta</th>
@@ -48,13 +50,14 @@
                                 <tbody>
                                     {% for item in obj.ventas %}
                                         <tr>
-                                            <td>{{item.cierre_no}}</td>
-                                            <td>{{item.fecha|date:'d/m/Y'}}</td>
-                                            <td>$ {{item.valor_total_registrado|intcomma}}</td>
-                                            <td>{{item.pos_no}}</td>
-                                            <td>{{item.factura_desde}}</td>
-                                            <td>{{item.factura_hasta}}</td>
-                                            <td>
+                                            <td class="text-center">{{item.cierre_no}}</td>
+                                            <td><strong>{{item.fecha|date:'d/m/Y H:i:s'}}</strong></td>
+                                            <td><strong>$ {{item.valor_total_registrado|intcomma}}</strong></td>
+                                            <td style="color: rgb(168, 3, 3);">$ {{item.base_caja|intcomma}}</td>
+                                            <td class="text-center">{{item.pos_no}}</td>
+                                            <td class="text-center">{{item.factura_desde}}</td>
+                                            <td class="text-center">{{item.factura_hasta}}</td>
+                                            <td class="text-center">
                                                 <a href="{% url 'facturas:imprimirCierre' item.cierre_no %}" class="btn btn-info btn-circle"><span class="fa fa-print"></span></a>
                                             </td>
                                         </tr>
@@ -71,23 +74,70 @@
     <script>
 
         $("#closed").click(function (){
-            var datos = "ok";
-            $.get( "{% url 'facturas:closed' %}", datos, function( data ) {
-                swal({
-                    title: 'Generado el cierre No. ' + data.cierre,
-                    text: 'Hecho..',
-                    type: 'success',
-                    confirmButtonClass: "btn btn-info",
-                    buttonsStyling: false
-                }).catch(swal.noop)
+            swal({
+                title: 'CIERRE DE CAJA',
+                //<input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="efectivo1" id="id_efectivo1" onkeyup="format(this)">        
+                showCancelButton: false,
+                html: '<div class="row"><table width="30%" class="table table-striped table-bordered table-active" style="font-size: 12px;"><tbody><tr><td style="width: 200px;">BASE CAJA</td><td style="width: 150px;"><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="base_caja1" id="id_base_caja1" onkeyup="format(this)"> </td></tr></tbody></table></div>',
+                showCancelButton: true,
+                confirmButtonText: 'Generar Cierre',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: "btn btn-success",
+                cancelButtonClass: "btn btn-danger",
+                buttonsStyling: false
+            }).then(function(dismiss) {
+                if (dismiss.dismiss === 'cancel') {
+                    swal({
+                        title: 'Cancelado',
+                        text: 'Cierre no emitido..',
+                        type: 'error',
+                        confirmButtonClass: "btn btn-info",
+                        buttonsStyling: false
+                    }).catch(swal.noop)
+                }
+                else {
+                    base_caja = $("#id_base_caja1").val();
+                    if (base_caja === undefined){base_caja=0;} else {if (base_caja.length == 0){base_caja=0;} else {base_caja=base_caja.replace(/\./g, '')}}
+                    var datos = {'base_caja': parseFloat(base_caja)};
+                    $.get( "{% url 'facturas:closed' %}", datos, function( data ) {
+                        swal({
+                            title: 'Generado el cierre No. ' + data.cierre,
+                            text: 'Hecho..',
+                            type: 'success',
+                            confirmButtonClass: "btn btn-info",
+                            buttonsStyling: false
+                        }).catch(swal.noop)
+                    });
+                }
             });
         })
+
+
+
+
+        function format(input){
+            var num = input.value.replace(/\./g,'');
+
+            if(!isNaN(num)){
+                num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                num = num.split('').reverse().join('').replace(/^[\.]/,'');
+                input.value = num;
+
+            }
+            
+            else{ alert('Solo se permiten numeros');
+                input.value = input.value.replace(/[^\d\.]*/g,'');
+            }
+        }
+
+
 
 
         $(document).ready(function() {
           $('#lista_table').DataTable({
             "pagingType": "full_numbers",
             "pageLength": 25,
+            "order": [0,"desc"],
             "lengthMenu": [
               [10, 25, 50, -1],
               [10, 25, 50, "Todo"]
