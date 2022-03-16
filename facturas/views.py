@@ -247,17 +247,19 @@ def imprimirCierre(request, cierre):
     titulo = "CIERRE # {}".format(cierre)
     qr = QRCodeImage(str(cierre), size=30 * mm)
     qr.hAlign = "RIGHT"
-    
+    tot = Paragraph('C I E R R E  D E  C A J A')
+    tot.hAlign = "TA_CENTER"
+    ordenes.append(tot)
 
 
     t=Table(
         data=[
-            [image1,''],
+            ['',''],
             [request.user.profile.empresa,''],
             [request.user.profile.nit,''],
             [request.user.profile.direccion,''],
             [request.user.profile.telefono,''],
-            ['',''],
+            [request.user.profile.dian,''],
             ['Fecha: ', cierre.fecha.strftime('%d/%m/%Y, %H:%M:%S')],
             ['Cierre No. ', cierre.cierre_no],
             ['Base Caja: ', '${:,}'.format(cierre.base_caja)],
@@ -266,8 +268,8 @@ def imprimirCierre(request, cierre):
         colWidths=[100,30],
         style=[
                 ("FONT", (0,0), (9,1), "Helvetica", 2, 4),
-                ('VALIGN',(1,0), (4,1),'MIDDLE'),
-                ('ALIGN',(1,0),(4,1),'CENTRE'),
+                ('VALIGN',(1,0), (4,1),'CENTER'),
+                ('ALIGN',(1,0),(4,1),'CENTER'),
             ]
         )
 
