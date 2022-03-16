@@ -268,7 +268,7 @@ def imprimirCierre(request, cierre):
         colWidths=[100,30],
         style=[
                 ("FONT", (0,0), (9,1), "Helvetica", 2, 4),
-                ('VALIGN',(1,0), (4,1),'CENTRE'),
+                ('VALIGN',(1,0), (4,1),'MIDDLE'),
                 ('ALIGN',(1,0),(4,1),'CENTRE'),
             ]
         )
