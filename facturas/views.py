@@ -259,7 +259,7 @@ def imprimirCierre(request, cierre):
             [request.user.profile.nit,''],
             [request.user.profile.direccion,''],
             [request.user.profile.telefono,''],
-            [request.user.profile.dian,''],
+            [request.user.profile.r_dian,''],
             ['Fecha: ', cierre.fecha.strftime('%d/%m/%Y, %H:%M:%S')],
             ['Cierre No. ', cierre.cierre_no],
             ['Base Caja: ', '${:,}'.format(cierre.base_caja)],
