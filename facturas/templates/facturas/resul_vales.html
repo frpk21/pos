@@ -1,0 +1,96 @@
+{% extends 'base/base1.html' %}
+
+{% block contenido %}
+
+{% load humanize %}
+
+<link type="text/css" rel="stylesheet" href="/static/base/printarea/css/PrintArea.css" />
+<br>
+<br>
+<br>
+<div >
+  <div class="row justify-content-center" style="font: TimesNewRoman">
+    <div class="col-md-4">
+        <div class="card ">
+            <div class="card-body ">
+                <div class="row justify-content-center">
+                  <p style="font-size: 14px;"><strong>Vale No. {{ctx.vale_no|intcomma}}</strong></p>
+                </div>
+                <div class="row justify-content-center">
+                  <p style="font-size: 18px;">Fecha   {{fecha}}</p></div>
+                </div>
+                <div class="row justify-content-center">
+                  <p style="font-size: 24px; color:blue;">Valor     $ {{ctx.valor|intcomma}}</p></div>
+                </div>
+                <div class="row justify-content-center">
+                  <a href="javascript:void(0)" id="imprime" class="btn btn-warning"><span class="fa fa-print"></span> Imprimir</a>
+                  <a href="{% url 'generales:home' %}" class="btn btn-success"><span class="fa fa-undo"></span> Aceptar</a>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-4">
+            <div class="ca55rd *">
+              <div class="tickeooot">
+                <div  id="myPrintArea">
+                  <div class="row justify-content-center">
+                    <img class="text-align:center;" src={{ctx.logo.url}}  width="40%;">
+                  </div>
+                  <strong>
+                    <div class="row justify-content-center">
+                      <h2 class="text-center">{{ctx.empresa}}</h2>
+                    </div>
+                    <div class="row justify-content-center">
+                      <h5>VALE No. {{ctx.vale_no}}</h5>
+                    </div>
+                    <div class="row justify-content-center">
+                      <p class="text-center">
+                        <span>{{ctx.fecha}}</span>
+                        <br>{{ctx.nit}}
+                        <br>{{ctx.direccion}}   Tel. {{ctx.telefono}}
+                      </p>
+                    </div>
+                    <br>
+                    <div class="row justify-content-center">
+                      <h5>BENEFICIARIO: {{ctx.beneficiario}}</h5>
+                    </div>
+                    <br>
+                    <div class="row justify-content-center">
+                      <h5>CONCEPTO:  {{ctx.concepto}}</h5>
+                    </div>
+                    <br>
+                    <div class="row justify-content-center">
+                      <h3>VALOR VALE ${{ctx.valor|intcomma}}</h3>
+                    </div>
+                    <br/><br/>
+                  </strong>
+                </div><br/><br/><br/><p class="text-center" style="font-size: 8px;">SOFTWARE POS - komtroll.com    por BUSYCOL SAS COL</p><br/><br/><br/><br/><br/><br/><p>..</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock contenido %}
+
+
+{% block extra_js %}
+
+  <script type="text/javascript">
+    $("#imprime").click(function (){
+      var printContents = document.getElementById('myPrintArea').innerHTML;
+      w = window.open();
+      w.document.write(printContents);
+      w.document.close(); // necessary for IE >= 10
+      w.focus(); // necessary for IE >= 10
+      w.print();
+      w.close();
+      return true;
+    })
+
+  </script>
+
+{% endblock extra_js %}

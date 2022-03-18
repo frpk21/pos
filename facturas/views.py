@@ -4,10 +4,10 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Facturas, Factp, FormasPagos, Cierres, Cierres1, GrabadosCierres1, FormasPagosCierres1
+from .models import Facturas, Factp, FormasPagos, Cierres, Cierres1, GrabadosCierres1, FormasPagosCierres1, Vales
 from generales.models import Terceros, Profile
 from catalogos.models import Producto, Iva
-from .forms import FacturaEncForm, FacturaDetForm, DetalleFacFormSet, FacturaPosEncForm, FacturaPosDetalleForm, DetalleMovimientosFormSet
+from .forms import FacturaEncForm, FacturaDetForm, DetalleFacFormSet, FacturaPosEncForm, FacturaPosDetalleForm, DetalleMovimientosFormSet, ValesForm
 from generales.views import SinPrivilegios
 from fact_digital.utilidades import facturaDian, consultaRangos, fechaDian, HoraDian, AnulaFactura
 from django.http import JsonResponse
@@ -43,7 +43,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
 
     def get(self, request, *args, **kwargs):
 
-        ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'vales': '', 'descuento': ''}
+        ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'descuento': ''}
 
         self.object = None
 
@@ -112,7 +112,6 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
                                     'tcredito': self.object.tcredito, \
                                     'transferencia': self.object.transferencia, \
                                     'bonos': self.object.bonos, \
-                                    'vales': self.object.vales, \
                                     'descuento': self.object.descuento}))
 
     def form_invalid(self, form, detalle_movimientos):
@@ -126,7 +125,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         
         
     
-def resul_pos(request, factura, total, iva_pagado, neto, recibido, cambio, efectivo, tdebito, tcredito, transferencia, bonos, vales, descuento):
+def resul_pos(request, factura, total, iva_pagado, neto, recibido, cambio, efectivo, tdebito, tcredito, transferencia, bonos, descuento):
     factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
     tarifas_iva = Iva.objects.all()
     iva={}
@@ -152,7 +151,7 @@ def resul_pos(request, factura, total, iva_pagado, neto, recibido, cambio, efect
         'factura': Facturas.objects.filter(factura=factura, usuario=request.user).last()
     }
 
-    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': (int(total)+int(iva_pagado)), 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'iva_total': iva_pagado, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos, 'vales': vales, 'descuento': descuento, 'neto': neto })
+    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': (int(total)+int(iva_pagado)), 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'iva_total': iva_pagado, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos, 'descuento': descuento, 'neto': neto })
 
 
 
@@ -564,3 +563,86 @@ def get_ajaxBarcode(request, *args, **kwargs):
                 }, safe=False)
         else: 
             return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})
+
+
+
+
+class ValesList(LoginRequiredMixin, generic.ListView):
+    login_url = 'generales:login'
+    model=Vales
+    template_name="facturas/vales_list.html"
+    context_object_name="vales"
+    
+    
+class ValesNew(LoginRequiredMixin, generic.CreateView):
+    permission_required = 'Vales.add_vales'
+    model = Vales
+    login_url = 'generales:login'
+    template_name = 'facturas/vales_form.html'
+    form_class = ValesForm
+    success_url = reverse_lazy('generales:home')
+
+    def get(self, request, *args, **kwargs):
+        ctx = {'fecha': datetime.today(), 'valor':0, 'concepto': '', 'beneficiaro': ''}
+        self.object = None
+        form = ValesForm(initial=ctx)
+
+        return self.render_to_response( 
+            self.get_context_data(
+                form=form           
+            )
+        )
+
+    def post(self, request, *args, **kwargs):
+        form =ValesForm(request.POST)
+        #print("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+        #print(form.errors)
+        #print(detalle_movimientos.errors)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        profile = Profile.objects.filter(user=self.request.user.id).get()
+        vale_no = profile.vales + 1
+        profile.vales = profile.vales + 1
+        profile.save()
+        self.object.vale_no = vale_no
+        self.object.usuario = self.request.user
+        self.object.fecha = datetime.now(tz=timezone.utc)
+        self.object = form.save()
+  
+        return HttpResponseRedirect(reverse_lazy('facturas:resul_vales', kwargs={'vale_no': vale_no, \
+                                    'fecha': self.object.fecha, \
+                                    'beneficiario': self.object.beneficiario, \
+                                    'concepto': self.object.concepto, \
+                                    'valor': self.object.valor}))
+
+    def form_invalid(self, form):
+        self.object=form
+        return self.render_to_response(
+            self.get_context_data(
+                form=form
+            )
+        )
+
+
+def resul_vales(request, vale_no, fecha, beneficiario, concepto, valor):
+
+    ctx={
+        'empresa':request.user.profile.empresa,
+        'nit': request.user.profile.nit,
+        'direccion': request.user.profile.direccion,
+        'telefono': request.user.profile.telefono,
+        'dian': request.user.profile.r_dian,
+        'logo': request.user.profile.logo,
+        'vale_no': vale_no,
+        'fecha': fecha,
+        'beneficiario': beneficiario,
+        'concepto': concepto,
+        'valor': valor
+    }
+
+    return render(request, "facturas/resul_vales.html", context={ 'ctx': ctx, 'fecha': fecha })

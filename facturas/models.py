@@ -383,3 +383,23 @@ class NotasCredito1(ClaseModelo):
 
 
 
+class Vales(ClaseModelo):
+    vale_no = models.IntegerField(default=0)
+    fecha = models.DateTimeField()
+    usuario = models.ForeignKey(User, blank=False, null=False, on_delete=models.DO_NOTHING)
+    concepto = models.CharField(max_length=200, null=True,blank=True)
+    valor = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    beneficiario = models.CharField(max_length=100, help_text='Nombre Beneficiario')
+    anulado = models.BooleanField(default=False, blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.beneficiario)
+
+    def save(self):
+        self.beneficiario = self.beneficiario.upper()
+        self.concepto = self.concepto.upper()
+        super(Vales,self).save()
+        
+    class Meta:
+        verbose_name_plural="Vale de Caja"
+        verbose_name="Vales de Caja"

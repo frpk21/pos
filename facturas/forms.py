@@ -2,7 +2,7 @@ from django import forms
 
 from django.forms.models import inlineformset_factory
 
-from facturas.models import Facturas, Factp
+from facturas.models import Facturas, Factp, Vales
 
 from catalogos.models import Producto
 
@@ -18,7 +18,7 @@ class FacturaPosEncForm(forms.ModelForm):
 
     class Meta:
         model=Facturas
-        fields = ['fecha_factura','valor_factura','valor_iva','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos','vales','descuento',]
+        fields = ['fecha_factura','valor_factura','valor_iva','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos','descuento',]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -31,14 +31,14 @@ class FacturaPosEncForm(forms.ModelForm):
         self.fields['tcredito'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['transferencia'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['bonos'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
-        self.fields['vales'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
+        #self.fields['vales'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['descuento'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['efectivo'].required = False
         self.fields['tdebito'].required = False
         self.fields['tcredito'].required = False
         self.fields['transferencia'].required = False
         self.fields['bonos'].required = False
-        self.fields['vales'].required = False
+        #self.fields['vales'].required = False
         self.fields['descuento'].required = False
         self.fields['valor_iva'].required = False
 
@@ -130,8 +130,40 @@ DetalleMovimientosFormSet = inlineformset_factory(Facturas,Factp,form=FacturaPos
 
 
 
+class ValesForm(forms.ModelForm):
+    valor = forms.CharField()
 
+    class Meta:
+        model = Vales
+        fields = ['concepto','valor','beneficiario',]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })
+        self.fields['valor'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;', 'onchange': 'validavalor(id)'})
+    
+    def clean_valor(self):
+        valor = int(self.cleaned_data["valor"])
+        if valor == 0:
+            raise forms.ValidationError("Valor Requerido")
+        elif valor < 0:
+            raise forms.ValidationError("Valor Incorrecto")
+        return valor
+
+    def clean_concepto(self):
+        concepto = self.cleaned_data["concepto"]
+        if not concepto:
+            raise forms.ValidationError("Concepto Requerido")
+        return concepto
+
+    def clean_beneficiario(self):
+        beneficiario = self.cleaned_data["beneficiario"]
+        if not beneficiario:
+            raise forms.ValidationError("Beneficiario Requerido")
+        return beneficiario
 
 
 

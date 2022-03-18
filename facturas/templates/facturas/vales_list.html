@@ -1,0 +1,124 @@
+{% extends 'base/base1.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+{% load humanize %}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="card-header card-header-icon card-header-warning">
+                            <div class="card-icon">
+                                <i class="material-icons">assignment</i>
+                            </div>
+                            <h4 class="card-title "><strong> Vales de Caja</strong></h4>
+                            <span style="color: gray;">GASTOS</span><br>
+                            <hr class="sidebar-divider">
+                            <a href="{% url 'facturas:vales_new' %}" class="btn btn-info"><span class="fa fa-plus-circle"></span>Nuevo</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="material-datatables">
+                        <table id="lista_table" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%; font-size:12px;">
+                            <thead>
+                                <th style="font-size:12px; background: gray; color: white;" data-orderable="false">VALE No.</th>
+                                <th style="font-size:12px; background: gray; color: white;" data-orderable="false">FECHA</th>
+                                <th style="font-size:12px; background: gray; color: white;">BENEFICIARIO</th>
+                                <th style="font-size:12px; background: gray; color: white;" class="text-center">CONCEPTO</th>
+                                <th style="font-size:12px; background: gray; color: white;" class="text-center">VALOR</th>
+                                <th style="font-size:12px; background: gray; color: yellow;" data-orderable="false" class="text-center">Acciones</th>
+                            </thead>
+                            <tfoot>
+                                <th>Vale No.</th>
+                                <th>Fecha</th>
+                                <th class="text-center">Beneficiario</th>
+                                <th class="text-center">Concepto</th>
+                                <th class="text-center">Valor</th>
+                                <th class="text-center">Acciones</th>
+                            </tfoot>
+                            <tbody>
+                                {% for item in vales %}
+                                    <tr>
+                                        <td>{{item.vale_no}}</td>
+                                        <td><strong>{{item.fecha|date:'d/m/Y H:i:s'}}</strong></td>
+                                        <td><strong>{{item.beneficiario}}</strong></td>
+                                        <td><strong>{{item.concepto}}</strong></td>
+                                        <td class="text-center">{{item.valor|intcomma}</td>
+                                        <td class="td-actions text-center">
+                                            <a href="{% url 'catalogos:categoria_delete' item.id %}">
+                                                <button type="button" rel="tooltip" class="btn btn-danger btn-round">
+                                                <i class="material-icons">delete</i>
+                                                </button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+      $('#lista_table').DataTable({
+        "pagingType": "full_numbers",
+        "pageLength": 25,
+        "lengthMenu": [
+          [10, 25, 50, -1],
+          [10, 25, 50, "Todo"]
+        ],
+        responsive: true,
+        "language": {
+          "sProcessing":    "Procesando...",
+          "sLengthMenu":    "Mostrar _MENU_ registros",
+          "sZeroRecords":   "No se encontraron resultados",
+          "sEmptyTable":    "Ningún dato disponible en esta tabla",
+          "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+          "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+          "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+          "sInfoPostFix":   "",
+          "sSearch":        "Buscar:",
+          "sUrl":           "",
+          "sInfoThousands":  ",",
+          "sLoadingRecords": "Cargando...",
+          "oPaginate": {
+              "sFirst":    "Primero",
+              "sLast":    "Último",
+              "sNext":    "Siguiente",
+              "sPrevious": "Anterior"
+          }}
+      });
+  
+      var table = $('#lista_table').DataTable();
+  
+      // Edit record
+      table.on('click', '.edit', function() {
+        $tr = $(this).closest('tr');
+        var data = table.row($tr).data();
+        alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+      });
+  
+      // Delete a record
+      table.on('click', '.remove', function(e) {
+        $tr = $(this).closest('tr');
+        table.row($tr).remove().draw();
+        e.preventDefault();
+      });
+  
+      //Like record
+      table.on('click', '.like', function() {
+        alert('You clicked on Like button');
+      });
+    });
+</script>
+{% endblock contenido %}
