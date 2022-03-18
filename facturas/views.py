@@ -43,22 +43,25 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
 
     def get(self, request, *args, **kwargs):
         
-        ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'descuento': ''}
+        if get_ajax_valida_cierres(request) == True:
+            ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'descuento': ''}
 
-        self.object = None
+            self.object = None
 
-        form = FacturaPosEncForm(initial=ctx)
+            form = FacturaPosEncForm(initial=ctx)
 
-        detalle_movimientos_formset = DetalleMovimientosFormSet()
+            detalle_movimientos_formset = DetalleMovimientosFormSet()
 
-        return self.render_to_response( 
-            self.get_context_data(
-                form=form,
-                bar_code_read= '',
-                frm_pagos = FormasPagos.objects.all().order_by('nombre'),
-                detalle_movimientos=detalle_movimientos_formset            
+            return self.render_to_response( 
+                self.get_context_data(
+                    form=form,
+                    bar_code_read= '',
+                    frm_pagos = FormasPagos.objects.all().order_by('nombre'),
+                    detalle_movimientos=detalle_movimientos_formset            
+                )
             )
-        )
+        else:
+            return HttpResponseRedirect(reverse_lazy("facturas:menu"))
 
     def post(self, request, *args, **kwargs):
         form =FacturaPosEncForm(request.POST)
@@ -566,12 +569,12 @@ def get_ajaxBarcode(request, *args, **kwargs):
 
 
 
-def get_ajax_valida_cierres(request, *args, **kwargs): 
-    cerrados = Facturas.objects.filter(usuario=request.user.id, cerrado=False)
+def get_ajax_valida_cierres(request): 
+    cerrados = Facturas.objects.filter(usuario=request.user.id, cerrado=False, fecha_factura__lt=date.today() )
     if cerrados:
-        return JsonResponse(data={'errors': 'Hay cierres de caja pendientes por realizar, No puede facturar hasta realizar estos cierres.'})
+        return False #JsonResponse(data={'errors': 'Hay cierres de caja pendientes por realizar, No puede facturar hasta realizar estos cierres.'})
     else:
-        return JsonResponse(data={'errors': ''})
+        return True #JsonResponse(data={'errors': ''})
 
 
 

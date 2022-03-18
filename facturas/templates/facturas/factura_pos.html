@@ -327,8 +327,11 @@
         
         
         function validacbarra(itemn) {
-            var datos = {'var':'ok'};
-            $.get( "{% url 'facturas:valida_cierres' %}", datos, function( data ) {
+            //var r = $("#"+itemn).val();
+            var r = $("#id_bar_code_read").val();
+            var datos = {'bar_code':r};
+            $.get( "{% url 'facturas:valida_bar_code' %}", datos, function( data ) {
+                //console.log(data);
                 if (data.errors){
                     swal({
                         title: data.errors,
@@ -337,83 +340,67 @@
                         cancelButtonClass: 'btn btn-danger',
                         buttonsStyling: false
                     }).catch(swal.noop);
+                    $("#id_bar_code_read").val('');
+                    document.getElementById("id_bar_code_read").focus();
                 }
                 else {
-                    var r = $("#id_bar_code_read").val();
-                    var datos = {'bar_code':r};
-                    $.get( "{% url 'facturas:valida_bar_code' %}", datos, function( data ) {
-                        //console.log(data);
-                        if (data.errors){
-                            swal({
-                                title: data.errors,
-                                showCancelButton: true,
-                                showConfirmButton: false,
-                                cancelButtonClass: 'btn btn-danger',
-                                buttonsStyling: false
-                            }).catch(swal.noop);
-                            $("#id_bar_code_read").val('');
-                            document.getElementById("id_bar_code_read").focus();
-                        }
-                        else {
-                            // + nuevo renglon:
-                            let total_form = $('#id_factp_set-TOTAL_FORMS');
-                            let form_idx = total_form.val();
-                            let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
-                            let formset_wrapper = document.getElementById('formset_wrapper')
-                            let e = document.createElement('div');
-                            e.innerHTML = new_html;
-                            formset_wrapper.appendChild(e.firstElementChild);
-                            total_form.val(parseInt(form_idx) + 1);
-                            // end + nuevo renglon
+                    // + nuevo renglon:
+                    let total_form = $('#id_factp_set-TOTAL_FORMS');
+                    let form_idx = total_form.val();
+                    let new_html = $('#movimientos_item_empty_form').html().replace(/__prefix__/g, form_idx)
+                    let formset_wrapper = document.getElementById('formset_wrapper')
+                    let e = document.createElement('div');
+                    e.innerHTML = new_html;
+                    formset_wrapper.appendChild(e.firstElementChild);
+                    total_form.val(parseInt(form_idx) + 1);
+                    // end + nuevo renglon
 
-                            itemn="id_factp_set-"+(parseInt(form_idx))+"-codigo_de_barra";
-                            $("#"+itemn).val(data.codigo_de_barra);
-                            id_prod=itemn.replace("codigo_de_barra", "prod");
-                            id_valor_unidad=itemn.replace("codigo_de_barra", "valor_unidad");
-                            id_nombre=itemn.replace("codigo_de_barra", "producto");
-                            id_cantidad=itemn.replace("codigo_de_barra", "cantidad");
-                            id_porc_iva_producto=itemn.replace("codigo_de_barra", "porc_iva");
-                            id_valor_iva_producto=itemn.replace("codigo_de_barra", "valor_iva");
-                            id_valor_total_producto=itemn.replace("codigo_de_barra", "valor_total");
-                            $("#"+id_prod).val(data.prod);
-                            $("#"+id_valor_unidad).val(data.valor_unidad);
-                            $("#"+id_nombre).val(data.nombre);
-                            $("#"+id_cantidad).val(1);
-                            $("#"+id_porc_iva_producto).val(parseFloat(data.porc_iva));
-                            $("#"+id_valor_iva_producto).val(parseInt(data.porc_iva)*parseInt(data.valor_unidad)/100);
-                            $("#"+id_valor_total_producto).val(data.valor_total);
-                            //console.log(id_valor_total_producto);
+                    itemn="id_factp_set-"+(parseInt(form_idx))+"-codigo_de_barra";
+                    $("#"+itemn).val(data.codigo_de_barra);
+                    id_prod=itemn.replace("codigo_de_barra", "prod");
+                    id_valor_unidad=itemn.replace("codigo_de_barra", "valor_unidad");
+                    id_nombre=itemn.replace("codigo_de_barra", "producto");
+                    id_cantidad=itemn.replace("codigo_de_barra", "cantidad");
+                    id_porc_iva_producto=itemn.replace("codigo_de_barra", "porc_iva");
+                    id_valor_iva_producto=itemn.replace("codigo_de_barra", "valor_iva");
+                    id_valor_total_producto=itemn.replace("codigo_de_barra", "valor_total");
+                    $("#"+id_prod).val(data.prod);
+                    $("#"+id_valor_unidad).val(data.valor_unidad);
+                    $("#"+id_nombre).val(data.nombre);
+                    $("#"+id_cantidad).val(1);
+                    $("#"+id_porc_iva_producto).val(parseFloat(data.porc_iva));
+                    $("#"+id_valor_iva_producto).val(parseInt(data.porc_iva)*parseInt(data.valor_unidad)/100);
+                    $("#"+id_valor_total_producto).val(data.valor_total);
+                    //console.log(id_valor_total_producto);
 
-                            
-                            // Totaliza factura pos
-                            tot=0;
-                            tiva=0;
-                            for (var i = 0; i < (parseInt(form_idx) + 1); i++) {
-                                id_valor_unidad = "id_factp_set-"+i+"-valor_unidad";
-                                id_valor_iva = "id_factp_set-"+i+"-valor_iva";
-                                valor_unidad = $("#"+id_valor_unidad).val();
-                                valor_iva = $("#"+id_valor_iva).val();
-                                tot += parseInt(valor_unidad);
-                                tiva += parseInt(valor_iva);
-                            }
-                            // End Totaliza factura pos
-                            // + Separador numerico
-                            $("#id_valor_factura").val(tot);
-                            tot = String(tot+tiva);
-                            var entrada = tot.split(',');
-                            parteEntera = entrada[0].replace(/\./g, '');
-                            parteDecimal = entrada[1];
-                            salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-                            tot = "$ "+salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
-                            $("#id_total_factura1").val(tot);
-                        
-                            itemn_next="id_factp_set-"+(parseInt($('#id_factp_set-TOTAL_FORMS').val())-1)+"-codigo_de_barra";
-                            // End + Separador numerico
-                        }
-                        nextFocus(itemn, itemn_next);
-                    });
+                    
+                    // Totaliza factura pos
+                    tot=0;
+                    tiva=0;
+                    for (var i = 0; i < (parseInt(form_idx) + 1); i++) {
+                        id_valor_unidad = "id_factp_set-"+i+"-valor_unidad";
+                        id_valor_iva = "id_factp_set-"+i+"-valor_iva";
+                        valor_unidad = $("#"+id_valor_unidad).val();
+                        valor_iva = $("#"+id_valor_iva).val();
+                        tot += parseInt(valor_unidad);
+                        tiva += parseInt(valor_iva);
+                    }
+                    // End Totaliza factura pos
+                    // + Separador numerico
+                    $("#id_valor_factura").val(tot);
+                    tot = String(tot+tiva);
+                    var entrada = tot.split(',');
+                    parteEntera = entrada[0].replace(/\./g, '');
+                    parteDecimal = entrada[1];
+                    salida = parteEntera.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+                    tot = "$ "+salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
+                    $("#id_total_factura1").val(tot);
+                   
+                    itemn_next="id_factp_set-"+(parseInt($('#id_factp_set-TOTAL_FORMS').val())-1)+"-codigo_de_barra";
+                    // End + Separador numerico
                 }
-            });
+                nextFocus(itemn, itemn_next);
+            } );
         }
 
         function onKeyDownHandler(event,id) {
