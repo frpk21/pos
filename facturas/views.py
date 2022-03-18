@@ -42,7 +42,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
     success_url = reverse_lazy('generales:home')
 
     def get(self, request, *args, **kwargs):
-
+        
         ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'descuento': ''}
 
         self.object = None
@@ -198,7 +198,7 @@ def CierreDoing(request):
         factura_desde = minimo["factura__factura__min"],
         factura_hasta = maximo["factura__factura__max"]
     )
-    
+    Facturas.objects.filter(usuario=request.user.id, cerrado=False).update(cerrado=True)
     return JsonResponse(data={'cierre': cierre, 'errors': ''})
 
 
@@ -563,6 +563,18 @@ def get_ajaxBarcode(request, *args, **kwargs):
                 }, safe=False)
         else: 
             return JsonResponse(data={'nombre': '', 'errors': 'No encuentro producto.'})
+
+
+
+def get_ajax_valida_cierres(request, *args, **kwargs): 
+    cerrados = Facturas.objects.filter(usuario=request.user.id, cerrado=False)
+    if cerrados:
+        return JsonResponse(data={'errors': 'Hay cierres de caja pendientes por realizar, No puede facturar hasta realizar estos cierres.'})
+    else:
+        return JsonResponse(data={'errors': ''})
+
+
+
 
 
 
