@@ -44,7 +44,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
     def get(self, request, *args, **kwargs):
         
         if get_ajax_valida_cierres(request) == True:
-            ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'descuento': ''}
+            ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'credito': '', 'descuento': ''}
 
             self.object = None
 
@@ -115,6 +115,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
                                     'tcredito': self.object.tcredito, \
                                     'transferencia': self.object.transferencia, \
                                     'bonos': self.object.bonos, \
+                                    'credito': self.object.credito, \
                                     'descuento': self.object.descuento}))
 
     def form_invalid(self, form, detalle_movimientos):
@@ -128,7 +129,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         
         
     
-def resul_pos(request, factura, total, iva_pagado, neto, recibido, cambio, efectivo, tdebito, tcredito, transferencia, bonos, descuento):
+def resul_pos(request, factura, total, iva_pagado, neto, recibido, cambio, efectivo, tdebito, tcredito, transferencia, bonos, credito, descuento):
     factp = Factp.objects.filter(factura__factura=factura, factura__usuario=request.user)
     tarifas_iva = Iva.objects.all()
     iva={}
@@ -154,7 +155,7 @@ def resul_pos(request, factura, total, iva_pagado, neto, recibido, cambio, efect
         'factura': Facturas.objects.filter(factura=factura, usuario=request.user).last()
     }
 
-    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': (int(total)+int(iva_pagado)), 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'iva_total': iva_pagado, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos, 'descuento': descuento, 'neto': neto })
+    return render(request, "facturas/resul_pos.html", context={'tarifas_iva': tarifas_iva, 'ctx': ctx, 'factura': factura, 'total': (int(total)+int(iva_pagado)), 'recibido': recibido, 'cambio': cambio, 'iva': iva, 'iva_total': iva_pagado, 'efectivo': efectivo, 'tdebito': tdebito, 'tcredito': tcredito, 'transferencia': transferencia, 'bonos': bonos, 'credito': credito , 'descuento': descuento, 'neto': neto })
 
 
 
@@ -179,7 +180,8 @@ class CierreCajaView(LoginRequiredMixin, generic.ListView):
         )
     
 def CierreDoing(request):
-    base_caja = request.GET.get('base_caja', None)
+    base_caja = request.GET.get('base_caja', 0)
+    base_caja = int(base_caja)
     ventas = Factp.objects.filter(factura__cerrado=False, factura__usuario=request.user)
     minimo = ventas.aggregate(Min('factura__factura'))
     maximo = ventas.aggregate(Max('factura__factura'))
@@ -202,6 +204,7 @@ def CierreDoing(request):
         factura_hasta = maximo["factura__factura__max"]
     )
     Facturas.objects.filter(usuario=request.user.id, cerrado=False).update(cerrado=True)
+    Vales.objects.filter(usuario=request.user.id, cerrado=False).update(cerrado=True)
     return JsonResponse(data={'cierre': cierre, 'errors': ''})
 
 

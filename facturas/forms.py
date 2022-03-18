@@ -18,7 +18,7 @@ class FacturaPosEncForm(forms.ModelForm):
 
     class Meta:
         model=Facturas
-        fields = ['fecha_factura','valor_factura','valor_iva','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos','descuento',]
+        fields = ['fecha_factura','valor_factura','valor_iva','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos', 'credito', 'descuento',]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -31,14 +31,14 @@ class FacturaPosEncForm(forms.ModelForm):
         self.fields['tcredito'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['transferencia'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['bonos'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
-        #self.fields['vales'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
+        self.fields['credito'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['descuento'].widget.attrs.update({'onkeyup': 'format(this)', 'style':'text-align: right; color:red; font-size:14px; width: 200px;'})
         self.fields['efectivo'].required = False
         self.fields['tdebito'].required = False
         self.fields['tcredito'].required = False
         self.fields['transferencia'].required = False
         self.fields['bonos'].required = False
-        #self.fields['vales'].required = False
+        self.fields['credito'].required = False
         self.fields['descuento'].required = False
         self.fields['valor_iva'].required = False
 

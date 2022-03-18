@@ -29,6 +29,7 @@ class Facturas(ClaseModelo):
     tcredito = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     transferencia = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     bonos = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    credito = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     vales = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     cerrado = models.BooleanField(default=False, blank=True, null=True)
     con_electronica = models.BooleanField(default=False, blank=True, null=True)
@@ -163,8 +164,23 @@ def crear_cierres1(sender, instance, created, **kwargs):
         tcredito = Facturas.objects.values('tcredito').order_by('tcredito').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('tcredito'))
         transferencias = Facturas.objects.values('transferencia').order_by('transferencia').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('transferencia'))
         bonos = Facturas.objects.values('bonos').order_by('bonos').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('bonos'))
-        vales = Facturas.objects.values('vales').order_by('vales').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('vales'))
+        credito = Facturas.objects.values('credito').order_by('credito').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('credito'))
+        vales = Vales.objects.values('valor').filter(cerrado=False, usuario=cierre_creado.usuario).aggregate(total=Sum('valor'))
         descuentos,excentos,excluidos,grabados,tventas = 0,0,0,0,0
+        if efectivo["total"] == None:
+            efectivo["total"] = 0
+        if tdebito["total"] == None:
+            tdebito["total"] = 0
+        if tcredito["total"] == None:
+            tcredito["total"] = 0
+        if transferencias["total"] == None:
+            transferencias["total"] = 0
+        if bonos["total"] == None:
+            bonos["total"] = 0
+        if credito["total"] == None:
+            credito["total"] = 0
+        if vales["total"] == None:
+            vales["total"] = 0
         for i, item in enumerate(ventas):
             if item.descuento > 0:
                 descuentos += item.descuento
@@ -203,7 +219,12 @@ def crear_cierres1(sender, instance, created, **kwargs):
             cierre=cierre_creado,
             forma_pago="VALES",
             valor_pago=vales["total"]
-            ) 
+            )
+        FormasPagosCierres1.objects.get_or_create(
+            cierre=cierre_creado,
+            forma_pago="CREDITO",
+            valor_pago=credito["total"]
+            )
         Cierres1.objects.get_or_create(
             cierre=cierre_creado,
             ventas_descuentos=descuentos,
@@ -391,6 +412,7 @@ class Vales(ClaseModelo):
     valor = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     beneficiario = models.CharField(max_length=100, help_text='Nombre Beneficiario')
     anulado = models.BooleanField(default=False, blank=True, null=True)
+    cerrado = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.beneficiario)
