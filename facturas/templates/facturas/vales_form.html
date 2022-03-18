@@ -28,7 +28,7 @@
                                     {% csrf_token %}
                                     {{ form.as_p }}
                                     <button type="submit" class="btn btn-danger"><span class="fa fa-save"></span> Guardar</button>
-                                    <a href="{% url 'catalogos:categoria_list'%}" class="btn btn-success"><span class="fa fa-undo"></span>Cancelar</a>
+                                    <a href="{% url 'facturas:lista_vales'%}" class="btn btn-success"><span class="fa fa-undo"></span>Cancelar</a>
                                 </div>
                             </div>
                         </form>
