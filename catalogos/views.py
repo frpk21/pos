@@ -540,7 +540,7 @@ def BarCodePrint(request,pk):
         topMargin=10,  
         bottomMargin=8,
         author="POS",
-        title="CODIGO DE BARRA DEL PRODUCTO:  "+producto.nombre,
+        title="CODIGO DE BARRA DEL PRODUCTO:  "+producto.nombre+' PRECIO: '+'${:,}'.format(round(producto.precio_de_venta + (producto.precio_de_venta * producto.tarifa_iva.tarifa_iva) / 100,0)),
         icon=icon,
         )
     
