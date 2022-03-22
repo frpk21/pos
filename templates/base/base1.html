@@ -98,22 +98,16 @@
                             <li class="nav-item ">
                                 <a class="nav-link" data-toggle="collapse" href="#pagesFacturas">
                                     <span class="sidebar-mini"> C </span>
-                                    <p>Cuentas x Cobrar 
+                                    <p>Cartera Clientes 
                                         <b class="caret"></b>
                                     </p>
                                 </a>
                                 <div class="collapse" id="pagesFacturas">
                                     <ul class="nav">
                                         <li class="nav-item ">
-                                            <a class="nav-link" href="">
-                                                <span class="sidebar-mini"> GF </span>
-                                                <span class="sidebar-normal"> Generar </span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item ">
-                                            <a class="nav-link" href="">
+                                            <a class="nav-link" href="{% url 'facturas:estado_cartera' %}">
                                                 <span class="sidebar-mini"> VE </span>
-                                                <span class="sidebar-normal"> Estado</span>
+                                                <span class="sidebar-normal"> Estado de Cartera</span>
                                             </a>
                                         </li>
                                         <li class="nav-item ">
@@ -124,13 +118,6 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </li>
-
-                            <li class="nav-item ">
-                                <a class="nav-link" href="/static/base/examples/pages/timeline.html">
-                                    <span class="sidebar-mini"> N </span>
-                                    <span class="sidebar-normal"> Notas </span>
-                                </a>
                             </li>
                         </ul>
                     </div>

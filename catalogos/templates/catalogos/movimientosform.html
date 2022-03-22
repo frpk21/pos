@@ -514,34 +514,35 @@
 
 
 
+
         $(document).ready(function(){ 
-                $("#id_tercero").select2({ 
-                    tags: true, 
-                    multiple: false,
-                    tokenSeparators: [',', ' '], 
-                    minimumInputLength: 3,
-                    delay: 200,
-                    minimumResultsForSearch: 20, 
-                    ajax: { 
-                        url: '{% url 'catalogos:terceros_select2' %}', 
-                        dataType: "json", 
-                        type: "GET", 
-                        data: function (params) { var queryParameters = { q: params.term } 
-                        return queryParameters; 
-                    }, 
-                    processResults: function (data) {
-                        return { 
-                            results: $.map(data, function (item) { 
-                                return { 
-                                    text: item.rzn_social, 
-                                    id: item.id
-                                } 
-                            }) 
-                        }; 
-                    } 
+            $("#id_tercero").select2({ 
+                tags: true, 
+                multiple: false,
+                tokenSeparators: [',', ' '], 
+                minimumInputLength: 3,
+                delay: 200,
+                minimumResultsForSearch: 20, 
+                ajax: { 
+                    url: '{% url 'catalogos:terceros_select2' %}', 
+                    dataType: "json", 
+                    type: "GET", 
+                    data: function (params) { var queryParameters = { q: params.term } 
+                    return queryParameters; 
+                }, 
+                processResults: function (data) {
+                    return { 
+                        results: $.map(data, function (item) { 
+                            return { 
+                                text: item.nombre, 
+                                id: item.id
+                            } 
+                        }) 
+                    }; 
                 } 
-            }); 
-        });
+            } 
+        }); });
+
     </script>
 
 {% endblock extra_js %}

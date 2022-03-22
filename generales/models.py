@@ -11,29 +11,6 @@ class ClaseModelo(models.Model):
         abstract=True 
 
 
-class Profile(models.Model): 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    foto = models.FileField("Archivo con Foto del Usuario", upload_to="fotos/", blank=False, null=False)
-    logo = models.FileField("Logo del Usuario", upload_to="fotos/", blank=False, null=False)
-    nit  = models.CharField('NIT / CC #', blank=False, null=False, max_length=30, default="")
-    empresa = models.CharField('Empresa', blank=False, null=False, max_length=100, default="")
-    direccion = models.CharField('Direccion Comercial', blank=False, null=False, max_length=100, default="")
-    telefono = models.CharField('Telefono Comercial', blank=False, null=False, max_length=100, default="")
-    email = models.CharField('Telefono Comercial', blank=False, null=False, max_length=100, default="")
-    entrada = models.IntegerField('CONSECUTIVO ENTRADAS DE ALMACEN', default=0, blank=True, null=True)
-    salida = models.IntegerField('CONSECUTIVO SALIDAS DE ALMACEN', default=0, blank=True, null=True)
-    factura = models.IntegerField('CONSECUTIVO SALIDAS DE ALMACEN', default=0, blank=True, null=True)
-    vales = models.IntegerField('CONSECUTIVO VALES', default=0, blank=True, null=True)
-    r_dian = models.CharField('Resolucion DIAN', blank=False, null=False, max_length=200, default="")
-    cierre = models.IntegerField('CONSECUTIVO CIERRES DIARIOS', default=0, blank=True, null=True)
-    
-    #sede = models.ForeignKey(Sedes, on_delete=models.CASCADE, default=0, null=False, blank=False)
- 
-    def save(self):
-        self.empresa = self.empresa.upper()
-        super(Profile, self).save()
-
-
 class Pais(ClaseModelo):
     nombre_pais = models.CharField('Nombre del Pais', blank=False, null=False, max_length=100, default="")
 
@@ -129,3 +106,28 @@ class Terceros(ClaseModelo):
 
     class Meta:
         verbose_name_plural = "Terceros"
+
+
+
+
+class Profile(models.Model): 
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    foto = models.FileField("Archivo con Foto del Usuario", upload_to="fotos/", blank=False, null=False)
+    logo = models.FileField("Logo del Usuario", upload_to="fotos/", blank=False, null=False)
+    nit  = models.CharField('NIT / CC #', blank=False, null=False, max_length=30, default="")
+    empresa = models.CharField('Empresa', blank=False, null=False, max_length=100, default="")
+    direccion = models.CharField('Direccion Comercial', blank=False, null=False, max_length=100, default="")
+    telefono = models.CharField('Telefono Comercial', blank=False, null=False, max_length=100, default="")
+    email = models.CharField('Telefono Comercial', blank=False, null=False, max_length=100, default="")
+    entrada = models.IntegerField('CONSECUTIVO ENTRADAS DE ALMACEN', default=0, blank=True, null=True)
+    salida = models.IntegerField('CONSECUTIVO SALIDAS DE ALMACEN', default=0, blank=True, null=True)
+    factura = models.IntegerField('CONSECUTIVO SALIDAS DE ALMACEN', default=0, blank=True, null=True)
+    vales = models.IntegerField('CONSECUTIVO VALES', default=0, blank=True, null=True)
+    r_dian = models.CharField('Resolucion DIAN', blank=False, null=False, max_length=200, default="")
+    cierre = models.IntegerField('CONSECUTIVO CIERRES DIARIOS', default=0, blank=True, null=True)
+    tercero_mostrador =  models.ForeignKey(Terceros, on_delete=models.CASCADE)
+    #sede = models.ForeignKey(Sedes, on_delete=models.CASCADE, default=0, null=False, blank=False)
+ 
+    def save(self):
+        self.empresa = self.empresa.upper()
+        super(Profile, self).save()

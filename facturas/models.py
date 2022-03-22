@@ -2,7 +2,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from decimal import Decimal
 from django.contrib.auth.models import User
-from generales.models import ClaseModelo
+from generales.models import ClaseModelo, Terceros
 from catalogos.models import Producto
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
@@ -30,10 +30,12 @@ class Facturas(ClaseModelo):
     transferencia = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     bonos = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     credito = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    saldo_credito = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     vales = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     cerrado = models.BooleanField(default=False, blank=True, null=True)
     con_electronica = models.BooleanField(default=False, blank=True, null=True)
     descuento = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    tercero =  models.ForeignKey(Terceros, on_delete=models.CASCADE)
 
     def __str__(self):
         return '{}'.format(self.fecha_factura)
@@ -82,7 +84,9 @@ class FormasPagos(ClaseModelo):
     class Meta:
         verbose_name_plural="Nombre Forma de Pago"
         verbose_name="Nombres Formas de Pago"
-             
+
+
+
 class Cierres(ClaseModelo):
     fecha = models.DateTimeField()
     cierre_no = models.IntegerField(default=0, blank=True, null=True)
@@ -425,3 +429,19 @@ class Vales(ClaseModelo):
     class Meta:
         verbose_name_plural="Vale de Caja"
         verbose_name="Vales de Caja"
+
+
+class PagosVales(ClaseModelo):
+    vales = models.ForeignKey(Vales, blank=False, null=False, on_delete=models.CASCADE)
+    fecha = models.DateTimeField()
+    valor_pago =  models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+    def __str__(self):
+        return '{}-{}'.format(self.vales.vale_no, self.valor_pago)
+
+    def save(self, *args, **kwargs):
+        super(PagosVales,self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural="Pago Vale"
+        verbose_name="Pagos Vales"

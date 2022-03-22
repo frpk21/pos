@@ -44,7 +44,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
     def get(self, request, *args, **kwargs):
         
         if get_ajax_valida_cierres(request) == True:
-            ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'credito': '', 'descuento': ''}
+            ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'credito': '', 'descuento': '', 'tercero':0}
 
             self.object = None
 
@@ -84,6 +84,8 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
         descto = self.object.descuento
         self.object.observacion = "Factura POS"
         self.object.usuario = self.request.user
+        if self.object.credito == 0:
+            self.object.tercero = profile.tercero_mostrador
         total, iva = 0, 0
         for detalle in detalle_movimientos:
             if not detalle.cleaned_data:
@@ -98,6 +100,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
             producto.save()
         self.object.valor_factura = total
         self.object.valor_iva = iva
+        self.object.saldo_credito = self.object.credito
         self.object = form.save()
         detalle_movimientos.instance = self.object
         detalle_movimientos.save()
@@ -581,7 +584,19 @@ def get_ajax_valida_cierres(request):
 
 
 
-
+def get_ajax_valida_nit(request, *args, **kwargs): 
+    nitr = request.GET.get('nitr', None)
+    if not nitr:
+        return JsonResponse(data={'id': '', 'errors': 'No encuentro cliente.'})
+    else:
+        resul = Terceros.objects.filter(nit=nitr, user=request.user).last()
+        if resul:
+            return JsonResponse(data={
+                "id": resul.id,
+                "errors": ""
+                }, safe=False)
+        else: 
+            return JsonResponse(data={'id': '', 'errors': 'No encuentro cliente.'})
 
 
 
@@ -664,3 +679,25 @@ def resul_vales(request, vale_no, fecha, beneficiario, concepto, valor):
     }
 
     return render(request, "facturas/resul_vales.html", context={ 'ctx': ctx, 'fecha': fecha })
+
+
+
+
+class EstadoCarteraList(LoginRequiredMixin, generic.ListView):
+    login_url = 'generales:login'
+    model=Facturas
+    template_name="facturas/estado_cartera.html"
+    context_object_name="cartera"
+    def get(self, request, *args, **kwargs):
+        cartera = Facturas.objects.filter(usuario=request.user, saldo_credito__gt=0).order_by('-id')[:30]
+        context = {}
+        context['empresa'] = request.user.profile.empresa
+        context['ventas'] = ventas
+        self.object_list = context
+
+        return self.render_to_response(
+            self.get_context_data(
+                context = context,
+                hoy = datetime.now(tz=timezone.utc)
+            )
+        )

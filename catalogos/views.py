@@ -469,19 +469,87 @@ class InformeMovimientos1View(LoginRequiredMixin, generic.ListView):
         
 #   ********  barcode imprimir      
 def BarCodePrint(request,pk):
+    import io
+    from django.conf import settings
+    from reportlab import platypus
+    from  reportlab.lib.styles import ParagraphStyle as PS
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
+    from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
+    from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+    from reportlab.lib import colors  
+    from reportlab.lib.pagesizes import letter, landscape
+    from reportlab.platypus import Table
+    from reportlab.lib.units import inch, mm
+    from reportlab.platypus import Image, PageBreak, Paragraph, Spacer
+    from django.core.mail import EmailMessage
+    from io import StringIO
+    from reportlab.pdfgen import canvas
+    from reportlab_qrcode import QRCodeImage
+    from reportlab.graphics.barcode import code128
+    import os
     codigo=pk
-    if len(codigo) < 12:
-        codigo = '0' * (12-len(codigo))
-    codigo = codigo + pk
-    template_name = 'catalogos/barcode_print.html'
-    ean = EuropeanArticleNumber13(str(codigo), writer=ImageWriter())
-    img=ean.save("media/barcode")
+    barcode_value = str(pk)
+    barcode128 = code128.Code128(
+        barcode_value,
+        barHeight=20,
+        barWidth=2,
+        fontSize=15,
+        humanReadable = False
+    )
+
+    #if len(codigo) < 12:
+    #    codigo = '0' * (12-len(codigo))
+    #codigo = codigo + pk
+    #template_name = 'catalogos/barcode_print.html'
+    #ean = EuropeanArticleNumber13(str(codigo), writer=ImageWriter())
+    #img=ean.save("media/barcode")
     producto = Producto.objects.filter(id=int(pk)).last()
     context={}
     context['producto'] = producto
-    context['codigo'] = img
+    context['codigo'] =  barcode128          #img
 
-    return render(request, template_name, context)
+
+    response = HttpResponse(content_type='application/pdf')  
+    buffer = io.BytesIO()
+    ordenes = []
+    t=Table(
+        data=[
+            [barcode128,'','',''],
+            [producto.nombre,'','','']
+        ],
+        colWidths=[100,0,0,0],
+        style=[
+                ("FONT", (0,1), (2,1), "Helvetica", 5, 5),
+                
+                
+                ('ALIGN',(0,0),(0,3),'CENTRE'),
+
+                ('VALIGN',(0,0),(0,3),'TOP'),
+                
+            ]
+        )
+    
+    t.hAlign = "LEFT"
+    ordenes.append(t)
+    icon_path = "static/base/images/inrai/favicon.png"
+    icon = os.path.join(settings.BASE_DIR, icon_path)
+    doc = SimpleDocTemplate(buffer,
+        #pagesize=landscape(letter),
+        rightMargin=5,
+        leftMargin=25,
+        topMargin=10,  
+        bottomMargin=8,
+        author="POS",
+        title="CODIGO DE BARRA DEL PRODUCTO:  "+producto.nombre,
+        icon=icon,
+        )
+    
+    doc.build(ordenes)
+    response.write(buffer.getvalue())
+    pdf = buffer.getvalue()
+    buffer.close()
+    return response
+    #return render(request, template_name, context)
 
 
 

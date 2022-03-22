@@ -4,6 +4,8 @@ from django.forms.models import inlineformset_factory
 
 from facturas.models import Facturas, Factp, Vales
 
+from generales.models import Terceros
+
 from catalogos.models import Producto
 
 from tempus_dominus.widgets import DatePicker, TimePicker, DateTimePicker
@@ -15,10 +17,11 @@ class FacturaPosEncForm(forms.ModelForm):
     tcredito = forms.CharField()
     transferencia = forms.CharField()
     bonos = forms.CharField()
+    tercero = forms.CharField()
 
     class Meta:
         model=Facturas
-        fields = ['fecha_factura','valor_factura','valor_iva','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos', 'credito', 'descuento',]
+        fields = ['fecha_factura','valor_factura','valor_iva','recibido','cambio', 'efectivo', 'tdebito', 'tcredito', 'transferencia', 'bonos', 'credito', 'descuento', 'tercero',]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,6 +44,20 @@ class FacturaPosEncForm(forms.ModelForm):
         self.fields['credito'].required = False
         self.fields['descuento'].required = False
         self.fields['valor_iva'].required = False
+        self.fields['tercero'].required = False
+
+    def clean_tercero(self):
+        
+        tercero = self.cleaned_data["tercero"]
+        if not tercero:
+            raise forms.ValidationError("ID Cliente Requerido.")
+        else:
+            if int(tercero) == 0:
+                raise forms.ValidationError("ID Cliente Requerido.")
+            else:
+                tercero = Terceros.objects.filter(id=tercero).last()
+
+        return tercero
 
 
 class FacturaPosDetalleForm(forms.ModelForm):

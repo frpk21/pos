@@ -33,7 +33,7 @@ class TercerosAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'foto', 'nit', 'empresa',)
+    list_display = ('user', 'foto', 'nit', 'empresa','tercero_mostrador')
     ordering = ['user',]
     search_fields = ('user', )
 

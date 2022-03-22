@@ -133,6 +133,7 @@
                                 {{form.bonos}}
                                 {{form.credito}}
                                 {{form.descuento}}
+                                {{form.tercero}}
                             </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-12">
@@ -515,7 +516,52 @@
                         $("#id_bonos").val(parseInt(bonos));
                         $("#id_credito").val(parseInt(credito));
                         $("#id_descuento").val(parseInt(descuento));
-                        $('#id_form_invoice').submit();
+                        if (parseInt(credito) > 0) {
+                            swal({
+                                title: 'Ingrese el NIT/CC # del cliente..',
+                                showCancelButton: false,
+                                html: '<div class="row justify-content-center"><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="nit" id="id_nit" onblur="valida_nit()"></div>',
+                                showCancelButton: true,
+                                confirmButtonText: 'Aceptar',
+                                cancelButtonText: 'Cancelar',
+                                confirmButtonClass: "btn btn-success",
+                                cancelButtonClass: "btn btn-danger",
+                                buttonsStyling: false
+                            }).then(function(dismiss) {
+                                if (dismiss.dismiss === 'cancel') {
+                                    swal({
+                                        title: 'Cancelado',
+                                        text: 'Tiquete no emitido, en las ventas a credito debe seleccionar un cliente !',
+                                        type: 'error',
+                                        confirmButtonClass: "btn btn-info",
+                                        buttonsStyling: false
+                                    }).catch(swal.noop)
+                                }
+                                else {
+                                    nit=$("#id_nit").val();
+                                    if (nit === undefined){
+                                        swal({
+                                            title: 'Cancelado',
+                                            text: 'Tiquete no emitido, en las ventas a credito debe seleccionar un cliente !',
+                                            type: 'error',
+                                            confirmButtonClass: "btn btn-info",
+                                            buttonsStyling: false
+                                        }).catch(swal.noop)
+                                    } else {if (nit.length == 0){
+                                        swal({
+                                            title: 'Cancelado',
+                                            text: 'Tiquete no emitido, en las ventas a credito debe seleccionar un cliente !',
+                                            type: 'error',
+                                            confirmButtonClass: "btn btn-info",
+                                            buttonsStyling: false
+                                        }).catch(swal.noop)
+                                    } else {$('#id_form_invoice').submit()}}
+                                }
+                            });
+                        }
+                        else {
+                            $('#id_form_invoice').submit();
+                        }
                     }
                 }).catch(swal.noop)
             }
@@ -545,6 +591,27 @@
             }
         }
 
+
+
+        function valida_nit() {
+            var r = $("#id_nit").val();
+            var datos = {'nitr':r};
+            $.get( "{% url 'facturas:valida_nit' %}", datos, function( data ) {
+                if (data.errors){
+                    swal({
+                        title: data.errors,
+                        showCancelButton: true,
+                        showConfirmButton: false,
+                        cancelButtonClass: 'btn btn-danger',
+                        buttonsStyling: false
+                    }).catch(swal.noop);
+                    $("#id_tercero").val(0);
+                }
+                else {
+                    $("#id_tercero").val(data.id);
+                }
+            });
+        }
 
     </script>
 
