@@ -515,17 +515,14 @@ def BarCodePrint(request,pk):
     t=Table(
         data=[
             [barcode128,'','',''],
-            [producto.nombre + '  -  '+'${:,}'.format(round(producto.precio_de_venta + (producto.precio_de_venta * producto.tarifa_iva.tarifa_iva) / 100,0)),'','','']
+            [producto.nombre,'','','']
+            ['${:,}'.format(round(producto.precio_de_venta + (producto.precio_de_venta * producto.tarifa_iva.tarifa_iva) / 100,0)),'','','']
         ],
         colWidths=[100,0,0,0],
         style=[
                 ("FONT", (0,1), (2,1), "Helvetica", 5, 5),
-                
-                
-                ('ALIGN',(0,0),(0,3),'CENTRE'),
-
-                ('VALIGN',(0,0),(0,3),'TOP'),
-                
+                ('ALIGN',(0,0),(2,3),'CENTRE'),
+                ('VALIGN',(0,0),(2,3),'TOP'),
             ]
         )
     
