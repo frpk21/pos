@@ -566,7 +566,7 @@ def get_ajaxBarcode(request, *args, **kwargs):
                 "nombre": bar_code.nombre, 
                 "valor_unidad": bar_code.precio_de_venta, 
                 "porc_iva": bar_code.tarifa_iva.tarifa_iva,
-                "valor_total": round(bar_code.precio_de_venta * bar_code.tarifa_iva.tarifa_iva / 100,0),  
+                "valor_total": round(bar_code.precio_de_venta + (bar_code.precio_de_venta * bar_code.tarifa_iva.tarifa_iva / 100,0)),  
                 "codigo_de_barra": bar_code.codigo_de_barra,
                 "prod": bar_code.id
                 }, safe=False)
