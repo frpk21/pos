@@ -515,7 +515,7 @@ def BarCodePrint(request,pk):
     t=Table(
         data=[
             [barcode128,'','',''],
-            [producto.nombre + ' '+'${:,}'.format(producto.precio_de_venta),'','','']
+            [producto.nombre + '  -  '+'${:,}'.format(producto.precio_de_venta),'','','']
         ],
         colWidths=[100,0,0,0],
         style=[
