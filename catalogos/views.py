@@ -33,10 +33,6 @@ from datetime import datetime, timedelta
 
 from django.db.models import Sum
 
-from barcode.ean import EuropeanArticleNumber13
-import barcode
-
-
 def MenuView(request, *args, **kwargs):
     template_name="catalogos/menu.html"
     context={'hoy': date.today(), 'mes':date.today().month, 'ano': date.today().year}
