@@ -507,7 +507,7 @@ def BarCodePrint(request,pk):
     context={}
     context['producto'] = producto
     context['codigo'] =  barcode128          #img
-    precio = round(producto.precio_de_venta + ((producto.precio_de_venta * producto.tarifa_iva.tarifa_iva) / 100),0)
+    precio = '${:,}'.format(round(producto.precio_de_venta + ((producto.precio_de_venta * producto.tarifa_iva.tarifa_iva) / 100),0))
 
     response = HttpResponse(content_type='application/pdf')  
     buffer = io.BytesIO()
@@ -516,7 +516,7 @@ def BarCodePrint(request,pk):
         data=[
             [barcode128,'','',''],
             [producto.nombre,'','','']
-            ['${:,}'.format(precio),'','','']
+            [precio,'','','']
         ],
         colWidths=[100,0,0,0],
         style=[
