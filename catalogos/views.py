@@ -521,8 +521,8 @@ def BarCodePrint(request,pk):
         colWidths=[100,0,0,0],
         style=[
                 ("FONT", (0,1), (2,1), "Helvetica", 5, 5),
-                ('ALIGN',(0,0),(0,3),'CENTRE'),
-                ('VALIGN',(0,0),(0,3),'TOP'),
+                ('ALIGN',(0,0),(2,3),'CENTRE'),
+                ('VALIGN',(0,0),(2,3),'TOP'),
             ]
         )
     
