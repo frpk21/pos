@@ -365,15 +365,15 @@ def get_ajaxSubcategoria(request, *args, **kwargs):
         return JsonResponse(data={'success': False, 'errors': 'No encuentro resultados.'}) 
 
 
+
 def get_ajaxTerceros(request, *args, **kwargs): 
     query = request.GET.get('q', None)
     if query: 
-        terceros = Terceros.objects.filter(rzn_social__icontains=query, user=request.user).values("id","rzn_social") 
+        terceros = Terceros.objects.filter(rzn_social__icontains=query).values("id","rzn_social") 
         terceros = list(terceros)
         return JsonResponse(terceros, safe=False) 
     else: 
         return JsonResponse(data={'success': False, 'errors': 'No encuentro resultados.'}) 
-
 
 
 def get_ajaxBarcode(request, *args, **kwargs): 

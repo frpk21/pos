@@ -226,6 +226,36 @@
     {{ detalle_movimientos.media }}
 
     <script>
+
+        $(document).ready(function(){ 
+            $("#id_tercero").select2({ 
+                tags: true, 
+                multiple: false,
+                tokenSeparators: [',', ' '], 
+                minimumInputLength: 3,
+                delay: 200,
+                minimumResultsForSearch: 20, 
+                ajax: { 
+                    url: '{% url 'catalogos:terceros_select2' %}', 
+                    dataType: "json", 
+                    type: "GET", 
+                    data: function (params) { var queryParameters = { q: params.term } 
+                    return queryParameters; 
+                }, 
+                processResults: function (data) {
+                    return { 
+                        results: $.map(data, function (item) { 
+                            return { 
+                                text: item.rzn_social, 
+                                id: item.id
+                            } 
+                        }) 
+                    }; 
+                } 
+            } 
+        }); }); 
+
+
         function nextFocus(itemn, itemn_next) {
             document.getElementById(itemn).addEventListener('keydown', function(event) {
                 if (event.keyCode == 13) {
@@ -346,7 +376,7 @@
             if(codigo === 13){
                 
                 setTimeout(validacbarra(id), 500);
-                let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
+//                let total_form = $('#id_movimientos_detalle_set-TOTAL_FORMS');
 
             }
         
@@ -511,37 +541,6 @@
             tot_tot = salida + (parteDecimal !== undefined ? ',' + parteDecimal : ',00');
             $("#id_valor_documento").val(tot_tot);
         }
-
-
-
-
-        $(document).ready(function(){ 
-            $("#id_tercero").select2({ 
-                tags: true, 
-                multiple: false,
-                tokenSeparators: [',', ' '], 
-                minimumInputLength: 3,
-                delay: 200,
-                minimumResultsForSearch: 20, 
-                ajax: { 
-                    url: '{% url 'catalogos:terceros_select2' %}', 
-                    dataType: "json", 
-                    type: "GET", 
-                    data: function (params) { var queryParameters = { q: params.term } 
-                    return queryParameters; 
-                }, 
-                processResults: function (data) {
-                    return { 
-                        results: $.map(data, function (item) { 
-                            return { 
-                                text: item.nombre, 
-                                id: item.id
-                            } 
-                        }) 
-                    }; 
-                } 
-            } 
-        }); });
 
     </script>
 
