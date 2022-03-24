@@ -8,7 +8,6 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete, pre_delete
 from django.db.models import Sum
 
-
 class Facturas(ClaseModelo):
     fecha_factura = models.DateField()
     factura = models.IntegerField(default=0)
@@ -86,6 +85,23 @@ class FormasPagos(ClaseModelo):
         verbose_name="Nombres Formas de Pago"
 
 
+class PagosCartera(ClaseModelo):
+    fecha = models.DateTimeField()
+    pago_no = models.IntegerField(default=0, blank=True, null=True)
+    factura=models.ForeignKey(Facturas, on_delete=models.CASCADE)
+    valor_pago = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    saldo_anterior = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    saldo_nuevo = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+    def __str__(self):
+        return '{}-{}'.format(self.pago_no, self.valor_pago)
+
+    def save(self, *args, **kwargs):
+        super(PagosCartera, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural="Pagos de Cartera"
+        verbose_name="Pago de Cartera"
 
 class Cierres(ClaseModelo):
     fecha = models.DateTimeField()

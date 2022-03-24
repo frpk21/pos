@@ -18,4 +18,5 @@ urlpatterns = [
     path('Vales/new', views.ValesNew.as_view(), name="vales_new"),
     path('Vales/new/prn/<vale_no>/<fecha>/<beneficiario>/<concepto>/<valor>', views.resul_vales, name='resul_vales'),
     path('Cartera/list', views.EstadoCarteraList.as_view(), name='estado_cartera'),
+    path('Pago/', views.get_ajax_pago_cartera, name='pago_cartera'),
 ]

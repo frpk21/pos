@@ -1,0 +1,188 @@
+{% extends 'base/base1.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+{% load humanize %}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="card-header card-header-icon card-header-warning">
+                            <div class="card-icon">
+                                <i class="material-icons">assignment</i>
+                            </div>
+                            <h4 class="card-title "><strong> ESTADO DE CARTERA</strong></h4>
+                            <span style="color: rgb(105, 11, 11); font-size: 14px;">{{empresa}}  -  TOTAL CARTERA: <strong>$ {{total|intcomma}}</strong></span><br>
+                            <hr class="sidebar-divider">
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row justify-content-center">
+                        <table id="lista_table" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="font-size:12px;">
+                            <thead>
+                                <th style="font-size:12px; background: gray; color: white;" data-orderable="false">FACTURA No.</th>
+                                <th style="font-size:12px; background: gray; color: white;" data-orderable="false">FECHA</th>
+                                <th style="font-size:12px; background: gray; color: white;">CLIENTE</th>
+                                <th style="font-size:12px; background: gray; color: white;" class="text-center">VALOR FACTURA</th>
+                                <th style="font-size:12px; background: gray; color: white;" class="text-center">VALOR IVA</th>
+                                <th style="font-size:12px; background: gray; color: white;" class="text-center">SALDO</th>
+                                <th style="font-size:12px; background: gray; color: yellow;" data-orderable="false" class="text-center">Acciones</th>
+                            </thead>
+                            <tbody>
+                                {% for item in cartera.cartera %}
+                                    <tr>
+                                        <td class="text-center"><input hidden readonly="true" id="id-{{forloop.counter0}}" value="{{item.id}}">{{item.factura}}</td>
+                                        <td class="text-center">{{item.fecha_factura|date:'d/m/Y'}}</td>
+                                        <td>{{item.tercero.rzn_social}}</td>
+                                        <td class="text-right">$  {{item.valor_factura|intcomma}}</td>
+                                        <td class="text-right">$  {{item.valor_iva|intcomma}}</td>
+                                        <td class="text-right"><strong>$  {{item.saldo_credito|intcomma}}</strong></td>
+                                        <td class="text-center">
+                                            <button onclick="pagos({{forloop.counter0}})"  rel="tooltip" class="btn btn-success btn-round">
+                                                <i class="material-icons">done</i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock contenido %}
+
+{% block extra_js %}
+
+    <script>
+        $(document).ready(function() {
+        $('#lista_table').DataTable({
+            "pagingType": "full_numbers",
+            "pageLength": 25,
+            "order": [2, "ASC", 0,"desc"],
+            "lengthMenu": [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todo"]
+            ],
+            responsive: true,
+            "language": {
+            "sProcessing":    "Procesando...",
+            "sLengthMenu":    "Mostrar _MENU_ registros",
+            "sZeroRecords":   "No se encontraron resultados",
+            "sEmptyTable":    "Ningún dato disponible en esta tabla",
+            "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":   "",
+            "sSearch":        "Buscar:",
+            "sUrl":           "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":    "Último",
+                "sNext":    "Siguiente",
+                "sPrevious": "Anterior"
+            }}
+        });
+    
+        var table = $('#lista_table').DataTable();
+        // Edit record
+        table.on('click', '.edit', function() {
+            $tr = $(this).closest('tr');
+            var data = table.row($tr).data();
+            alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+        });
+    
+        // Delete a record
+        table.on('click', '.remove', function(e) {
+            $tr = $(this).closest('tr');
+            table.row($tr).remove().draw();
+            e.preventDefault();
+        });
+    
+        //Like record
+        table.on('click', '.like', function() {
+            alert('You clicked on Like button');
+        });
+        });
+        
+        function format(input){
+            var num = input.value.replace(/\./g,'');
+
+            if(!isNaN(num)){
+                num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+                num = num.split('').reverse().join('').replace(/^[\.]/,'');
+                input.value = num;
+
+            }
+            
+            else{ alert('Solo se permiten numeros');
+                input.value = input.value.replace(/[^\d\.]*/g,'');
+            }
+        }
+
+        function pagos(id_fact) {
+            let id_factura = $("#id-"+String(id_fact)).val();
+            swal({
+                title: 'CIERRE DE CAJA',
+                //<input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="efectivo1" id="id_efectivo1" onkeyup="format(this)">        
+                showCancelButton: false,
+                html: '<div class="row justify-content-center"><input class="form-control" style="text-align: right; color:red; font-size:14px; width: 200px;" name="pago" id="id_pago" onkeyup="format(this)"> </div>',
+                showCancelButton: true,
+                confirmButtonText: 'Aplicar pago',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: "btn btn-success",
+                cancelButtonClass: "btn btn-danger",
+                buttonsStyling: false
+            }).then(function(dismiss) {
+                if (dismiss.dismiss === 'cancel') {
+                    swal({
+                        title: 'Cancelado',
+                        text: 'No se genero pago..!',
+                        type: 'error',
+                        confirmButtonClass: "btn btn-info",
+                        buttonsStyling: false
+                    }).catch(swal.noop)
+                }
+                else{
+                    pago=$("#id_pago").val();
+                    if (pago === undefined){pago=0;} else {if (pago.length == 0){pago=0;} else {pago=pago.replace(/\./g, '')}}
+                    var datos = {'id': id_factura, 'pago': pago};
+                    $.get( "{% url 'facturas:pago_cartera' %}", datos, function( data ) {
+                        if (data.errors){
+                            swal({
+                                title: data.errors,
+                                showCancelButton: true,
+                                showConfirmButton: false,
+                                cancelButtonClass: 'btn btn-danger',
+                                buttonsStyling: false
+                            }).catch(swal.noop);
+                            $("#id_pago").val(0);
+                        }
+                        else {
+                            swal({
+                                title: 'Hecho !',
+                                text: 'EL nuevo saldo es: ' + data.saldo,
+                                type: 'success',
+                                confirmButtonClass: "btn btn-info",
+                                buttonsStyling: false
+                            }).catch(swal.noop);
+                        }
+                    });
+                }
+            });
+        }
+
+    </script>
+
+{% endblock extra_js %}

@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Facturas, Factp, FormasPagos, Cierres, Cierres1, GrabadosCierres1, FormasPagosCierres1, Vales
+from .models import Facturas, Factp, FormasPagos, Cierres, Cierres1, GrabadosCierres1, FormasPagosCierres1, Vales, PagosCartera
 from generales.models import Terceros, Profile
 from catalogos.models import Producto, Iva
 from .forms import FacturaEncForm, FacturaDetForm, DetalleFacFormSet, FacturaPosEncForm, FacturaPosDetalleForm, DetalleMovimientosFormSet, ValesForm
@@ -169,7 +169,7 @@ class CierreCajaView(LoginRequiredMixin, generic.ListView):
     login_url='generales:login'
 
     def get(self, request, *args, **kwargs):
-        ventas = Cierres.objects.filter(usuario=request.user).order_by('-id')[:30]
+        ventas = Cierres.objects.filter(usuario=self.request.user).order_by('-id')[:30]
         context = {}
         context['empresa'] = request.user.profile.empresa
         context['ventas'] = ventas
@@ -234,7 +234,10 @@ def imprimirCierre(request, cierre):
 
     response = HttpResponse(content_type='application/pdf')  
     buffer = io.BytesIO()
-    
+    recaudos = PagosCartera.objects.filter(modificado=datetime.today(), factura__usuario=request.user)
+    total_recaudo = 0
+    for i, item in enumerate(recaudos):
+        total_recaudo += item.valor_pago
     ordenes = []
     logo_path = request.user.profile.foto.url
     logo = os.path.join(settings.BASE_DIR, logo_path)
@@ -271,7 +274,7 @@ def imprimirCierre(request, cierre):
             ['Fecha: ', cierre.fecha.strftime('%d/%m/%Y, %H:%M:%S')],
             ['Cierre No. ', cierre.cierre_no],
             ['Base Caja: ', '${:,}'.format(cierre.base_caja)],
-            ['Total Caja','${:,}'.format(cierre.base_caja+cierre.valor_total_registrado)],
+            ['Total Caja','${:,}'.format(cierre.base_caja+cierre.valor_total_registrado+total_recaudo)],
         ],
         colWidths=[100,30],
         style=[
@@ -317,16 +320,17 @@ def imprimirCierre(request, cierre):
             ['VENTAS EXCENTAS', '${:,}'.format(cierre1.ventas_cubcat_excentas)],
             ['VENTAS EXCLUIDAS', '${:,}'.format(cierre1.ventas_cubcat_excluidas)],
             ['VENTAS GRABADAS','${:,}'.format(cierre1.ventas_cubcat_grabadas)],
-            [''],
+            ['RECAUDOS DE CARTERA','${:,}'.format(total_recaudo)],
             ['', ''],
             ['', ''],
             ['', ''],
         ],
-        colWidths=[100,30],
+        colWidths=[120,30],
         style=[
-                ("FONT", (0,0), (9,1), "Helvetica", 2, 4),
+                ("FONT", (0,0), (9,1), "Helvetica", 3),
                 ('VALIGN',(1,0), (4,1),'MIDDLE'),
                 ('ALIGN',(1,0),(4,1),'CENTRE'),
+                ('FONTSIZE', (0, 0), (9, -1), 6),
             ]
         )
 
@@ -387,6 +391,34 @@ def imprimirCierre(request, cierre):
 
     ordenes.append(t0)
 # END FORMAS DE PAGO
+# RECAUDOS
+    ordenes.append(Spacer(1, 5))
+    tot = Paragraph('RECAUDOS DE CARTERA')
+    tot.hAlign = "TA_RIGHT"
+    ordenes.append(tot)
+    headings0 = ('PAGO No.', 'CLIENTE', 'VALOR')
+    recibos2=[]
+    for i, item in enumerate(recaudos):
+        recibos2.append([
+            item.pago_no,
+            item.factura.tercero.rzn_social,
+            '${:,}'.format(item.valor_pago)
+            ])
+    t0 = Table([headings0] + recibos2, colWidths=[40,80,60])
+    t0.setStyle(TableStyle(
+    [  
+        ('GRID', (0, 0), (2, -1), 1, colors.gray),  
+        ('LINEBELOW', (0, 0), (-1, 0), 1, colors.gray),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('FONT', (0, 0), (2, -1), "Helvetica", 6,6),
+        ('FONTSIZE', (0, 0), (2, -1), 6),
+        ('BACKGROUND', (0, 0), (2,0), colors.gray)  
+    ]  
+    ))
+    t0.hAlign = "LEFT"
+
+    ordenes.append(t0)
+# END RECAUDOS
     ordenes.append(Spacer(1, 5))
     icon_path = "/static/base/images/favicon.png"
     icon = os.path.join(settings.BASE_DIR, icon_path)
@@ -584,6 +616,40 @@ def get_ajax_valida_cierres(request):
 
 
 
+def get_ajax_pago_cartera(request, *args, **kwargs): 
+    id = request.GET.get('id', None)
+    valor_pago = int(request.GET.get('pago', None))
+    if not id:
+        return JsonResponse(data={'id': '', 'errors': 'No encuentro factura.'})
+    else:
+        resul = Facturas.objects.filter(id=id).last()
+        if resul:
+            if valor_pago > resul.saldo_credito:
+                return JsonResponse(data={'id': '', 'errors': 'El valor del pago No puede ser mayor que el saldo pendiente por pagar.'})
+            else:
+                s_anterior = resul.saldo_credito
+                resul.saldo_credito = resul.saldo_credito - valor_pago
+                resul.save()
+                profile = Profile.objects.filter(user=request.user.id).get()
+                pago_no = profile.pago_no + 1
+                profile.pago_no = profile.pago_no + 1
+                profile.save()
+                PagosCartera.objects.get_or_create(
+                    fecha = datetime.now(tz=timezone.utc),
+                    pago_no = pago_no,
+                    factura = resul,
+                    valor_pago = valor_pago,
+                    saldo_anterior = s_anterior,
+                    saldo_nuevo = resul.saldo_credito
+                )
+                return JsonResponse(data={
+                    "saldo": resul.saldo_credito,
+                    "errors": ""
+                    }, safe=False)
+        else: 
+            return JsonResponse(data={'id': '', 'errors': 'No encuentro cliente.'})
+
+
 def get_ajax_valida_nit(request, *args, **kwargs): 
     nitr = request.GET.get('nitr', None)
     if not nitr:
@@ -688,16 +754,20 @@ class EstadoCarteraList(LoginRequiredMixin, generic.ListView):
     model=Facturas
     template_name="facturas/estado_cartera.html"
     context_object_name="cartera"
-    def get(self, request, *args, **kwargs):
-        cartera = Facturas.objects.filter(usuario=request.user, saldo_credito__gt=0).order_by('-id')[:30]
-        context = {}
-        context['empresa'] = request.user.profile.empresa
-        context['ventas'] = ventas
-        self.object_list = context
 
+    def get(self, request, *args, **kwargs):
+        cartera = Facturas.objects.filter(usuario=self.request.user, saldo_credito__gt=0).order_by('-factura')
+        ctx = {}
+        ctx['cartera'] = cartera
+        self.object_list = ctx
+        total=0
+        for i, item in enumerate(cartera):
+            total += item.saldo_credito
         return self.render_to_response(
             self.get_context_data(
-                context = context,
+                context = ctx,
+                empresa = self.request.user.profile.empresa,
+                total = total,
                 hoy = datetime.now(tz=timezone.utc)
             )
         )

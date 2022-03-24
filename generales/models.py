@@ -126,6 +126,7 @@ class Profile(models.Model):
     r_dian = models.CharField('Resolucion DIAN', blank=False, null=False, max_length=200, default="")
     cierre = models.IntegerField('CONSECUTIVO CIERRES DIARIOS', default=0, blank=True, null=True)
     tercero_mostrador =  models.ForeignKey(Terceros, on_delete=models.CASCADE)
+    pago_no = models.IntegerField('CONSECUTIVO PAGOS CARTERA', default=0, blank=True, null=True)
     #sede = models.ForeignKey(Sedes, on_delete=models.CASCADE, default=0, null=False, blank=False)
  
     def save(self):
