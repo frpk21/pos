@@ -253,7 +253,6 @@ def imprimirCierre(request, cierre):
     image1.hAlign = "LEFT"
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Normal_CENTER', alignment=TA_CENTER))
-
     cierre = (Cierres.objects.get(cierre_no=cierre, usuario=request.user))
     cierre1 = (Cierres1.objects.get(cierre = cierre.id))
     grabados = (GrabadosCierres1.objects.filter(cierre = cierre.id))
