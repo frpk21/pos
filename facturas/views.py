@@ -406,7 +406,7 @@ def imprimirCierre(request, cierre):
             item.factura.tercero.rzn_social,
             '${:,}'.format(item.valor_pago)
             ])
-    t0 = Table([headings0] + recibos2, colWidths=[40,80,60])
+    t0 = Table([headings0] + recibos2, colWidths=[30,80,55])
     t0.setStyle(TableStyle(
     [  
         ('GRID', (0, 0), (2, -1), 1, colors.gray),  
