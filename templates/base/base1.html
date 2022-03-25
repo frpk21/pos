@@ -111,7 +111,7 @@
                                             </a>
                                         </li>
                                         <li class="nav-item ">
-                                            <a class="nav-link" href="/">
+                                            <a class="nav-link" onclick="ver_pagos()">
                                                 <span class="sidebar-mini"> PA </span>
                                                 <span class="sidebar-normal"> Pagos y Abonos</span>
                                             </a>
@@ -151,4 +151,24 @@
     </div>
 </div>
 
+<script>
+    function reporte1(itemn) {
+        var r = $("#"+itemn).val();
+        var datos = {'periodo':r};
+        window.location.href="{% url 'facturas:info_pagos' %}?periodo="+r
+    }
+
+    function ver_pagos() {
+        swal({
+        title: 'Consulta de Pagos y Abonos',
+        html: '<div class="form-group"> <div class="col-md-6"><center>' +
+            '<input class="form-control" id="reporte" type="month" name="cambio_mes" value="" placeholder="Cambiar mes y a&nacute;o" onblur="reporte1(id)">' +
+            '</center></div></div>',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+        }).catch(swal.noop)
+    }
+</script>
 {% endblock menu1 %}

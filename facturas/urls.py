@@ -19,4 +19,5 @@ urlpatterns = [
     path('Vales/new/prn/<vale_no>/<fecha>/<beneficiario>/<concepto>/<valor>', views.resul_vales, name='resul_vales'),
     path('Cartera/list', views.EstadoCarteraList.as_view(), name='estado_cartera'),
     path('Pago/', views.get_ajax_pago_cartera, name='pago_cartera'),
+    path('repo1/res/', views.InformePagosView.as_view(), name='info_pagos'),
 ]

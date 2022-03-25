@@ -18,7 +18,7 @@
                                 <div class="card-icon">
                                     <i class="material-icons">assignment</i>
                                 </div>
-                                <h4 class="card-title "><strong>MOVIMIENTOS DE ALMACEN DEL MES {{obj.mes}} DEL A&Ntilde;O {{obj.ano}}</strong></h4>
+                                <h4 class="card-title "><strong>PAGOS Y ABONOS DEL MES {{obj.mes}} DEL A&Ntilde;O {{obj.ano}}</strong></h4>
                                 <hr class="sidebar-divider">>
                             </div>
                         </div>
@@ -27,38 +27,37 @@
                         <div class="material-datatables">
                             <table id="lista_table" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%; font-size:12px;">
                                 <thead>
-                                    <th style="font-size:12px; background: gray; color: white;">DOC-No.</th>
-                                    <th style="font-size:12px; background: gray; color: white;">TIPO</th>
+                                    <th style="font-size:12px; background: gray; color: white;">PAGO No.</th>
                                     <th style="font-size:12px; background: gray; color: white;">FECHA</th>
-                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">PRODUCTO</th>
-                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">CANTIDAD</th>
-                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">VALOR</th>
-                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">TOTAL</th>
-
+                                    <th style="font-size:12px; background: gray; color: white;">CLIENTE</th>
+                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">VALOR PAGO</th>
+                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">FACTURA</th>
+                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">SALDO ANTERIOR</th>
+                                    <th class="text-center" style="font-size:12px; background: gray; color: white;">SALDO FINAL</th>
                                     <th style="font-size:12px; background: gray; color: yellow;" data-orderable="false" class="text-center">Acciones</th>
                                 </thead>
                                 <tfoot>
-                                    <th>Doc-No.</th>
-                                    <th>Tipo</th>
+                                    <th>Pago No.</th>
                                     <th>Fecha</th>
-                                    <th class="text-center">Producto</th>
-                                    <th class="text-center">Cantidad</th>
-                                    <th class="text-center">Valor</th>
-                                    <th class="text-center">Total</th>
+                                    <th>Cliente</th>
+                                    <th class="text-center">Valor Pago</th>
+                                    <th class="text-center">Factura</th>
+                                    <th class="text-center">Saldo inicial</th>
+                                    <th class="text-center">Saldo final</th>
                                     <th class="text-center">Acciones</th>
                                 </tfoot>
                                 <tbody>
-                                    {% for item in obj.movimientos %}
+                                    {% for item in obj.pagos %}
                                         <tr>
-                                            <td>{{item.movimiento.documento_no}}</td>
-                                            <td>{{item.movimiento.tipo_movimiento.nombre}}</td>
-                                            <td>{{item.movimiento.fecha|date:'d/m/Y'}}</td>
-                                            <td>{{item.movimiento.producto.nombre}}</td>
-                                            <td class="text-right">{{item.cantidad}}</td>
-                                            <td class="text-right">{{item.costo|intcomma}}</td>
-                                            <td class="text-right">{{item.total|intcomma}}</td>
+                                            <td>{{item.pago_no}}</td>
+                                            <td>{{item.fecha|date:'d/m/Y'}}</td>
+                                            <td>{{item.factura.tercero.rzn_social}}</td>
+                                            <td class="text-right">$ {{item.valor_pago|intcomma}}</td>
+                                            <td class="text-center">{{item.factura.factura}}</td>
+                                            <td class="text-right">$ {{item.saldo_anterior|intcomma}}</td>
+                                            <td class="text-right">$ {{item.saldo_nuevo|intcomma}}</td>
                                             <td class="td-actions text-center">
-                                                <a href="{% url 'catalogos:imp_movimiento' item.movimiento.id  item.movimiento.tipo_movimiento.tipo item.movimiento.documento_no %}">
+                                                <a href="">
                                                     <button type="button" rel="tooltip" class="btn btn-info btn-round">
                                                     <i class="material-icons">print</i>
                                                     </button>
@@ -80,6 +79,7 @@
           $('#lista_table').DataTable({
             "pagingType": "full_numbers",
             "pageLength": 25,
+            "order": [2, "ASC", 0,"desc"],
             "lengthMenu": [
               [10, 25, 50, -1],
               [10, 25, 50, "Todo"]

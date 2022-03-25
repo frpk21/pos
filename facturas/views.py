@@ -235,9 +235,13 @@ def imprimirCierre(request, cierre):
     response = HttpResponse(content_type='application/pdf')  
     buffer = io.BytesIO()
     recaudos = PagosCartera.objects.filter(modificado=datetime.today(), factura__usuario=request.user)
+    vales = Vales.objects.filter(modificado=datetime.today(), usuario=request.user)
     total_recaudo = 0
     for i, item in enumerate(recaudos):
         total_recaudo += item.valor_pago
+    total_vales = 0
+    for i, item in enumerate(recaudos):
+        total_vales += item.valor
     ordenes = []
     logo_path = request.user.profile.foto.url
     logo = os.path.join(settings.BASE_DIR, logo_path)
@@ -261,8 +265,6 @@ def imprimirCierre(request, cierre):
     tot = Paragraph('C I E R R E  D E  C A J A')
     tot.hAlign = "TA_CENTER"
     ordenes.append(tot)
-
-
     t=Table(
         data=[
             ['',''],
@@ -274,16 +276,16 @@ def imprimirCierre(request, cierre):
             ['Fecha: ', cierre.fecha.strftime('%d/%m/%Y, %H:%M:%S')],
             ['Cierre No. ', cierre.cierre_no],
             ['Base Caja: ', '${:,}'.format(cierre.base_caja)],
-            ['Total Caja','${:,}'.format(cierre.base_caja+cierre.valor_total_registrado+total_recaudo)],
+            ['Total Caja','${:,}'.format(cierre.base_caja+cierre.valor_total_registrado+total_recaudo-total_vales)],
         ],
         colWidths=[100,30],
         style=[
                 ("FONT", (0,0), (9,1), "Helvetica", 2, 4),
                 ('VALIGN',(1,0), (4,1),'MIDDLE'),
                 ('ALIGN',(1,0),(4,1),'CENTRE'),
+                ('FONTSIZE', (0, 0), (9, -1), 8),
             ]
         )
-
     t.hAlign = "LEFT"
     ordenes.append(t)
     ordenes.append(Spacer(1, 5))
@@ -295,7 +297,7 @@ def imprimirCierre(request, cierre):
         cierre.factura_hasta
         #'${:,}'.format(reg.valor_unidad)
         ])
-    t0 = Table([headings0] + recibos2, colWidths=[70,50,50])
+    t0 = Table([headings0] + recibos2, colWidths=[70,45,45])
     t0.setStyle(TableStyle(
     [  
         ('GRID', (0, 0), (2, -1), 1, colors.gray),  
@@ -321,7 +323,7 @@ def imprimirCierre(request, cierre):
             ['VENTAS EXCLUIDAS', '${:,}'.format(cierre1.ventas_cubcat_excluidas)],
             ['VENTAS GRABADAS','${:,}'.format(cierre1.ventas_cubcat_grabadas)],
             ['RECAUDOS DE CARTERA','${:,}'.format(total_recaudo)],
-            ['', ''],
+            ['VALES', '-${:,}'.format(total_vales)],
             ['', ''],
             ['', ''],
         ],
@@ -349,7 +351,7 @@ def imprimirCierre(request, cierre):
             '${:,}'.format(item.base_iva),
             '${:,}'.format(item.valor_iva)
             ])
-    t0 = Table([headings0] + recibos2, colWidths=[35,60,60])
+    t0 = Table([headings0] + recibos2, colWidths=[40,60,60])
     t0.setStyle(TableStyle(
     [  
         ('GRID', (0, 0), (2, -1), 1, colors.gray),  
@@ -769,5 +771,32 @@ class EstadoCarteraList(LoginRequiredMixin, generic.ListView):
                 empresa = self.request.user.profile.empresa,
                 total = total,
                 hoy = datetime.now(tz=timezone.utc)
+            )
+        )
+
+
+
+
+class InformePagosView(LoginRequiredMixin, generic.ListView):
+    
+    model = PagosCartera
+    template_name = "facturas/info_pagos.html"
+    context_object_name = "obj"
+    login_url='generales:login'
+
+    def get(self, request, *args, **kwargs):
+        ano = int(request.GET.get('periodo')[0:4])
+        mes = int(request.GET.get('periodo')[5:7])
+        pagos = PagosCartera.objects.filter(fecha__month=mes, fecha__year=ano, factura__usuario=request.user)
+        context = {}
+        context['mes'] = mes
+        context['ano'] = ano
+        context['empresa'] = request.user.profile.empresa
+        context['pagos'] = pagos
+        self.object_list = context
+
+        return self.render_to_response(
+            self.get_context_data(
+                context = context
             )
         )
