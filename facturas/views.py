@@ -786,6 +786,10 @@ class InformePagosView(LoginRequiredMixin, generic.ListView):
     def get(self, request, *args, **kwargs):
         ano = int(request.GET.get('periodo')[0:4])
         mes = int(request.GET.get('periodo')[5:7])
+        hoy = datetime.now(tz=timezone.utc)
+        if not ano:
+            ano = hoy.year
+            mes = hoy.month
         pagos = PagosCartera.objects.filter(fecha__month=mes, fecha__year=ano, factura__usuario=request.user)
         context = {}
         context['mes'] = mes
