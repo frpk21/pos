@@ -647,9 +647,8 @@ def MenuIndicadoresView(request, *args, **kwargs):
         else:
             h_0 = h_0 + item.valor_factura
         lista.append(r)
-        context={}
         tot_dia += item.valor_factura
-
+    context={}
     context['total_dia'] = tot_dia
     ventas.append(int(h_0))
     ventas.append(int(h_2))
