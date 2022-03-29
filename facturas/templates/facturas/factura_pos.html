@@ -488,15 +488,12 @@
                         if (descuento === undefined){descuento=0;} else {if (descuento.length == 0){descuento=0;} else {descuento=descuento.replace(/\./g, '')}}
                         t_t = parseFloat(efectivo) + parseFloat(tdebito) + parseFloat(tcredito) + parseFloat(transferencia) + parseFloat(bonos) + parseFloat(credito);
                         if (t_t == 0 ) {
-                            $("#cambio").val(tot1+iva1);
-                            $("#id_cambio").val(0);
-                            $("#id_efectivo").val(tot1+iva1);
+                            efectivo = tot1 + iva;
+                            tt = efectivo;
                         }
-                        else {
-                            $("#cambio").val(t_t);
-                            $("#id_cambio").val(t_t-tot1-iva1+parseFloat(descuento));
-                            $("#id_efectivo").val(parseInt(efectivo));
-                        }
+                        $("#cambio").val(t_t);
+                        $("#id_cambio").val(t_t-tot1-iva1+parseFloat(descuento));
+                        $("#id_efectivo").val(parseInt(efectivo));
                         recibido =  String(parseInt($('#cambio').val()));
                         var entrada = recibido.split(',');
                         parteEntera = entrada[0].replace(/\./g, '');
@@ -605,7 +602,7 @@
                         cancelButtonClass: 'btn btn-danger',
                         buttonsStyling: false
                     }).catch(swal.noop);
-                    $("#id_tercero").val(0);
+//                    $("#id_tercero").val(0);
                 }
                 else {
                     $("#id_tercero").val(data.id);

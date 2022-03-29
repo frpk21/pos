@@ -39,6 +39,9 @@ class Facturas(ClaseModelo):
     def __str__(self):
         return '{}'.format(self.fecha_factura)
 
+    def save(self, *args, **kwargs):
+        super(Facturas,self).save(*args, **kwargs)
+
     class Meta:
         verbose_name_plural="Encabezados de Facturas"
         verbose_name="Encabezado de Factura"

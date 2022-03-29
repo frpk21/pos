@@ -44,7 +44,7 @@ class FacturaNew(LoginRequiredMixin, generic.CreateView):
     def get(self, request, *args, **kwargs):
         
         if get_ajax_valida_cierres(request) == True:
-            ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'credito': '', 'descuento': '', 'tercero':0}
+            ctx = {'fecha_factura': datetime.today(), 'valor_factura':0, 'valor_iva':0, 'recibido':0, 'cambio':0, 'efectivo': '', 'tdebito': '', 'tcredito': '', 'transferencia': '', 'bonos': '', 'credito': '', 'descuento': '', 'tercero': request.user.profile.tercero_mostrador.id}
 
             self.object = None
 
@@ -186,29 +186,32 @@ def CierreDoing(request):
     base_caja = request.GET.get('base_caja', 0)
     base_caja = int(base_caja)
     ventas = Factp.objects.filter(factura__cerrado=False, factura__usuario=request.user)
-    minimo = ventas.aggregate(Min('factura__factura'))
-    maximo = ventas.aggregate(Max('factura__factura'))
-    total=0
-    profile = Profile.objects.filter(user=request.user.id).get()
-    cierre = profile.cierre + 1
-    profile.cierre = profile.cierre + 1
-    profile.save()
-    for i,item in enumerate(ventas):
-        total+= (item.valor_unidad * item.cantidad) + item.valor_iva
-    
-    Cierres.objects.get_or_create(
-        fecha = datetime.now(tz=timezone.utc),
-        cierre_no = cierre,
-        valor_total_registrado = total,
-        base_caja = base_caja,
-        usuario = request.user,
-        pos_no = 1,
-        factura_desde = minimo["factura__factura__min"],
-        factura_hasta = maximo["factura__factura__max"]
-    )
-    Facturas.objects.filter(usuario=request.user.id, cerrado=False).update(cerrado=True)
-    Vales.objects.filter(usuario=request.user.id, cerrado=False).update(cerrado=True)
-    return JsonResponse(data={'cierre': cierre, 'errors': ''})
+    if ventas:
+        minimo = ventas.aggregate(Min('factura__factura'))
+        maximo = ventas.aggregate(Max('factura__factura'))
+        total=0
+        profile = Profile.objects.filter(user=request.user.id).get()
+        cierre = profile.cierre + 1
+        profile.cierre = profile.cierre + 1
+        profile.save()
+        for i,item in enumerate(ventas):
+            total+= (item.valor_unidad * item.cantidad) + item.valor_iva
+        
+        Cierres.objects.get_or_create(
+            fecha = datetime.now(tz=timezone.utc),
+            cierre_no = cierre,
+            valor_total_registrado = total,
+            base_caja = base_caja,
+            usuario = request.user,
+            pos_no = 1,
+            factura_desde = minimo["factura__factura__min"],
+            factura_hasta = maximo["factura__factura__max"]
+        )
+        Facturas.objects.filter(usuario=request.user.id, cerrado=False).update(cerrado=True)
+        Vales.objects.filter(usuario=request.user.id, cerrado=False).update(cerrado=True)
+        return JsonResponse(data={'cierre': cierre, 'errors': ''})
+    else:
+        return JsonResponse(data={'cierre': '', 'errors': 'No hay movieminetos para cerrar.'})
 
 
 

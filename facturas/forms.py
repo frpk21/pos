@@ -47,15 +47,11 @@ class FacturaPosEncForm(forms.ModelForm):
         self.fields['tercero'].required = False
 
     def clean_tercero(self):
-        
         tercero = self.cleaned_data["tercero"]
         if not tercero:
             raise forms.ValidationError("ID Cliente Requerido.")
         else:
-            if int(tercero) == 0:
-                raise forms.ValidationError("ID Cliente Requerido.")
-            else:
-                tercero = Terceros.objects.filter(id=tercero).last()
+            tercero = Terceros.objects.filter(id=tercero).last()
 
         return tercero
 

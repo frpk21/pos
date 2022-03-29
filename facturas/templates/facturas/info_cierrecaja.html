@@ -100,13 +100,24 @@
                     if (base_caja === undefined){base_caja=0;} else {if (base_caja.length == 0){base_caja=0;} else {base_caja=base_caja.replace(/\./g, '')}}
                     var datos = {'base_caja': parseFloat(base_caja)};
                     $.get( "{% url 'facturas:closed' %}", datos, function( data ) {
-                        swal({
-                            title: 'Generado el cierre No. ' + data.cierre,
-                            text: 'Hecho..',
-                            type: 'success',
-                            confirmButtonClass: "btn btn-info",
-                            buttonsStyling: false
-                        }).catch(swal.noop)
+                        if (data.errors){
+                            swal({
+                                title: 'Cancelado',
+                                text: 'Cierre no emitido..' + data.errors,
+                                type: 'error',
+                                confirmButtonClass: "btn btn-info",
+                                buttonsStyling: false
+                            }).catch(swal.noop)
+                        }
+                        else {
+                            swal({
+                                title: 'Generado el cierre No. ' + data.cierre,
+                                text: 'Hecho..',
+                                type: 'success',
+                                confirmButtonClass: "btn btn-info",
+                                buttonsStyling: false
+                            }).catch(swal.noop)
+                        }
                     });
                 }
             });

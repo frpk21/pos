@@ -90,7 +90,7 @@ class Terceros(ClaseModelo):
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.DO_NOTHING)
 
     def __str__(self):
-        return '{}: {}'.format(self.rzn_social, self.nit)
+        return '{}: {}: {}'.format(self.id, self.rzn_social, self.nit)
 
     def save(self):
         if self.nombre1:
