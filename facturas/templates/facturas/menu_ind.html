@@ -1,0 +1,130 @@
+{% extends 'base/base1.html' %}
+
+{% load static %}
+
+{% block contenido %}
+
+{% load humanize %}
+<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card card-chart">
+          <div class="card-header card-header-rose" data-header-animation="false">
+            <div class="ct-chart" id="websiteViewsChart1"></div>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Ventas del d&iacute;a <strong>${{total_dia|intcomma}}</strong></h4>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">access_time</i> {{hoy}} {{h_11}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-chart">
+          <div class="card-header card-header-info" data-header-animation="false">
+            <div class="ct-chart1" id="websiteViewsChart1"></div>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Cartera <strong>${{total|intcomma}}</strong></h4>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">access_time</i> {{hoy}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-chart">
+          <div class="card-header card-header-warning" data-header-animation="false">
+            <div class="ct-chart2" id="websiteViewsChart"></div>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">Gastos</h4>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">access_time</i> {{hoy}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/static/base/assets/js/plugins/chartist.min.js"></script>
+<script>
+  new Chartist.Bar('.ct-chart', { labels: ['0', '2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '22'], series: [ {{ventas}} ] }, {
+    stackBars: true,
+    axisY: {
+        labelInterpolationFnc: function(value) {
+        return (value / 1000000) + 'M';
+        }
+    }
+    }).on('draw', function(data) {
+    if(data.type === 'bar') {
+        data.element.attr({
+        style: 'stroke-width: 15px'
+        });
+    }
+    });
+     
+
+  /*  **************** Public Preferences - Pie Chart ******************** */
+  var data = {
+  labels: [{{ vencimientos }}],
+  series: [30, 60, 90, 91]
+};
+
+var options = {
+  labelInterpolationFnc: function(value) {
+    return value[0]
+  }
+};
+
+var responsiveOptions = [
+  ['screen and (min-width: 640px)', {
+    chartPadding: 30,
+    labelOffset: 100,
+    labelDirection: 'explode',
+    labelInterpolationFnc: function(value) {
+      return value;
+    }
+  }],
+  ['screen and (min-width: 1024px)', {
+    labelOffset: 80,
+    chartPadding: 20
+  }]
+];
+
+new Chartist.Pie('.ct-chart1', data, options, responsiveOptions);
+  
+
+    new Chartist.Bar('.ct-chart2', {
+      labels: ['30d', '60d', '90d', '+90d'],
+      series: [{{gastos}}]
+      }, {
+      stackBars: true,
+      axisY: {
+          labelInterpolationFnc: function(value) {
+          return (value / 1000000) + 'M';
+          }
+      }
+      }).on('draw', function(data) {
+      if(data.type === 'bar') {
+          data.element.attr({
+          style: 'stroke-width: 25px'
+          });
+      }
+      });
+  
+</script>
+
+{% endblock contenido %}

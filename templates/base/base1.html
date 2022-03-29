@@ -123,28 +123,10 @@
                     </div>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link" data-toggle="collapse" href="#inrai-indi">
-                        <i class="material-icons">insert_chart_outlined</i>
-                        <p> Indicadores
-                            <b class="caret"></b>
-                        </p>
+                    <a class="nav-link" href="{% url 'facturas:menu_ind' %}">
+                        <i class="material-icons">receipt</i>
+                        <p> Indicadores</p>
                     </a>
-                    <div class="collapse" id="inrai-indi">
-                        <ul class="nav">
-                            <li class="nav-item ">
-                                <a class="nav-link" href="">
-                                    <span class="sidebar-mini"> VR</span>
-                                    <span class="sidebar-normal"> Ventas regionales </span>
-                                </a>
-                            </li>
-                            <li class="nav-item ">
-                                <a class="nav-link" href="/">
-                                    <span class="sidebar-mini"> VC</span>
-                                    <span class="sidebar-normal"> Ventas Cliente </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
             {% endif %}
         </ul>

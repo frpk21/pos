@@ -9,7 +9,7 @@ from django.db.models.signals import post_save, post_delete, pre_delete
 from django.db.models import Sum
 
 class Facturas(ClaseModelo):
-    fecha_factura = models.DateField()
+    fecha_factura = models.DateTimeField()
     factura = models.IntegerField(default=0)
     observacion = models.CharField(max_length=200, null=True,blank=True)
     valor_factura = models.DecimalField(max_digits=15, decimal_places=2, default=0)

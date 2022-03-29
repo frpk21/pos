@@ -20,4 +20,5 @@ urlpatterns = [
     path('Cartera/list', views.EstadoCarteraList.as_view(), name='estado_cartera'),
     path('Pago/', views.get_ajax_pago_cartera, name='pago_cartera'),
     path('repo1/res/', views.InformePagosView.as_view(), name='info_pagos'),
+    path('Indicadores', views.MenuIndicadoresView, name='menu_ind'),
 ]

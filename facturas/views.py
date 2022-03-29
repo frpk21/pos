@@ -458,8 +458,7 @@ class FacturaEdit(generic.UpdateView):
 
 def MenuView(request, *args, **kwargs):
     template_name="facturas/menu.html"
-    hoy = date.today()
-    #form = SedesForm()
+    hoy = datetime.now(tz=timezone.utc)
     anoR = hoy.year
     ventas=[]
     ene=0
@@ -588,6 +587,117 @@ def MenuView(request, *args, **kwargs):
     #context['netos'] = r['total']-p['sin_url']
 
     return render(request, template_name, context)
+
+
+
+def MenuIndicadoresView(request, *args, **kwargs):
+    template_name="facturas/menu_ind.html"
+    hoy = date.today()
+    ventas=[]
+    h_0=0
+    h_2=0
+    h_4=0
+    h_6=0
+    h_8=0
+    h_10=0
+    h_12=0
+    h_14=0
+    h_16=0
+    h_18=0
+    h_20=0
+    h_22=0
+    r = Facturas.objects.filter(fecha_factura__date=hoy, anulado=False)
+    #.aggregate(
+    #    Sum('valor_factura'),
+    #    Sum('valor_iva'),
+    #    Sum('reteica'),
+    #    Sum('reteiva'),
+    #    Sum('retfuente'),
+    #    Sum('saldo'))
+
+    #
+    # for hora in range(0,24):
+    tot_dia = 0
+    for i, item in enumerate(r):
+        lista=[]
+        if int(item.fecha_factura.hour) >=2 and int(item.fecha_factura.hour) <= 3:
+            h_2 = h_2 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=4 and int(item.fecha_factura.hour) <= 5:
+            h_4 = h_4 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=6 and int(item.fecha_factura.hour) <= 7:
+            h_6 = h_6 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=8 and int(item.fecha_factura.hour) <= 9:
+            h_8 = h_8 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=10 and int(item.fecha_factura.hour) <= 11:
+            h_10 = h_10 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=11 and int(item.fecha_factura.hour) <= 13:
+            h_11 = h_11 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=12 and int(item.fecha_factura.hour) <= 14:
+            h_12 = h_12 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=14 and int(item.fecha_factura.hour) <= 16:
+            h_14 = h_14 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=16 and int(item.fecha_factura.hour) <= 18:
+            h_16 = h_16 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=18 and int(item.fecha_factura.hour) <= 20:
+            h_18 = h_18 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=20 and int(item.fecha_factura.hour) <= 21:
+            h_20 = h_20 + item.valor_factura
+        elif int(item.fecha_factura.hour) >=22 and int(item.fecha_factura.hour) <= 24:
+            h_22 = h_22 + item.valor_factura
+        else:
+            h_0 = h_0 + item.valor_factura
+        lista.append(r)
+        context={}
+        tot_dia += item.valor_factura
+
+    context['total_dia'] = tot_dia
+    ventas.append(int(h_0))
+    ventas.append(int(h_2))
+    ventas.append(int(h_4))
+    ventas.append(int(h_6))
+    ventas.append(int(h_8))
+    ventas.append(int(h_10))
+    ventas.append(int(h_12))
+    ventas.append(int(h_14))
+    ventas.append(int(h_16))
+    ventas.append(int(h_18))
+    ventas.append(int(h_20))
+    ventas.append(int(h_22))
+    ventas.append(int(h_22))
+    context['ventas'] = ventas
+    context['hoy'] = hoy
+
+    resul = Facturas.objects.filter(saldo_credito__gt=0,anulado=False)
+    vencimientos=[]
+    sdo30=0
+    sdo60=0
+    sdo90=0
+    sdootros=0
+    total=0
+    for i, item in enumerate(resul):
+        total += int(item.saldo_credito)
+        if (hoy-item.fecha_factura.date()).days<=31:
+            sdo30 += int(item.saldo_credito)
+        elif (hoy-item.fecha_factura.date()).days<=61:
+            sdo60 += int(item.saldo_credito)
+        elif (hoy-item.fecha_factura.date()).days<=91:
+            sdo90 += int(item.saldo_credito)
+        else:
+            sdootros += int(item.saldo_credito)
+    vencimientos.append(sdo30)
+    vencimientos.append(sdo60)
+    vencimientos.append(sdo90)
+    vencimientos.append(sdootros)
+    context['vencimientos'] = vencimientos
+    context['total'] = total
+    #p=Emisoras.objects.filter(categoria__lte=3, url_streaming=None).aggregate(sin_url = Count('id'))
+    #context['sin_url'] = p['sin_url']
+    #r=Emisoras.objects.filter(categoria__lte=3).aggregate(total=Count('id'))
+    #context['total_emisoras'] = r['total']
+    #context['netos'] = r['total']-p['sin_url']
+
+    return render(request, template_name, context)
+
 
 
 
