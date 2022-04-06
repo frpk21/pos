@@ -463,7 +463,7 @@ class InformeMovimientos1View(LoginRequiredMixin, generic.ListView):
         )
         
         
-#   ********  barcode imprimir      
+#   ********  barcode imprimir     
 def BarCodePrint(request,pk):
     import io
     from django.conf import settings
@@ -483,66 +483,62 @@ def BarCodePrint(request,pk):
     from reportlab_qrcode import QRCodeImage
     from reportlab.graphics.barcode import code128
     import os
-    codigo=pk
-    barcode_value = str(pk)
-    barcode128 = code128.Code128(
-        barcode_value,
-        barHeight=20,
-        barWidth=2,
-        fontSize=15,
-        humanReadable = False
-    )
 
-    #if len(codigo) < 12:
-    #    codigo = '0' * (12-len(codigo))
-    #codigo = codigo + pk
-    #template_name = 'catalogos/barcode_print.html'
-    #ean = EuropeanArticleNumber13(str(codigo), writer=ImageWriter())
-    #img=ean.save("media/barcode")
+
+
     producto = Producto.objects.filter(id=int(pk)).last()
-    context={}
-    context['producto'] = producto
-    context['codigo'] =  barcode128          #img
-
-
-    response = HttpResponse(content_type='application/pdf')  
-    buffer = io.BytesIO()
-    ordenes = []
-    t=Table(
-        data=[
-            [barcode128,'','',''],
-            [producto.nombre,'','',''],
-            ['${:,}'.format(round(producto.precio_de_venta + ((producto.precio_de_venta * producto.tarifa_iva.tarifa_iva) / 100),0)),'','','']
-        ],
-        colWidths=[150,0,0,0],
-        style=[
-                ("FONT", (0,0), (2,3), "Helvetica", 5, 5),
-                ('ALIGN',(0,0),(2,3),'CENTRE'),
-                ('VALIGN',(0,0),(2,3),'TOP'),
-            ]
+    if producto.codigo_de_barra:
+        codigo=pk
+        barcode_value = str(producto.codigo_de_barra)
+        barcode128 = code128.Code128(
+            barcode_value,
+            barHeight=30,
+            barWidth=1,
+            fontSize=20,
+            humanReadable = False
         )
-    
-    t.hAlign = "LEFT"
-    ordenes.append(t)
-    icon_path = "static/base/images/inrai/favicon.png"
-    icon = os.path.join(settings.BASE_DIR, icon_path)
-    doc = SimpleDocTemplate(buffer,
-        #pagesize=landscape(letter),
-        rightMargin=5,
-        leftMargin=25,
-        topMargin=20,  
-        bottomMargin=8,
-        author="POS",
-        title="CODIGO DE BARRA DEL PRODUCTO:  "+producto.nombre+' PRECIO: '+'${:,}'.format(round(producto.precio_de_venta + (producto.precio_de_venta * producto.tarifa_iva.tarifa_iva) / 100,0)),
-        icon=icon,
-        )
-    
-    doc.build(ordenes)
-    response.write(buffer.getvalue())
-    pdf = buffer.getvalue()
-    buffer.close()
-    return response
-    #return render(request, template_name, context)
+        
+        context={}
+        context['producto'] = producto
+        context['codigo'] =  barcode128          #img
+        response = HttpResponse(content_type='application/pdf')  
+        buffer = io.BytesIO()
+        ordenes = []
+        t=Table(
+            data=[
+                [barcode128,'','',''],
+                [producto.nombre,'','',''],
+                ['${:,}'.format(round(producto.precio_de_venta + ((producto.precio_de_venta * producto.tarifa_iva.tarifa_iva) / 100),0)),'','','']
+            ],
+            colWidths=[150,0,0,0],
+            style=[
+                    ("FONT", (0,0), (2,3), "Helvetica", 5, 5),
+                    ('ALIGN',(0,0),(2,3),'CENTRE'),
+                    ('VALIGN',(0,0),(2,3),'TOP'),
+                ]
+            )
+        
+        t.hAlign = "LEFT"
+        ordenes.append(t)
+        icon_path = "static/base/images/inrai/favicon.png"
+        icon = os.path.join(settings.BASE_DIR, icon_path)
+        doc = SimpleDocTemplate(buffer,
+            #pagesize=landscape(letter),
+            rightMargin=5,
+            leftMargin=25,
+            topMargin=20,  
+            bottomMargin=8,
+            author="POS",
+            title="CODIGO DE BARRA DEL PRODUCTO:  "+producto.nombre+' PRECIO: '+'${:,}'.format(round(producto.precio_de_venta + (producto.precio_de_venta * producto.tarifa_iva.tarifa_iva) / 100,0)),
+            icon=icon,
+            )
+        
+        doc.build(ordenes)
+        response.write(buffer.getvalue())
+        pdf = buffer.getvalue()
+        buffer.close()
+        return response
+
 
 
 
