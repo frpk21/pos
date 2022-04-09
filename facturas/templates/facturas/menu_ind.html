@@ -13,7 +13,7 @@
     <div class="row">
       <div class="col-md-6">
         <div class="card card-chart">
-          <div class="card-header card-header-rose" data-header-animation="false">
+          <div class="card-header card-header-warning" data-header-animation="false">
             <div class="ct-chart" id="websiteViewsChart1"></div>
           </div>
           <div class="card-body">
@@ -40,6 +40,14 @@
             </div>
           </div>
         </div>
+      </div><div class="col-md-6">
+        <div class="card card-stats text-center">
+          <i class="material-icons">receipt_long</i>
+          <div class="card-body text-center">
+            <h5 class="card-text">Ventas Mes</h5>
+            <button class="btn btn-rose btn-fill" onclick="ver_ventas()">Consultar</button>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -47,6 +55,27 @@
 </div>
 <script src="/static/base/assets/js/plugins/chartist.min.js"></script>
 <script>
+   function reporte1(itemn) {
+    var r = $("#"+itemn).val();
+    var datos = {'periodo':r};
+    window.location.href="{% url 'facturas:info_ventas_mes' %}?periodo="+r
+  }
+
+
+  function ver_ventas() {
+    swal({
+      title: 'Consulta Ventas Mes',
+      html: '<div class="form-group"> <div class="col-md-6"><center>' +
+        '<input class="form-control" id="reporte" type="month" name="cambio_mes" value="" placeholder="Cambiar mes y a&nacute;o" onblur="reporte1(id)">' +
+        '</center></div></div>',
+      showCancelButton: true,
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      buttonsStyling: false
+    }).catch(swal.noop)
+  }
+
+
   new Chartist.Bar('.ct-chart', { labels: ['0', '2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '22'], series: [ {{ventas}} ] }, {
     stackBars: true,
     axisY: {

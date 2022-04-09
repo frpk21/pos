@@ -915,3 +915,40 @@ class InformePagosView(LoginRequiredMixin, generic.ListView):
                 context = context
             )
         )
+
+
+
+
+
+
+
+class InformeVentasMesView(LoginRequiredMixin, generic.ListView):
+    
+    model = Facturas
+    template_name = "facturas/info_ventas.html"
+    context_object_name = "obj"
+    login_url='generales:login'
+
+    def get(self, request, *args, **kwargs):
+        ano = int(request.GET.get('periodo')[0:4])
+        mes = int(request.GET.get('periodo')[5:7])
+        ventas = Facturas.objects.filter(fecha_factura__month=mes, fecha_factura__year=ano, usuario=request.user)
+        total=0
+        if ventas:
+            for i,item in enumerate(ventas):
+                if item.anulado == False:
+                    total += item.valor_factura
+
+        context = {}
+        context['mes'] = mes
+        context['ano'] = ano
+        context['total'] = total
+        context['empresa'] = request.user.profile.empresa
+        context['ventas'] = ventas
+        self.object_list = context
+
+        return self.render_to_response(
+            self.get_context_data(
+                context = context
+            )
+        )
