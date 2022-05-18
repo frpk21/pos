@@ -2,6 +2,7 @@ from django.contrib import admin
 from facturas.models import Facturas, Factp, FormasPagos, PagosCartera, Cierres, Cierres1, GrabadosCierres1, FormasPagosCierres1, Vales, PagosVales
 
 class FacturasAdmin(admin.ModelAdmin):
+    list_display = all
     class Meta:
         model = Facturas
     
@@ -10,6 +11,7 @@ class FacturasAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class FactpAdmin(admin.ModelAdmin):
+    list_display = all
     class Meta:
         model = Factp
     
@@ -18,6 +20,7 @@ class FactpAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class FormasPagosAdmin(admin.ModelAdmin):
+    list_display = all
     class Meta:
         model = FormasPagos
     
@@ -26,6 +29,7 @@ class FormasPagosAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class PagosCarteraAdmin(admin.ModelAdmin):
+    list_display = all
     class Meta:
         model = PagosCartera
     
@@ -34,6 +38,7 @@ class PagosCarteraAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class CierresAdmin(admin.ModelAdmin):
+    list_display = all
     class Meta:
         model = Cierres
     
@@ -42,6 +47,7 @@ class CierresAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class Cierres1Admin(admin.ModelAdmin):
+    list_display = all
     class Meta:
         model = Cierres1
     
@@ -50,6 +56,7 @@ class Cierres1Admin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class GrabadosCierres1Admin(admin.ModelAdmin):
+    list_display = all
     class Meta:
         model = GrabadosCierres1
     
@@ -58,6 +65,7 @@ class GrabadosCierres1Admin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class FormasPagosCierres1Admin(admin.ModelAdmin):
+    list_display = all
     class Meta:
         model = FormasPagosCierres1
     
@@ -66,6 +74,7 @@ class FormasPagosCierres1Admin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class ValesAdmin(admin.ModelAdmin):
+    list_display = all
     class Meta:
         model = Vales
     
@@ -74,6 +83,7 @@ class ValesAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class PagosValesAdmin(admin.ModelAdmin):
+    list_display = all
     class Meta:
         model = PagosVales
     
