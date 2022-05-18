@@ -129,10 +129,10 @@ class Cierres(ClaseModelo):
 class Cierres1(ClaseModelo):
     cierre = models.ForeignKey(Cierres, blank=False, null=False, on_delete=models.CASCADE)
     ventas_descuentos = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-    ventas_cubcat = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-    ventas_cubcat_excentas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-    ventas_cubcat_excluidas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-    ventas_cubcat_grabadas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    ventas_subcat = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    ventas_subcat_excentas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    ventas_subcat_excluidas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    ventas_subcat_grabadas = models.DecimalField(max_digits=15, decimal_places=2, default=0)
 
     def __str__(self):
         return '{}'.format(self.ventas_subcat)
