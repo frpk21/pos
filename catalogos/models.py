@@ -151,7 +151,7 @@ class Movimientos(ClaseModelo):
     valor_documento = models.DecimalField('Valor documento', max_digits=12, decimal_places=0, default=0, blank=True, null=True)
 
     def __str__(self):
-        return '{}:{}'.format(self.tipo.nombre,self.id)
+        return '{}:{}'.format(self.tipo_movimiento.nombre,self.id)
 
     def save(self):
         super(Movimientos, self).save()
