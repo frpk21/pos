@@ -40,9 +40,9 @@ class ProfileAdmin(admin.ModelAdmin):
     class Meta:
         model = Profile
     
-    def get_queryset(self, request):
-        qs = Profile.objects.all()
-        return qs.filter(user=request.user)
+#    def get_queryset(self, request):
+#        qs = Profile.objects.all()
+#        return qs.filter(user=request.user)
 
 
 admin.site.register(Terceros, TercerosAdmin)
