@@ -28,7 +28,7 @@ class Categoria(ClaseModelo):
     class Meta:
         verbose_name_plural = "Categorias"
 
-
+ 
 
 class SubCategoria(ClaseModelo):
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Producto, Ubicaciones, Tipos_movimientos, Formulacion, Formulacion1, Iva
+from .models import Producto, Ubicaciones, Tipos_movimientos, Formulacion, Formulacion1, Iva, Categoria, SubCategoria, Movimientos, Movimientos_detalle
 from django.contrib.admin.widgets import AutocompleteSelect
 
 class Tipos_movimientosAdmin(admin.ModelAdmin):
@@ -61,5 +61,9 @@ admin.site.register(Ubicaciones, UbicacionesAdmin)
 admin.site.register(Tipos_movimientos, Tipos_movimientosAdmin)
 admin.site.register(Iva)
 
-
-
+admin.site.register(Categoria)
+admin.site.register(SubCategoria)
+admin.site.register(Producto)
+admin.site.register(Movimientos)
+admin.site.register(Movimientos_detalle)
+admin.site.register(Formulacion)
