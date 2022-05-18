@@ -4,6 +4,9 @@ from facturas.models import Facturas, Factp, FormasPagos, PagosCartera, Cierres,
 
 
 class FacturasAdmin(admin.ModelAdmin):
+    def get_list_display(self, request):
+        return [field.name for field in self.model._meta.concrete_fields]
+
     class Meta:
         model = Facturas
     
@@ -12,6 +15,9 @@ class FacturasAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class FactpAdmin(admin.ModelAdmin):
+    def get_list_display(self, request):
+        return [field.name for field in self.model._meta.concrete_fields]
+    
     class Meta:
         model = Factp
     
@@ -20,6 +26,9 @@ class FactpAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class FormasPagosAdmin(admin.ModelAdmin):
+    def get_list_display(self, request):
+        return [field.name for field in self.model._meta.concrete_fields]
+    
     class Meta:
         model = FormasPagos
     
@@ -28,6 +37,9 @@ class FormasPagosAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class PagosCarteraAdmin(admin.ModelAdmin):
+    def get_list_display(self, request):
+        return [field.name for field in self.model._meta.concrete_fields]
+    
     class Meta:
         model = PagosCartera
     
@@ -36,6 +48,9 @@ class PagosCarteraAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class CierresAdmin(admin.ModelAdmin):
+    def get_list_display(self, request):
+        return [field.name for field in self.model._meta.concrete_fields]
+    
     class Meta:
         model = Cierres
     
@@ -44,6 +59,9 @@ class CierresAdmin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class Cierres1Admin(admin.ModelAdmin):
+    def get_list_display(self, request):
+        return [field.name for field in self.model._meta.concrete_fields]
+    
     class Meta:
         model = Cierres1
     
@@ -52,6 +70,9 @@ class Cierres1Admin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class GrabadosCierres1Admin(admin.ModelAdmin):
+    def get_list_display(self, request):
+        return [field.name for field in self.model._meta.concrete_fields]
+    
     class Meta:
         model = GrabadosCierres1
     
@@ -60,6 +81,9 @@ class GrabadosCierres1Admin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class FormasPagosCierres1Admin(admin.ModelAdmin):
+    def get_list_display(self, request):
+        return [field.name for field in self.model._meta.concrete_fields]
+    
     class Meta:
         model = FormasPagosCierres1
     
@@ -68,6 +92,9 @@ class FormasPagosCierres1Admin(admin.ModelAdmin):
         return qs.filter(user=request.user)
 
 class ValesAdmin(admin.ModelAdmin):
+    def get_list_display(self, request):
+        return [field.name for field in self.model._meta.concrete_fields]
+    
     class Meta:
         model = Vales
     
@@ -83,7 +110,6 @@ class PagosValesAdmin(admin.ModelAdmin):
         qs = PagosVales.objects.all()
         return qs.filter(user=request.user)
 
-# Register your models here.
 admin.site.register(FacturasAdmin, Facturas)
 admin.site.register(FactpAdmin, Factp)
 admin.site.register(FormasPagosAdmin, FormasPagos)
