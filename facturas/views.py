@@ -766,16 +766,13 @@ def get_ajax_pago_cartera(request, *args, **kwargs):
 def get_ajax_valida_nit(request, *args, **kwargs): 
     nitr = request.GET.get('nitr', None)
     if not nitr:
-        return JsonResponse(data={'id': '', 'errors': 'No encuentro cliente.'})
+        return JsonResponse(data={'id': '', 'nombre': '', 'errors': 'NIT No Existe.'})
     else:
         resul = Terceros.objects.filter(nit=nitr, user=request.user).last()
         if resul:
-            return JsonResponse(data={
-                "id": resul.id,
-                "errors": ""
-                }, safe=False)
+            return JsonResponse(data={'id': resul.id, 'nombre': resul.rzn_social, 'errors': ''})
         else: 
-            return JsonResponse(data={'id': '', 'errors': 'No encuentro cliente.'})
+            return JsonResponse(data={'id': '', 'nombre': '', 'errors': 'No encuentro cliente.'})
 
 
 
